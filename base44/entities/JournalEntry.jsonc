@@ -1,0 +1,50 @@
+{
+  "name": "JournalEntry",
+  "type": "object",
+  "properties": {
+    "mood": {
+      "type": "string",
+      "enum": [
+        "great",
+        "good",
+        "neutral",
+        "low",
+        "terrible"
+      ],
+      "description": "Current mood"
+    },
+    "trigger": {
+      "type": "string",
+      "description": "Trigger if any"
+    },
+    "context": {
+      "type": "string",
+      "description": "Location or context"
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "resisted",
+        "relapsed",
+        "no_urge"
+      ],
+      "description": "What happened"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Free form notes"
+    },
+    "energy_level": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "description": "Energy level"
+    }
+  },
+  "required": [
+    "mood"
+  ]
+}

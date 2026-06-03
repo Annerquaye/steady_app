@@ -1,0 +1,125 @@
+{
+  "name": "UserProfile",
+  "type": "object",
+  "properties": {
+    "reason_for_quitting": {
+      "type": "string",
+      "description": "User's personal reason for quitting"
+    },
+    "triggers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Main triggers like boredom, stress, loneliness, etc."
+    },
+    "vulnerable_times": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Most vulnerable times of day"
+    },
+    "goals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "User goals"
+    },
+    "accountability_partner_email": {
+      "type": "string",
+      "description": "Optional accountability partner email"
+    },
+    "accountability_partner_name": {
+      "type": "string",
+      "description": "Name of accountability partner"
+    },
+    "privacy_level": {
+      "type": "string",
+      "enum": [
+        "minimal",
+        "moderate",
+        "full"
+      ],
+      "default": "minimal",
+      "description": "What gets shared with accountability partner"
+    },
+    "send_weekly_email": {
+      "type": "boolean",
+      "default": false
+    },
+    "send_relapse_alert": {
+      "type": "boolean",
+      "default": false
+    },
+    "send_missed_checkin_alert": {
+      "type": "boolean",
+      "default": false
+    },
+    "onboarding_complete": {
+      "type": "boolean",
+      "default": false
+    },
+    "streak_start_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When current streak started"
+    },
+    "total_urges_resisted": {
+      "type": "number",
+      "default": 0
+    },
+    "total_relapses": {
+      "type": "number",
+      "default": 0
+    },
+    "blocked_websites": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of blocked website domains"
+    },
+    "blocked_keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Blocked search keywords"
+    },
+    "high_risk_apps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "High-risk app reminders"
+    },
+    "lockdown_windows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "string"
+          },
+          "end": {
+            "type": "string"
+          },
+          "days": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "description": "Scheduled lockdown time windows"
+    },
+    "hard_mode_enabled": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": []
+}

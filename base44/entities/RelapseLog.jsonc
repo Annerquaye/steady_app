@@ -1,0 +1,40 @@
+{
+  "name": "RelapseLog",
+  "type": "object",
+  "properties": {
+    "trigger": {
+      "type": "string",
+      "description": "What triggered the relapse"
+    },
+    "what_happened_before": {
+      "type": "string",
+      "description": "Events leading up to relapse"
+    },
+    "what_to_change": {
+      "type": "string",
+      "description": "What can be changed next time"
+    },
+    "tighten_restrictions": {
+      "type": "boolean",
+      "default": false
+    },
+    "notify_partner": {
+      "type": "boolean",
+      "default": false
+    },
+    "mood_before": {
+      "type": "string",
+      "enum": [
+        "great",
+        "good",
+        "neutral",
+        "low",
+        "terrible"
+      ]
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": []
+}

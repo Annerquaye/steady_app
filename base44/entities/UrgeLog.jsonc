@@ -1,0 +1,44 @@
+{
+  "name": "UrgeLog",
+  "type": "object",
+  "properties": {
+    "feeling": {
+      "type": "string",
+      "description": "What the user was feeling"
+    },
+    "trigger": {
+      "type": "string",
+      "description": "What triggered the urge"
+    },
+    "intensity": {
+      "type": "number",
+      "description": "Urge intensity 1-10"
+    },
+    "intervention_used": {
+      "type": "string",
+      "description": "What intervention was used"
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "resisted",
+        "relapsed"
+      ],
+      "description": "Whether urge was resisted or led to relapse"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "description": "How long the urge lasted"
+    },
+    "time_of_day": {
+      "type": "string",
+      "description": "Time when urge occurred"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "outcome"
+  ]
+}
