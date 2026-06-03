@@ -1,48 +1,69 @@
 import React from 'react';
-import { TrendingUp } from 'lucide-react';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { subDays, format, isAfter } from 'date-fns';
 
-const moodValues = { terrible: 1, low: 2, neutral: 3, good: 4, great: 5 };
-const moodEmojis = { terrible: '😞', low: '😔', neutral: '😐', good: '🙂', great: '😊' };
+const MOOD_SCORE = { terrible: 1, low: 2, neutral: 3, good: 4, great: 5 };
+const MOOD_EMOJI = { 1: '😞', 2: '😕', 3: '😐', 4: '🙂', 5: '😊' };
 
 export default function MoodTrend({ journals }) {
-  const recent = journals.slice(0, 7).reverse();
+  const last30 = subDays(new Date(), 30);
+
+  const recent = journals.filter(j => isAfter(new Date(j.created_date), last30));
 
   if (recent.length === 0) {
     return (
-      <div className="bg-card rounded-xl p-4 border border-border">
-        <div className="flex items-center gap-2 mb-2">
-          <TrendingUp className="w-4 h-4 text-chart-2" />
-          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Mood trend</span>
+      <div className="bg-card rounded-2xl p-4 border border-border">
+        <div className="flex items-center justify-between mb-1">
+          <h3 className="text-sm font-semibold">Mood trend</h3>
+          <span className="text-xs text-muted-foreground">Last 30 days</span>
         </div>
-        <p className="text-sm text-muted-foreground">Start journaling to see your mood trend.</p>
+        <p className="text-xs text-muted-foreground py-4 text-center">No journal entries yet. Start journaling to see your mood trend.</p>
       </div>
     );
   }
 
-  const avgMood = recent.reduce((sum, j) => sum + (moodValues[j.mood] || 3), 0) / recent.length;
-  const maxH = 32;
+  // Group by day and average mood
+  const dayMap = {};
+  recent.forEach(j => {
+    const key = format(new Date(j.created_date), 'MMM d');
+    if (!dayMap[key]) dayMap[key] = [];
+    dayMap[key].push(MOOD_SCORE[j.mood] || 3);
+  });
+
+  const data = Object.entries(dayMap).map(([day, scores]) => ({
+    day,
+    mood: parseFloat((scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1)),
+  }));
+
+  const avgMood = data.reduce((s, d) => s + d.mood, 0) / data.length;
+  const avgEmoji = MOOD_EMOJI[Math.round(avgMood)];
 
   return (
-    <div className="bg-card rounded-xl p-4 border border-border">
-      <div className="flex items-center gap-2 mb-4">
-        <TrendingUp className="w-4 h-4 text-chart-2" />
-        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Mood trend</span>
-        <span className="ml-auto text-xs text-muted-foreground">Avg: {moodEmojis[Object.keys(moodValues).find(k => moodValues[k] === Math.round(avgMood))] || '😐'}</span>
+    <div className="bg-card rounded-2xl p-4 border border-border">
+      <div className="flex items-center justify-between mb-1">
+        <h3 className="text-sm font-semibold">Mood trend</h3>
+        <span className="text-xs text-muted-foreground">Last 30 days</span>
       </div>
-      <div className="flex items-end gap-1 h-10">
-        {recent.map((j, i) => {
-          const val = moodValues[j.mood] || 3;
-          const h = (val / 5) * maxH;
-          return (
-            <div key={i} className="flex-1 flex flex-col items-center gap-1">
-              <div
-                className="w-full rounded-sm bg-primary/30 transition-all"
-                style={{ height: `${h}px` }}
-              />
-            </div>
-          );
-        })}
-      </div>
+      <p className="text-xs text-muted-foreground mb-4">
+        Average mood: {avgEmoji} {['', 'Terrible', 'Low', 'Neutral', 'Good', 'Great'][Math.round(avgMood)]}
+      </p>
+      <ResponsiveContainer width="100%" height={120}>
+        <AreaChart data={data}>
+          <defs>
+            <linearGradient id="moodGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="hsl(160 30% 42%)" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="hsl(160 30% 42%)" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <XAxis dataKey="day" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
+          <YAxis domain={[1, 5]} hide />
+          <Tooltip
+            contentStyle={{ fontSize: 12, borderRadius: 8, border: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
+            formatter={(val) => [MOOD_EMOJI[Math.round(val)] + ' ' + ['', 'Terrible', 'Low', 'Neutral', 'Good', 'Great'][Math.round(val)], 'Mood']}
+          />
+          <Area type="monotone" dataKey="mood" stroke="hsl(160 30% 42%)" strokeWidth={2} fill="url(#moodGrad)" dot={{ r: 3, fill: 'hsl(160 30% 42%)' }} />
+        </AreaChart>
+      </ResponsiveContainer>
     </div>
   );
 }

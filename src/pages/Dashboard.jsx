@@ -7,8 +7,8 @@ import StatsGrid from '@/components/dashboard/StatsGrid';
 import DailyMessage from '@/components/dashboard/DailyMessage';
 import TriggerInsights from '@/components/dashboard/TriggerInsights';
 import MoodTrend from '@/components/dashboard/MoodTrend';
+import UrgeFrequencyChart from '@/components/dashboard/UrgeFrequencyChart';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
 import { BarChart3, FileText } from 'lucide-react';
 
 export default function Dashboard() {
@@ -24,17 +24,16 @@ export default function Dashboard() {
 
   const { data: urges } = useQuery({
     queryKey: ['urges'],
-    queryFn: () => base44.entities.UrgeLog.list('-created_date', 50),
+    queryFn: () => base44.entities.UrgeLog.list('-created_date', 100),
     initialData: [],
   });
 
   const { data: journals } = useQuery({
     queryKey: ['journals'],
-    queryFn: () => base44.entities.JournalEntry.list('-created_date', 7),
+    queryFn: () => base44.entities.JournalEntry.list('-created_date', 100),
     initialData: [],
   });
 
-  // Redirect to onboarding if no profile
   React.useEffect(() => {
     if (!loadingProfile && !profile) {
       navigate('/onboarding');
@@ -59,7 +58,6 @@ export default function Dashboard() {
 
   return (
     <div className="p-6 space-y-5">
-      {/* Header */}
       <div>
         <h1 className="text-2xl font-heading font-bold">Your recovery</h1>
         <p className="text-sm text-muted-foreground mt-0.5">One day at a time.</p>
@@ -69,9 +67,9 @@ export default function Dashboard() {
       <StatsGrid profile={profile} urges={urges} />
       <DailyMessage />
       <MoodTrend journals={journals} />
+      <UrgeFrequencyChart urges={urges} />
       <TriggerInsights urges={urges} profile={profile} />
 
-      {/* Quick Actions */}
       <div className="grid grid-cols-2 gap-3">
         <Link to="/review">
           <div className="bg-card rounded-xl border border-border p-4 hover:border-primary/20 transition-colors">
