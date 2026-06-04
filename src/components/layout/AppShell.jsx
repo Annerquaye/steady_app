@@ -38,7 +38,7 @@ export default function AppShell() {
     <div className="min-h-screen bg-background flex flex-col">
       <SubscriptionBanner />
 
-      {/* pt-safe accounts for iOS status bar notch */}
+      {/* Tab pages get safe-area top padding here; sub-pages handle it via PageHeader */}
       <main
         ref={mainRef}
         className="flex-1 overflow-y-auto pb-20 max-w-lg mx-auto w-full"

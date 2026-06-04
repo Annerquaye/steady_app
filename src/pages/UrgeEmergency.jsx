@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import PageHeader from '@/components/layout/PageHeader';
 import {
   Wind, Dumbbell, TreePine, PenLine, Droplets, Phone,
-  ArrowLeft, Check, X, Timer, MessageCircle, Heart
+  Check, X, Timer, MessageCircle, Heart
 } from 'lucide-react';
 
 const FEELINGS = ['Anxious', 'Bored', 'Lonely', 'Stressed', 'Tired', 'Sad', 'Restless', 'Angry'];
@@ -76,11 +77,9 @@ export default function UrgeEmergency() {
   const progress = ((600 - timeLeft) / 600) * 100;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col p-6 max-w-lg mx-auto">
-      <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-sm text-muted-foreground mb-6">
-        <ArrowLeft className="w-4 h-4" /> Back to safety
-      </button>
-
+    <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto">
+      <PageHeader title="Urge Mode" />
+      <div className="flex-1 flex flex-col p-6">
       <AnimatePresence mode="wait">
         <motion.div
           key={step}
@@ -218,6 +217,7 @@ export default function UrgeEmergency() {
           )}
         </motion.div>
       </AnimatePresence>
+      </div>
     </div>
   );
 }

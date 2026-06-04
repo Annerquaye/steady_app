@@ -257,7 +257,10 @@ export default function Onboarding() {
   const progressIdx = progressSteps.indexOf(current);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto">
+    <div
+      className="min-h-screen bg-background flex flex-col max-w-lg mx-auto"
+      style={{ paddingTop: 'env(safe-area-inset-top, 0px)', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+    >
       {/* Top bar */}
       {showProgress && (
         <div className="px-5 pt-6 pb-0">

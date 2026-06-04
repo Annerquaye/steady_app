@@ -3,8 +3,9 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { subDays, differenceInDays, format } from 'date-fns';
-import { BarChart3, ShieldCheck, AlertTriangle, Lightbulb, Loader2, Calendar } from 'lucide-react';
+import { BarChart3, Loader2, Calendar } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import PageHeader from '@/components/layout/PageHeader';
 
 export default function WeeklyReview() {
   const [report, setReport] = useState(null);
@@ -76,9 +77,10 @@ Keep it concise but insightful. Reference their specific data.`;
   };
 
   return (
+    <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto">
+      <PageHeader title="Weekly Review" />
     <div className="p-6 space-y-5">
       <div>
-        <h1 className="text-2xl font-heading font-bold">Weekly Review</h1>
         <p className="text-sm text-muted-foreground">
           {format(subDays(new Date(), 7), 'MMM d')} — {format(new Date(), 'MMM d, yyyy')}
         </p>
@@ -115,6 +117,7 @@ Keep it concise but insightful. Reference their specific data.`;
           </Button>
         </div>
       )}
+    </div>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import PageHeader from '@/components/layout/PageHeader';
 import { ArrowRight, ArrowLeft, Heart, Check } from 'lucide-react';
 
 const MOODS = ['great', 'good', 'neutral', 'low', 'terrible'];
@@ -54,7 +55,9 @@ export default function RelapseReflection() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col p-6 max-w-lg mx-auto">
+    <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto">
+      <PageHeader title="Relapse Reflection" />
+      <div className="flex-1 flex flex-col p-6">
       {/* Supportive header */}
       <div className="text-center mb-8">
         <Heart className="w-8 h-8 text-primary mx-auto mb-3" />
@@ -193,6 +196,7 @@ export default function RelapseReflection() {
             {saving ? 'Saving...' : 'Complete reflection'} <Check className="w-4 h-4" />
           </Button>
         )}
+      </div>
       </div>
     </div>
   );

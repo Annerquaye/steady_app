@@ -105,14 +105,20 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Prevent accidental text selection on interactive UI chrome */
-nav a,
-nav button,
+/* Prevent accidental text selection on ALL interactive elements */
+a,
 button,
 [role="button"],
+[role="tab"],
+[role="menuitem"],
+label,
+select,
+summary,
 svg {
   user-select: none;
   -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
 }
 
 /* Custom scrollbar */
