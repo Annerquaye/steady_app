@@ -20,6 +20,8 @@ import Blocking from '@/pages/Blocking';
 import Settings from '@/pages/Settings';
 import WeeklyReview from '@/pages/WeeklyReview';
 import RelapseReflection from '@/pages/RelapseReflection';
+import Pricing from '@/pages/Pricing';
+import Checkout from '@/pages/Checkout';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -56,6 +58,8 @@ const AuthenticatedApp = () => {
         <Route path="/urge" element={<UrgeEmergency />} />
         <Route path="/relapse" element={<RelapseReflection />} />
         <Route path="/review" element={<WeeklyReview />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/checkout" element={<Checkout />} />
 
         <Route element={<AppShell />}>
           <Route path="/" element={<Dashboard />} />

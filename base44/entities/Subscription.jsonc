@@ -1,0 +1,67 @@
+{
+  "name": "Subscription",
+  "type": "object",
+  "properties": {
+    "stripe_customer_id": {
+      "type": "string"
+    },
+    "stripe_subscription_id": {
+      "type": "string"
+    },
+    "stripe_price_id": {
+      "type": "string"
+    },
+    "plan": {
+      "type": "string",
+      "enum": [
+        "starter",
+        "recovery_pro",
+        "elite"
+      ]
+    },
+    "billing_interval": {
+      "type": "string",
+      "enum": [
+        "month",
+        "year"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "trialing",
+        "active",
+        "past_due",
+        "canceled",
+        "incomplete"
+      ]
+    },
+    "trial_start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "trial_end": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "current_period_start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "current_period_end": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "cancel_at_period_end": {
+      "type": "boolean",
+      "default": false
+    },
+    "email": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "plan",
+    "status"
+  ]
+}

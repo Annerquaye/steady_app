@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, BookHeart, Shield, MessageCircle, Settings, Flame } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import SubscriptionBanner from '@/components/subscription/SubscriptionBanner';
 
 const navItems = [
   { path: '/', icon: LayoutDashboard, label: 'Home' },
@@ -16,6 +17,7 @@ export default function AppShell() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <SubscriptionBanner />
       <main className="flex-1 pb-20 max-w-lg mx-auto w-full">
         <Outlet />
       </main>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
@@ -9,11 +10,35 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
-import { Users, Shield, Trash2, LogOut, ChevronRight, Eye } from 'lucide-react';
+import { Users, Shield, Trash2, LogOut, ChevronRight, Eye, CreditCard, Zap } from 'lucide-react';
+import { format, differenceInDays } from 'date-fns';
+
+const PLAN_NAMES = { starter: 'Starter', recovery_pro: 'Recovery Pro', elite: 'Elite Recovery' };
 
 export default function Settings() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
+  const [portalLoading, setPortalLoading] = useState(false);
+
+  const { data: subscriptions } = useQuery({
+    queryKey: ['subscriptions'],
+    queryFn: () => base44.entities.Subscription.list('-created_date', 1),
+    initialData: [],
+  });
+
+  const sub = subscriptions?.[0];
+
+  const handleManageBilling = async () => {
+    if (!sub?.stripe_subscription_id) return;
+    setPortalLoading(true);
+    const res = await base44.functions.invoke('manageSubscription', {
+      action: 'portal',
+      subscription_id: sub.stripe_subscription_id,
+    });
+    if (res.data?.url) window.location.href = res.data.url;
+    else setPortalLoading(false);
+  };
 
   const { data: profiles } = useQuery({
     queryKey: ['userProfile'],
@@ -61,6 +86,51 @@ export default function Settings() {
       <div>
         <h1 className="text-2xl font-heading font-bold">Settings</h1>
         <p className="text-sm text-muted-foreground">Your privacy, your control.</p>
+      </div>
+
+      {/* Subscription */}
+      <div className="bg-card rounded-2xl border border-border p-5 space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+            <CreditCard className="w-4 h-4 text-primary" />
+          </div>
+          <h3 className="text-sm font-semibold">Subscription</h3>
+        </div>
+        {sub ? (
+          <div className="space-y-3">
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-muted-foreground">Plan</span>
+              <span className="font-semibold">{PLAN_NAMES[sub.plan] || sub.plan}</span>
+            </div>
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-muted-foreground">Status</span>
+              <span className={`font-semibold capitalize ${sub.status === 'trialing' ? 'text-accent' : sub.status === 'active' ? 'text-primary' : 'text-destructive'}`}>
+                {sub.status === 'trialing' ? `Trial (${differenceInDays(new Date(sub.trial_end), new Date())} days left)` : sub.status}
+              </span>
+            </div>
+            {sub.current_period_end && (
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-muted-foreground">{sub.cancel_at_period_end ? 'Access until' : 'Next billing'}</span>
+                <span className="font-medium">{format(new Date(sub.current_period_end), 'MMM d, yyyy')}</span>
+              </div>
+            )}
+            {sub.cancel_at_period_end && (
+              <div className="text-xs text-destructive bg-destructive/10 rounded-lg p-2.5">
+                Your subscription will end on {format(new Date(sub.current_period_end), 'MMM d, yyyy')}.
+              </div>
+            )}
+            <Button variant="outline" className="w-full" onClick={handleManageBilling} disabled={portalLoading}>
+              <CreditCard className="w-4 h-4" /> {portalLoading ? 'Loading...' : 'Manage Billing & Invoices'}
+            </Button>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-sm text-muted-foreground">No active subscription. Upgrade to unlock all features.</p>
+            <Button className="w-full gap-2" onClick={() => navigate('/pricing')}>
+              <Zap className="w-4 h-4" /> View Plans
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Accountability Partner */}

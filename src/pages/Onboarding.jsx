@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -596,62 +596,23 @@ export default function Onboarding() {
 
           {/* ── PRICING ── */}
           {current === 'pricing' && (
-            <div className="flex-1 flex flex-col pt-4 gap-4">
-              <div className="text-center">
-                <h1 className="text-2xl font-heading font-bold mb-1">Choose Your Plan</h1>
-                <p className="text-sm text-muted-foreground">Start free. Upgrade when you're ready.</p>
-              </div>
-
-              <div className="space-y-3">
-                {PLANS.map(plan => (
-                  <button
-                    key={plan.id}
-                    onClick={() => setSelectedPlan(plan.id)}
-                    className={cn(
-                      "w-full text-left rounded-2xl border-2 p-4 transition-all",
-                      selectedPlan === plan.id
-                        ? plan.highlight ? "border-primary bg-primary/5" : "border-foreground/20 bg-secondary/40"
-                        : "border-border hover:border-border/80 bg-card"
-                    )}
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-heading font-bold text-base">{plan.name}</span>
-                          {plan.badge && (
-                            <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full", plan.badgeColor)}>{plan.badge}</span>
-                          )}
-                        </div>
-                        {plan.trial && <p className="text-xs text-primary font-semibold mt-0.5">{plan.trial}</p>}
-                        <p className="text-xs text-muted-foreground mt-1">{plan.desc}</p>
-                      </div>
-                      <div className="text-right flex-shrink-0 ml-3">
-                        <span className="text-xl font-heading font-bold">{plan.price}</span>
-                        <span className="text-xs text-muted-foreground">{plan.period}</span>
-                      </div>
-                    </div>
-                    <div className="space-y-1 mt-3">
-                      {plan.features.map(f => (
-                        <div key={f} className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <Check className="w-3 h-3 text-primary flex-shrink-0" />
-                          <span>{f}</span>
-                        </div>
-                      ))}
-                    </div>
-                    {selectedPlan === plan.id && (
-                      <div className="mt-3 pt-3 border-t border-border/50">
-                        <p className="text-xs text-primary font-semibold flex items-center gap-1">
-                          <Check className="w-3 h-3" /> Selected — {plan.trial ? 'free trial, then ' + plan.price + plan.period : plan.price + plan.period}
-                        </p>
-                      </div>
-                    )}
-                  </button>
+            <div className="flex-1 flex flex-col pt-4 gap-4 items-center justify-center text-center">
+              <div className="text-5xl">🎯</div>
+              <h1 className="text-2xl font-heading font-bold">Your plan is ready</h1>
+              <p className="text-sm text-muted-foreground max-w-xs">
+                Choose the right plan on the next screen. Recovery Pro includes a 7-day free trial — no charge until your trial ends.
+              </p>
+              <div className="bg-primary/10 rounded-2xl border border-primary/20 p-4 w-full text-left space-y-2">
+                {['AI Recovery Coach (24/7)', 'Urge Emergency Mode', 'Trigger Analytics & Insights', 'Accountability Partner Tools', '7-day free trial included'].map(f => (
+                  <div key={f} className="flex items-center gap-2 text-sm">
+                    <Check className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+                    <span>{f}</span>
+                  </div>
                 ))}
               </div>
-
-              <div className="flex items-center gap-2 justify-center text-xs text-muted-foreground">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <Lock className="w-3 h-3" />
-                <span>Cancel anytime. You'll be reminded before billing.</span>
+                <span>Cancel anytime. Secured by Stripe.</span>
               </div>
             </div>
           )}
@@ -712,22 +673,29 @@ export default function Onboarding() {
           </Button>
         )}
         {step < STEPS.length - 1 ? (
-          <Button
-            onClick={() => setStep(s => s + 1)}
-            disabled={!canProceed()}
-            className={cn("gap-2", current === 'welcome' ? 'px-8' : '', current === 'trial' || current === 'results' ? 'px-8' : '')}
-            size={current === 'welcome' || current === 'trial' || current === 'results' ? 'lg' : 'default'}
-          >
-            {current === 'welcome' && 'Get Started'}
-            {current === 'motivation' && 'Continue'}
-            {current === 'cost' && 'Continue'}
-            {current === 'triggers' && 'Continue'}
-            {current === 'risk_profile' && 'See My Results'}
-            {current === 'results' && 'View My Recovery Plan'}
-            {current === 'trial' && 'See Pricing'}
-            {current === 'pricing' && <>Start {selectedPlan === 'starter' ? 'Free' : '7-Day Trial'}</>}
-            <ArrowRight className="w-4 h-4" />
-          </Button>
+          current === 'pricing' ? (
+            <Button asChild size="lg" className="gap-2 px-8">
+              <Link to="/pricing">
+                See Plans <ArrowRight className="w-4 h-4" />
+              </Link>
+            </Button>
+          ) : (
+            <Button
+              onClick={() => setStep(s => s + 1)}
+              disabled={!canProceed()}
+              className={cn("gap-2", current === 'welcome' || current === 'trial' || current === 'results' ? 'px-8' : '')}
+              size={current === 'welcome' || current === 'trial' || current === 'results' ? 'lg' : 'default'}
+            >
+              {current === 'welcome' && 'Get Started'}
+              {current === 'motivation' && 'Continue'}
+              {current === 'cost' && 'Continue'}
+              {current === 'triggers' && 'Continue'}
+              {current === 'risk_profile' && 'See My Results'}
+              {current === 'results' && 'View My Recovery Plan'}
+              {current === 'trial' && 'See Pricing'}
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          )
         ) : (
           <Button onClick={handleFinish} disabled={saving} className="gap-2">
             {saving ? 'Setting up...' : 'Begin My Journey'} <Check className="w-4 h-4" />
