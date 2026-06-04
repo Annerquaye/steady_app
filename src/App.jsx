@@ -22,6 +22,8 @@ import WeeklyReview from '@/pages/WeeklyReview';
 import RelapseReflection from '@/pages/RelapseReflection';
 import Pricing from '@/pages/Pricing';
 import Checkout from '@/pages/Checkout';
+import PrivacyPolicy from '@/pages/PrivacyPolicy';
+import TermsOfService from '@/pages/TermsOfService';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -60,6 +62,8 @@ const AuthenticatedApp = () => {
         <Route path="/review" element={<WeeklyReview />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
 
         <Route element={<AppShell />}>
           <Route path="/" element={<Dashboard />} />

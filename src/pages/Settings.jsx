@@ -59,18 +59,24 @@ export default function Settings() {
   const handleDeleteData = async () => {
     if (!profile) return;
     // Delete all user data
-    const urges = await base44.entities.UrgeLog.list();
-    const journals = await base44.entities.JournalEntry.list();
-    const relapses = await base44.entities.RelapseLog.list();
-    const chats = await base44.entities.ChatMessage.list();
+    const [urges, journals, relapses, chats, subs] = await Promise.all([
+      base44.entities.UrgeLog.list(),
+      base44.entities.JournalEntry.list(),
+      base44.entities.RelapseLog.list(),
+      base44.entities.ChatMessage.list(),
+      base44.entities.Subscription.list(),
+    ]);
 
-    for (const u of urges) await base44.entities.UrgeLog.delete(u.id);
-    for (const j of journals) await base44.entities.JournalEntry.delete(j.id);
-    for (const r of relapses) await base44.entities.RelapseLog.delete(r.id);
-    for (const c of chats) await base44.entities.ChatMessage.delete(c.id);
+    await Promise.all([
+      ...urges.map(u => base44.entities.UrgeLog.delete(u.id)),
+      ...journals.map(j => base44.entities.JournalEntry.delete(j.id)),
+      ...relapses.map(r => base44.entities.RelapseLog.delete(r.id)),
+      ...chats.map(c => base44.entities.ChatMessage.delete(c.id)),
+      ...subs.map(s => base44.entities.Subscription.delete(s.id)),
+    ]);
     await base44.entities.UserProfile.delete(profile.id);
 
-    window.location.reload();
+    base44.auth.logout();
   };
 
   if (!profile) {

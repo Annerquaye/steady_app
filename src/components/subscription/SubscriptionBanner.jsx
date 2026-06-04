@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { differenceInDays } from 'date-fns';
 import { Zap, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 export default function SubscriptionBanner() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
   const [dismissed, setDismissed] = useState(false);
   const [activated, setActivated] = useState(false);
+  const verifiedRef = useRef(false);
 
   // Verify subscription on return from Stripe
   const sessionId = searchParams.get('session_id');
@@ -23,14 +25,19 @@ export default function SubscriptionBanner() {
   });
 
   useEffect(() => {
-    if (sessionId && subscriptionActive) {
+    // Guard against double-invoke in strict mode / re-renders
+    if (sessionId && subscriptionActive && !verifiedRef.current) {
+      verifiedRef.current = true;
       base44.functions.invoke('verifyCheckoutSession', { session_id: sessionId }).then(() => {
         setActivated(true);
+        queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
         // Clean up URL params
         const newParams = new URLSearchParams(searchParams);
         newParams.delete('session_id');
         newParams.delete('subscription');
         setSearchParams(newParams, { replace: true });
+      }).catch(err => {
+        console.error('Failed to verify checkout session:', err);
       });
     }
   }, [sessionId]);

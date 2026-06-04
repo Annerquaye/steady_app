@@ -21,6 +21,7 @@ Deno.serve(async (req) => {
   try {
     if (event.type === 'customer.subscription.updated' || event.type === 'customer.subscription.deleted') {
       const sub = event.data.object;
+
       const existing = await base44.asServiceRole.entities.Subscription.filter({
         stripe_subscription_id: sub.id,
       });
@@ -35,17 +36,37 @@ Deno.serve(async (req) => {
 
       if (existing.length > 0) {
         await base44.asServiceRole.entities.Subscription.update(existing[0].id, updateData);
-        console.log('Subscription updated via webhook:', sub.id, sub.status);
+        console.log('Subscription updated via webhook:', sub.id, 'status:', sub.status);
+      } else {
+        console.warn('Webhook received for unknown subscription:', sub.id);
+      }
+    }
+
+    if (event.type === 'invoice.payment_failed') {
+      const invoice = event.data.object;
+      const subId = invoice.subscription;
+      if (subId) {
+        const existing = await base44.asServiceRole.entities.Subscription.filter({
+          stripe_subscription_id: subId,
+        });
+        if (existing.length > 0) {
+          await base44.asServiceRole.entities.Subscription.update(existing[0].id, {
+            status: 'past_due',
+          });
+          console.log('Subscription marked past_due due to payment failure:', subId);
+        }
       }
     }
 
     if (event.type === 'checkout.session.completed') {
-      console.log('Checkout session completed:', event.data.object.id);
+      // Subscription record is created via verifyCheckoutSession on the client side.
+      // Log for audit purposes only — no sensitive data.
+      console.log('Checkout session completed:', event.data.object.id, 'plan:', event.data.object.metadata?.plan);
     }
 
     return Response.json({ received: true });
   } catch (error) {
     console.error('Webhook handler error:', error.message);
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ error: 'Webhook processing failed' }, { status: 500 });
   }
 });

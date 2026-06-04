@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Lock, Shield, Check, ChevronLeft, AlertCircle, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { addDays, format } from 'date-fns';
+import { useQuery } from '@tanstack/react-query';
 
 const PLAN_META = {
   starter: {
@@ -52,6 +53,7 @@ export default function Checkout() {
 
   const handleCheckout = async () => {
     if (!email) { setError('Please enter your email address.'); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError('Please enter a valid email address.'); return; }
     if (!agreed) { setError('Please accept the terms to continue.'); return; }
 
     // Check if running in an iframe (preview mode)
@@ -199,7 +201,7 @@ export default function Checkout() {
                   className="mt-0.5 accent-primary"
                 />
                 <span className="text-xs text-muted-foreground leading-relaxed">
-                  I agree to the <span className="text-primary underline cursor-pointer">Terms of Service</span> and <span className="text-primary underline cursor-pointer">Privacy Policy</span>.
+                  I agree to the <Link to="/terms" className="text-primary underline" target="_blank">Terms of Service</Link> and <Link to="/privacy" className="text-primary underline" target="_blank">Privacy Policy</Link>.
                   {meta.trial && ' I understand my trial ends in 7 days and I can cancel before being charged.'}
                 </span>
               </label>
