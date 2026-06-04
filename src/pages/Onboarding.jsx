@@ -4,94 +4,219 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ArrowLeft, Check, Shield, Heart, Target, Clock, Users, Zap, Brain, Coffee, Moon } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Check, Shield, Lock, Star, Zap, Brain, BarChart3, Users, Bell, Globe, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const REASONS = [
-  { id: 'relationships', label: 'Improve my relationships', emoji: '❤️', description: 'Be more present with people I love' },
-  { id: 'focus', label: 'Regain focus & clarity', emoji: '🧠', description: 'Stop the brain fog and distraction' },
-  { id: 'self_respect', label: 'Respect myself more', emoji: '🛡️', description: 'Feel proud of who I am' },
-  { id: 'energy', label: 'Get my energy back', emoji: '⚡', description: 'Feel motivated and alive again' },
-  { id: 'control', label: 'Take back control', emoji: '🎯', description: 'Stop feeling controlled by urges' },
-  { id: 'mental_health', label: 'Improve mental health', emoji: '🌱', description: 'Reduce anxiety and depression' },
-  { id: 'intimacy', label: 'Fix intimacy issues', emoji: '🔥', description: 'Connect better with a partner' },
-  { id: 'personal_growth', label: 'Become a better person', emoji: '✨', description: 'Build the life I actually want' },
+/* ─── DATA ───────────────────────────────────────────────────────── */
+
+const MOTIVATIONS = [
+  { id: 'relationships', label: 'Save my relationships', emoji: '❤️', cost: 'Distance and disconnection from people I love' },
+  { id: 'focus', label: 'Regain focus & clarity', emoji: '🧠', cost: 'Hours of lost productivity and brain fog every day' },
+  { id: 'self_respect', label: 'Respect myself again', emoji: '🛡️', cost: 'Shame, guilt, and a sense of losing control' },
+  { id: 'energy', label: 'Get my energy back', emoji: '⚡', cost: 'Motivation crashes and constant fatigue' },
+  { id: 'control', label: 'Take back my life', emoji: '🎯', cost: 'Feeling enslaved to a habit I can\'t stop' },
+  { id: 'mental_health', label: 'Heal my mental health', emoji: '🌱', cost: 'Anxiety, depression, and low self-worth' },
+  { id: 'intimacy', label: 'Fix intimacy problems', emoji: '🔥', cost: 'Inability to connect and perform in real relationships' },
+  { id: 'confidence', label: 'Build real confidence', emoji: '✨', cost: 'Social anxiety and constant comparison to others' },
 ];
 
 const TRIGGERS = [
-  { label: 'Boredom', emoji: '😴' },
   { label: 'Stress', emoji: '😤' },
   { label: 'Loneliness', emoji: '😔' },
+  { label: 'Boredom', emoji: '😴' },
   { label: 'Anxiety', emoji: '😰' },
-  { label: 'Late-night scrolling', emoji: '🌙' },
-  { label: 'Alcohol', emoji: '🍺' },
   { label: 'Social media', emoji: '📱' },
-  { label: 'Being alone', emoji: '🏠' },
-  { label: 'Tiredness', emoji: '😩' },
-  { label: 'Rejection', emoji: '💔' },
+  { label: 'Late-night scrolling', emoji: '🌙' },
+  { label: 'Relationship issues', emoji: '💔' },
   { label: 'Procrastination', emoji: '⏳' },
   { label: 'After arguments', emoji: '😠' },
+  { label: 'Being alone', emoji: '🏠' },
+  { label: 'Other', emoji: '🔄' },
+];
+
+const FREQUENCY = [
+  { id: 'daily', label: 'Daily or more', hours: 3.5, risk: 92 },
+  { id: 'few_week', label: 'A few times a week', hours: 2.0, risk: 74 },
+  { id: 'weekly', label: 'About once a week', hours: 1.0, risk: 52 },
+  { id: 'monthly', label: 'A few times a month', hours: 0.4, risk: 31 },
 ];
 
 const TIMES = [
-  { label: 'Early morning', sublabel: '5–8 AM', emoji: '🌅' },
-  { label: 'Morning', sublabel: '8–11 AM', emoji: '☀️' },
-  { label: 'Afternoon', sublabel: '12–3 PM', emoji: '🌤️' },
-  { label: 'Late afternoon', sublabel: '3–6 PM', emoji: '🌇' },
+  { label: 'Morning', sublabel: '5–11 AM', emoji: '☀️' },
+  { label: 'Afternoon', sublabel: '12–5 PM', emoji: '🌤️' },
   { label: 'Evening', sublabel: '6–9 PM', emoji: '🌆' },
-  { label: 'Night', sublabel: '9 PM–12 AM', emoji: '🌙' },
-  { label: 'Late night', sublabel: '12–3 AM', emoji: '🌃' },
-  { label: 'Very late', sublabel: '3–5 AM', emoji: '🦉' },
+  { label: 'Night', sublabel: '9 PM–midnight', emoji: '🌙' },
+  { label: 'Late night', sublabel: 'After midnight', emoji: '🌃' },
+];
+
+const TRIED = [
+  { id: 'never', label: 'No, first time', emoji: '🌱' },
+  { id: 'few', label: 'Yes, a few times', emoji: '🔄' },
+  { id: 'many', label: 'Yes, many times', emoji: '💪' },
 ];
 
 const GOALS = [
   { id: 'quit_porn', label: 'Quit porn completely', emoji: '🚫' },
-  { id: 'reduce_masturbation', label: 'Reduce masturbation', emoji: '📉' },
-  { id: 'improve_focus', label: 'Improve focus', emoji: '🎯' },
-  { id: 'improve_relationships', label: 'Better relationships', emoji: '❤️' },
-  { id: 'improve_self_control', label: 'More self-control', emoji: '💪' },
-  { id: 'more_energy', label: 'More energy', emoji: '⚡' },
+  { id: 'focus', label: 'Improve focus', emoji: '🎯' },
+  { id: 'relationships', label: 'Better relationships', emoji: '❤️' },
+  { id: 'confidence', label: 'Real confidence', emoji: '✨' },
+  { id: 'self_control', label: 'More self-control', emoji: '💪' },
+  { id: 'peace', label: 'Inner peace', emoji: '🕊️' },
 ];
 
-const COMMITMENT_LEVELS = [
-  { id: 'casual', label: 'Taking it slow', description: 'Reduce gradually, no pressure', emoji: '🌱' },
-  { id: 'serious', label: 'Seriously committed', description: 'I\'m ready to do the work', emoji: '💪' },
-  { id: 'urgent', label: 'This is urgent', description: 'It\'s affecting my life badly', emoji: '🚨' },
+const FEATURES = [
+  { icon: Brain, label: 'AI Recovery Coach', desc: 'Available 24/7 when urges hit' },
+  { icon: Zap, label: 'Urge Emergency Mode', desc: 'Guided intervention in the moment' },
+  { icon: BarChart3, label: 'Advanced Trigger Analytics', desc: 'Understand your patterns deeply' },
+  { icon: Users, label: 'Accountability Partner Tools', desc: 'Controlled progress sharing' },
+  { icon: Globe, label: 'Website Blocking', desc: 'Remove temptation at the source' },
+  { icon: Star, label: 'Weekly Recovery Reports', desc: 'AI-powered progress summaries' },
+  { icon: Bell, label: 'Personalized Habit Plans', desc: 'Recovery roadmap built for you' },
 ];
 
-const steps = ['welcome', 'reason', 'commitment', 'triggers', 'times', 'goals', 'partner'];
+const TESTIMONIALS = [
+  { text: '"I tried every app out there. This one finally helped me hit 90 days."', author: 'Marcus, 28' },
+  { text: '"The AI coach talked me through my worst moment. I didn\'t relapse."', author: 'Jordan, 34' },
+  { text: '"My relationship improved dramatically. She noticed the difference."', author: 'Alex, 31' },
+];
+
+const PLANS = [
+  {
+    id: 'starter',
+    name: 'Starter',
+    price: '$4.99',
+    period: '/month',
+    badge: null,
+    desc: 'For users beginning their recovery journey.',
+    features: ['Streak tracking', 'Daily check-ins', 'Basic journaling', 'Progress dashboard'],
+    cta: 'Start Free',
+    highlight: false,
+  },
+  {
+    id: 'pro',
+    name: 'Recovery Pro',
+    price: '$14.99',
+    period: '/month',
+    trial: '7-day free trial',
+    badge: 'Most Popular',
+    badgeColor: 'bg-primary text-primary-foreground',
+    desc: 'For users serious about lasting change.',
+    features: ['Everything in Starter', 'AI Recovery Coach', 'Urge Emergency Mode', 'Trigger Analytics', 'Weekly Reports', 'Accountability Features', 'Smart Notifications'],
+    cta: 'Start Free Trial',
+    highlight: true,
+  },
+  {
+    id: 'elite',
+    name: 'Elite Recovery',
+    price: '$29.99',
+    period: '/month',
+    trial: '7-day free trial',
+    badge: 'Maximum Support',
+    badgeColor: 'bg-accent text-accent-foreground',
+    desc: 'For users who want the highest level of structure.',
+    features: ['Everything in Pro', 'Advanced AI Coaching', 'Personalized Recovery Plans', 'Multiple Partners', 'Family Progress Sharing', 'Deep Behavioral Analytics', 'Priority Support', 'Early Access Features'],
+    cta: 'Start Free Trial',
+    highlight: false,
+  },
+];
+
+const pageVariants = {
+  enter: { opacity: 0, x: 28 },
+  center: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: -28 },
+};
+
+/* ─── HELPERS ─────────────────────────────────────────────────────── */
+function calcResults(data) {
+  const freq = FREQUENCY.find(f => f.id === data.frequency) || FREQUENCY[1];
+  const hoursLostWeekly = freq.hours;
+  const annualHours = Math.round(hoursLostWeekly * 52);
+  const baseRisk = freq.risk;
+  const tried = data.tried_before === 'many' ? 8 : data.tried_before === 'few' ? 5 : 0;
+  const nightRisk = data.vulnerable_times?.some(t => t.includes('Night') || t.includes('Late')) ? 12 : 0;
+  const recoveryScore = Math.max(10, Math.min(95, 100 - baseRisk + tried - nightRisk));
+  const highRiskTime = data.vulnerable_times?.find(t => t.includes('Night') || t.includes('Late')) || data.vulnerable_times?.[0] || 'Evening';
+  return { annualHours, recoveryScore, highRiskTime, riskLevel: baseRisk > 70 ? 'High' : baseRisk > 45 ? 'Moderate' : 'Low' };
+}
+
+/* ─── STEP COMPONENTS ─────────────────────────────────────────────── */
+
+function SelectGrid({ items, field, data, toggle, cols = 2 }) {
+  return (
+    <div className={`grid grid-cols-${cols} gap-2.5`}>
+      {items.map(item => {
+        const key = item.id || item.label;
+        const val = item.id || item.label;
+        const selected = Array.isArray(data[field]) ? data[field].includes(val) : data[field] === val;
+        return (
+          <button
+            key={key}
+            onClick={() => toggle(field, val)}
+            className={cn(
+              "flex items-center gap-2.5 px-3 py-3 rounded-xl text-sm font-medium text-left transition-all border",
+              selected ? "bg-primary text-primary-foreground border-primary shadow-sm" : "bg-card border-border hover:border-primary/30"
+            )}
+          >
+            {item.emoji && <span className="text-xl flex-shrink-0">{item.emoji}</span>}
+            <div className="flex-1 min-w-0">
+              <p className="leading-tight truncate">{item.label}</p>
+              {item.sublabel && (
+                <p className={cn("text-[10px]", selected ? "text-primary-foreground/70" : "text-muted-foreground")}>{item.sublabel}</p>
+              )}
+            </div>
+            {selected && <Check className="w-3.5 h-3.5 flex-shrink-0" />}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ─── MAIN ────────────────────────────────────────────────────────── */
+
+const STEPS = ['welcome', 'motivation', 'cost', 'triggers', 'risk_profile', 'results', 'trial', 'pricing', 'partner'];
 
 export default function Onboarding() {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
+  const [saving, setSaving] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState('pro');
   const [data, setData] = useState({
-    reason_for_quitting: '',
-    commitment_level: '',
+    motivation: '',
+    what_its_costing: '',
+    what_would_improve: '',
     triggers: [],
+    frequency: '',
     vulnerable_times: [],
+    tried_before: '',
     goals: [],
     accountability_partner_email: '',
     accountability_partner_name: '',
   });
-  const [saving, setSaving] = useState(false);
 
-  const toggleArrayItem = (field, item) => {
+  const current = STEPS[step];
+
+  const set = (field, val) => setData(prev => ({ ...prev, [field]: val }));
+
+  const toggle = (field, val) => {
     setData(prev => ({
       ...prev,
-      [field]: prev[field].includes(item)
-        ? prev[field].filter(i => i !== item)
-        : [...prev[field], item]
+      [field]: Array.isArray(prev[field])
+        ? prev[field].includes(val) ? prev[field].filter(v => v !== val) : [...prev[field], val]
+        : prev[field] === val ? '' : val,
     }));
   };
 
   const canProceed = () => {
-    switch (steps[step]) {
+    switch (current) {
       case 'welcome': return true;
-      case 'reason': return data.reason_for_quitting.length > 0;
-      case 'commitment': return data.commitment_level.length > 0;
+      case 'motivation': return !!data.motivation;
+      case 'cost': return !!data.what_its_costing || !!data.what_would_improve;
       case 'triggers': return data.triggers.length > 0;
-      case 'times': return data.vulnerable_times.length > 0;
-      case 'goals': return data.goals.length > 0;
+      case 'risk_profile': return !!data.frequency && data.vulnerable_times.length > 0 && !!data.tried_before;
+      case 'results': return true;
+      case 'trial': return true;
+      case 'pricing': return true;
       case 'partner': return true;
       default: return false;
     }
@@ -99,9 +224,9 @@ export default function Onboarding() {
 
   const handleFinish = async () => {
     setSaving(true);
-    const reasonLabel = REASONS.find(r => r.id === data.reason_for_quitting)?.label || data.reason_for_quitting;
+    const motLabel = MOTIVATIONS.find(m => m.id === data.motivation)?.label || data.motivation;
     await base44.entities.UserProfile.create({
-      reason_for_quitting: reasonLabel,
+      reason_for_quitting: motLabel,
       triggers: data.triggers,
       vulnerable_times: data.vulnerable_times,
       goals: data.goals,
@@ -124,28 +249,23 @@ export default function Onboarding() {
     navigate('/');
   };
 
-  const pageVariants = {
-    enter: { opacity: 0, x: 30 },
-    center: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: -30 },
-  };
+  const results = calcResults(data);
+  const motObj = MOTIVATIONS.find(m => m.id === data.motivation);
 
-  const currentStep = steps[step];
+  const showProgress = !['welcome', 'results', 'trial', 'pricing'].includes(current);
+  const progressSteps = ['motivation', 'cost', 'triggers', 'risk_profile'];
+  const progressIdx = progressSteps.indexOf(current);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col px-5 py-8 max-w-lg mx-auto">
-      {/* Progress bar — hidden on welcome */}
-      {currentStep !== 'welcome' && (
-        <div className="flex gap-1.5 mb-8">
-          {steps.slice(1).map((_, i) => (
-            <div
-              key={i}
-              className={cn(
-                "h-1 flex-1 rounded-full transition-colors duration-300",
-                i < step ? "bg-primary" : "bg-border"
-              )}
-            />
-          ))}
+    <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto">
+      {/* Top bar */}
+      {showProgress && (
+        <div className="px-5 pt-6 pb-0">
+          <div className="flex gap-1.5 mb-5">
+            {progressSteps.map((_, i) => (
+              <div key={i} className={cn("h-1 flex-1 rounded-full transition-all duration-400", i <= progressIdx ? "bg-primary" : "bg-border")} />
+            ))}
+          </div>
         </div>
       )}
 
@@ -156,27 +276,27 @@ export default function Onboarding() {
           initial="enter"
           animate="center"
           exit="exit"
-          transition={{ duration: 0.22 }}
-          className="flex-1 flex flex-col"
+          transition={{ duration: 0.2 }}
+          className="flex-1 flex flex-col px-5 pb-8"
         >
-          {/* WELCOME */}
-          {currentStep === 'welcome' && (
-            <div className="flex-1 flex flex-col items-center justify-center text-center gap-6 py-8">
-              <div className="text-6xl">🌿</div>
-              <div>
-                <h1 className="text-3xl font-heading font-bold mb-3">You're not alone.</h1>
+          {/* ── WELCOME ── */}
+          {current === 'welcome' && (
+            <div className="flex-1 flex flex-col items-center justify-center text-center gap-7 py-10">
+              <div className="text-7xl">🌿</div>
+              <div className="space-y-3">
+                <h1 className="text-3xl font-heading font-bold leading-tight">Take Back Control<br />of Your Attention</h1>
                 <p className="text-muted-foreground text-base leading-relaxed max-w-xs mx-auto">
-                  This is a private, judgment-free space to help you break free and build a better life.
+                  A private, science-backed recovery companion that helps you rewire your habits, understand your triggers, and rebuild the life you want.
                 </p>
               </div>
-              <div className="flex flex-col gap-2 w-full max-w-xs">
+              <div className="w-full space-y-2">
                 {[
-                  { icon: '🔒', text: 'Completely private — no one sees your data' },
-                  { icon: '🧠', text: 'Science-backed strategies that actually work' },
-                  { icon: '💬', text: 'AI coach available 24/7 when you need support' },
-                ].map(({ icon, text }) => (
-                  <div key={text} className="flex items-center gap-3 bg-secondary/50 rounded-xl px-4 py-3 text-left">
-                    <span className="text-xl">{icon}</span>
+                  { icon: Lock, text: 'Completely private — encrypted, never shared' },
+                  { icon: Brain, text: 'AI-powered coaching when you need it most' },
+                  { icon: Shield, text: 'Proven strategies backed by behavioral science' },
+                ].map(({ icon: Icon, text }) => (
+                  <div key={text} className="flex items-center gap-3 bg-secondary/60 rounded-xl px-4 py-3 text-left">
+                    <Icon className="w-4 h-4 text-primary flex-shrink-0" />
                     <p className="text-sm text-foreground/80">{text}</p>
                   </div>
                 ))}
@@ -184,176 +304,378 @@ export default function Onboarding() {
             </div>
           )}
 
-          {/* REASON */}
-          {currentStep === 'reason' && (
-            <div className="flex-1 flex flex-col">
-              <h1 className="text-2xl font-heading font-semibold mb-1">Why are you here?</h1>
-              <p className="text-muted-foreground text-sm mb-6">Choose what resonates most with you.</p>
-              <div className="grid grid-cols-1 gap-2.5">
-                {REASONS.map(({ id, label, emoji, description }) => (
+          {/* ── MOTIVATION ── */}
+          {current === 'motivation' && (
+            <div className="flex-1 flex flex-col pt-2">
+              <h1 className="text-2xl font-heading font-semibold mb-1">Why do you want to quit?</h1>
+              <p className="text-sm text-muted-foreground mb-5">Your reason is your fuel. Choose what resonates most.</p>
+              <div className="space-y-2">
+                {MOTIVATIONS.map(({ id, label, emoji }) => (
                   <button
                     key={id}
-                    onClick={() => setData({ ...data, reason_for_quitting: id })}
+                    onClick={() => set('motivation', id)}
                     className={cn(
-                      "flex items-center gap-3 px-4 py-3.5 rounded-xl text-left transition-all border",
-                      data.reason_for_quitting === id
+                      "w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-left transition-all border",
+                      data.motivation === id
                         ? "bg-primary text-primary-foreground border-primary shadow-md"
-                        : "bg-card border-border hover:border-primary/30 hover:bg-secondary/60"
+                        : "bg-card border-border hover:border-primary/30"
                     )}
                   >
                     <span className="text-2xl">{emoji}</span>
-                    <div>
-                      <p className="text-sm font-semibold leading-tight">{label}</p>
-                      <p className={cn("text-xs mt-0.5", data.reason_for_quitting === id ? "text-primary-foreground/70" : "text-muted-foreground")}>{description}</p>
-                    </div>
-                    {data.reason_for_quitting === id && <Check className="w-4 h-4 ml-auto flex-shrink-0" />}
+                    <p className="text-sm font-semibold flex-1">{label}</p>
+                    {data.motivation === id && <Check className="w-4 h-4 flex-shrink-0" />}
                   </button>
                 ))}
               </div>
             </div>
           )}
 
-          {/* COMMITMENT */}
-          {currentStep === 'commitment' && (
-            <div className="flex-1 flex flex-col">
-              <h1 className="text-2xl font-heading font-semibold mb-1">How committed are you?</h1>
-              <p className="text-muted-foreground text-sm mb-6">Be honest — there's no wrong answer.</p>
-              <div className="flex flex-col gap-3">
-                {COMMITMENT_LEVELS.map(({ id, label, description, emoji }) => (
-                  <button
-                    key={id}
-                    onClick={() => setData({ ...data, commitment_level: id })}
-                    className={cn(
-                      "flex items-center gap-4 px-5 py-5 rounded-2xl text-left transition-all border-2",
-                      data.commitment_level === id
-                        ? "bg-primary text-primary-foreground border-primary shadow-lg scale-[1.02]"
-                        : "bg-card border-border hover:border-primary/30"
-                    )}
-                  >
-                    <span className="text-4xl">{emoji}</span>
-                    <div className="flex-1">
-                      <p className="font-semibold">{label}</p>
-                      <p className={cn("text-sm mt-0.5", data.commitment_level === id ? "text-primary-foreground/70" : "text-muted-foreground")}>{description}</p>
-                    </div>
-                    {data.commitment_level === id && <Check className="w-5 h-5 flex-shrink-0" />}
-                  </button>
-                ))}
+          {/* ── COST / VISION ── */}
+          {current === 'cost' && (
+            <div className="flex-1 flex flex-col pt-2 gap-5">
+              <div>
+                <div className="text-3xl mb-2">💭</div>
+                <h1 className="text-2xl font-heading font-semibold mb-1">What is this costing you?</h1>
+                <p className="text-sm text-muted-foreground mb-4">Be honest with yourself. This is only for you.</p>
+                {motObj && (
+                  <div className="bg-secondary/50 rounded-xl px-4 py-3 mb-4 text-sm text-muted-foreground italic">
+                    "{motObj.cost}"
+                  </div>
+                )}
+                <textarea
+                  className="w-full bg-card border border-border rounded-xl p-3.5 text-sm resize-none outline-none focus:border-primary/50 transition-colors"
+                  rows={3}
+                  placeholder="e.g. Hours wasted, feel ashamed, avoiding real connection..."
+                  value={data.what_its_costing}
+                  onChange={e => set('what_its_costing', e.target.value)}
+                />
+              </div>
+              <div>
+                <p className="text-sm font-semibold mb-2">What would improve if you succeeded?</p>
+                <textarea
+                  className="w-full bg-card border border-border rounded-xl p-3.5 text-sm resize-none outline-none focus:border-primary/50 transition-colors"
+                  rows={3}
+                  placeholder="e.g. More energy, feel proud, better relationships, sharper focus..."
+                  value={data.what_would_improve}
+                  onChange={e => set('what_would_improve', e.target.value)}
+                />
               </div>
             </div>
           )}
 
-          {/* TRIGGERS */}
-          {currentStep === 'triggers' && (
-            <div className="flex-1 flex flex-col">
+          {/* ── TRIGGERS ── */}
+          {current === 'triggers' && (
+            <div className="flex-1 flex flex-col pt-2">
               <h1 className="text-2xl font-heading font-semibold mb-1">Know your triggers</h1>
-              <p className="text-muted-foreground text-sm mb-6">Select all that apply. We'll watch out for these.</p>
-              <div className="grid grid-cols-2 gap-2.5">
-                {TRIGGERS.map(({ label, emoji }) => (
-                  <button
-                    key={label}
-                    onClick={() => toggleArrayItem('triggers', label)}
-                    className={cn(
-                      "flex items-center gap-2.5 px-3 py-3 rounded-xl text-sm font-medium text-left transition-all border",
-                      data.triggers.includes(label)
-                        ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                        : "bg-card border-border hover:border-primary/30"
-                    )}
-                  >
-                    <span className="text-xl">{emoji}</span>
-                    <span className="leading-tight">{label}</span>
-                    {data.triggers.includes(label) && <Check className="w-3.5 h-3.5 ml-auto flex-shrink-0" />}
-                  </button>
-                ))}
-              </div>
+              <p className="text-sm text-muted-foreground mb-5">Select all that apply — we'll watch out for these patterns.</p>
+              <SelectGrid items={TRIGGERS} field="triggers" data={data} toggle={toggle} cols={2} />
             </div>
           )}
 
-          {/* TIMES */}
-          {currentStep === 'times' && (
-            <div className="flex-1 flex flex-col">
-              <h1 className="text-2xl font-heading font-semibold mb-1">Vulnerable hours</h1>
-              <p className="text-muted-foreground text-sm mb-6">When do urges hit hardest? We'll help you protect these windows.</p>
-              <div className="grid grid-cols-2 gap-2.5">
-                {TIMES.map(({ label, sublabel, emoji }) => {
-                  const value = `${label} (${sublabel})`;
-                  const selected = data.vulnerable_times.includes(value);
-                  return (
+          {/* ── RISK PROFILE ── */}
+          {current === 'risk_profile' && (
+            <div className="flex-1 flex flex-col pt-2 gap-6">
+              <div>
+                <h1 className="text-2xl font-heading font-semibold mb-1">Your risk profile</h1>
+                <p className="text-sm text-muted-foreground">A few more questions to personalize your plan.</p>
+              </div>
+
+              <div>
+                <p className="text-sm font-semibold mb-2.5">How often do you consume porn?</p>
+                <div className="space-y-2">
+                  {FREQUENCY.map(f => (
                     <button
-                      key={label}
-                      onClick={() => toggleArrayItem('vulnerable_times', value)}
+                      key={f.id}
+                      onClick={() => set('frequency', f.id)}
                       className={cn(
-                        "flex flex-col items-center justify-center gap-1 py-4 px-2 rounded-xl transition-all border text-center",
-                        selected
-                          ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                          : "bg-card border-border hover:border-primary/30"
+                        "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-left transition-all border",
+                        data.frequency === f.id ? "bg-primary text-primary-foreground border-primary shadow-sm" : "bg-card border-border hover:border-primary/30"
                       )}
                     >
-                      <span className="text-2xl">{emoji}</span>
-                      <p className="text-xs font-semibold leading-tight">{label}</p>
-                      <p className={cn("text-[10px]", selected ? "text-primary-foreground/70" : "text-muted-foreground")}>{sublabel}</p>
+                      <span className="flex-1">{f.label}</span>
+                      {data.frequency === f.id && <Check className="w-4 h-4" />}
                     </button>
-                  );
-                })}
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <p className="text-sm font-semibold mb-2.5">When are urges strongest?</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {TIMES.map(({ label, sublabel, emoji }) => {
+                    const val = `${label} (${sublabel})`;
+                    const sel = data.vulnerable_times.includes(val);
+                    return (
+                      <button
+                        key={label}
+                        onClick={() => toggle('vulnerable_times', val)}
+                        className={cn(
+                          "flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-all border",
+                          sel ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border hover:border-primary/30"
+                        )}
+                      >
+                        <span>{emoji}</span>
+                        <div>
+                          <p className="text-xs font-semibold">{label}</p>
+                          <p className={cn("text-[10px]", sel ? "text-primary-foreground/70" : "text-muted-foreground")}>{sublabel}</p>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <p className="text-sm font-semibold mb-2.5">Have you tried quitting before?</p>
+                <div className="space-y-2">
+                  {TRIED.map(({ id, label, emoji }) => (
+                    <button
+                      key={id}
+                      onClick={() => set('tried_before', id)}
+                      className={cn(
+                        "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-left transition-all border",
+                        data.tried_before === id ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border hover:border-primary/30"
+                      )}
+                    >
+                      <span>{emoji}</span>
+                      <span className="flex-1">{label}</span>
+                      {data.tried_before === id && <Check className="w-4 h-4" />}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           )}
 
-          {/* GOALS */}
-          {currentStep === 'goals' && (
-            <div className="flex-1 flex flex-col">
-              <h1 className="text-2xl font-heading font-semibold mb-1">Your goals</h1>
-              <p className="text-muted-foreground text-sm mb-6">What does winning look like for you?</p>
-              <div className="grid grid-cols-2 gap-2.5">
-                {GOALS.map(({ id, label, emoji }) => (
+          {/* ── RESULTS ── */}
+          {current === 'results' && (
+            <div className="flex-1 flex flex-col pt-4 gap-5">
+              <div className="text-center">
+                <div className="text-5xl mb-3">📊</div>
+                <h1 className="text-2xl font-heading font-bold mb-1">Your Recovery Profile</h1>
+                <p className="text-sm text-muted-foreground">Personalized based on your answers</p>
+              </div>
+
+              {/* Recovery score */}
+              <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-transparent rounded-2xl p-5 border border-primary/15 text-center">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">Recovery Score</p>
+                <div className="text-6xl font-heading font-bold text-foreground">{results.recoveryScore}</div>
+                <div className="text-xs text-muted-foreground mt-1">out of 100</div>
+                <div className={cn(
+                  "inline-block mt-2 px-3 py-1 rounded-full text-xs font-semibold",
+                  results.riskLevel === 'High' ? "bg-destructive/15 text-destructive" :
+                  results.riskLevel === 'Moderate' ? "bg-accent/20 text-accent-foreground" :
+                  "bg-primary/15 text-primary"
+                )}>
+                  {results.riskLevel} Risk Profile
+                </div>
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-card rounded-xl border border-border p-4 text-center">
+                  <div className="text-2xl font-heading font-bold text-destructive">{results.annualHours}h</div>
+                  <p className="text-xs text-muted-foreground mt-1">Estimated hours lost per year</p>
+                </div>
+                <div className="bg-card rounded-xl border border-border p-4 text-center">
+                  <div className="text-2xl font-heading font-bold text-accent">{data.triggers.length}</div>
+                  <p className="text-xs text-muted-foreground mt-1">Identified triggers</p>
+                </div>
+              </div>
+
+              {/* Key findings */}
+              <div className="bg-card rounded-2xl border border-border p-4 space-y-3">
+                <p className="text-sm font-semibold">Key findings</p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex gap-2">
+                    <span className="text-primary mt-0.5">→</span>
+                    <p className="text-muted-foreground">
+                      <span className="font-medium text-foreground">Highest-risk period:</span> {results.highRiskTime}
+                    </p>
+                  </div>
+                  {data.triggers.slice(0, 2).map(t => (
+                    <div key={t} className="flex gap-2">
+                      <span className="text-primary mt-0.5">→</span>
+                      <p className="text-muted-foreground"><span className="font-medium text-foreground">{t}</span> is a primary trigger</p>
+                    </div>
+                  ))}
+                  {data.tried_before !== 'never' && (
+                    <div className="flex gap-2">
+                      <span className="text-primary mt-0.5">→</span>
+                      <p className="text-muted-foreground">Previous attempts show <span className="font-medium text-foreground">high motivation</span> — a structured plan makes the difference</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="bg-secondary/50 rounded-xl p-4 text-sm text-muted-foreground leading-relaxed">
+                💡 <em>"Based on your profile, your highest-risk period is {results.highRiskTime.toLowerCase()}. Users with similar patterns who implement accountability and urge interventions consistently report significantly better outcomes."</em>
+              </div>
+            </div>
+          )}
+
+          {/* ── TRIAL PITCH ── */}
+          {current === 'trial' && (
+            <div className="flex-1 flex flex-col pt-4 gap-5">
+              <div className="text-center">
+                <div className="text-5xl mb-3">🗝️</div>
+                <h1 className="text-2xl font-heading font-bold mb-2">Your Personalized Recovery Plan Is Ready</h1>
+                <p className="text-muted-foreground text-sm">Start with a free trial. Cancel anytime. No commitment.</p>
+              </div>
+
+              {/* Features unlocked */}
+              <div className="bg-gradient-to-br from-primary/8 to-transparent rounded-2xl border border-primary/20 p-4">
+                <p className="text-xs font-bold uppercase tracking-wide text-primary mb-3">Unlocked during your free trial</p>
+                <div className="space-y-2.5">
+                  {FEATURES.map(({ icon: Icon, label, desc }) => (
+                    <div key={label} className="flex items-center gap-3">
+                      <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <Icon className="w-3.5 h-3.5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold leading-tight">{label}</p>
+                        <p className="text-xs text-muted-foreground">{desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Social proof */}
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2.5">What others say</p>
+                <div className="space-y-2">
+                  {TESTIMONIALS.map(({ text, author }) => (
+                    <div key={author} className="bg-card rounded-xl border border-border p-3.5">
+                      <p className="text-sm text-foreground/80 italic leading-relaxed">{text}</p>
+                      <p className="text-xs text-muted-foreground mt-2">— {author}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Trust signals */}
+              <div className="flex justify-center gap-6 py-2">
+                {[
+                  { icon: Lock, label: 'End-to-end\nencrypted' },
+                  { icon: Shield, label: 'Never\nshared' },
+                  { icon: Star, label: '4.9★\nrating' },
+                ].map(({ icon: Icon, label }) => (
+                  <div key={label} className="flex flex-col items-center gap-1 text-center">
+                    <Icon className="w-5 h-5 text-primary" />
+                    <p className="text-[10px] text-muted-foreground whitespace-pre-line leading-tight">{label}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Milestones */}
+              <div className="bg-secondary/40 rounded-xl p-4">
+                <p className="text-xs font-semibold mb-2 text-muted-foreground">Milestones our community has reached</p>
+                <div className="grid grid-cols-3 gap-2 text-center">
+                  {[['12,400+', 'urges resisted'], ['3,200+', '30-day streaks'], ['890+', '90-day streaks']].map(([n, l]) => (
+                    <div key={l}>
+                      <div className="text-sm font-bold text-foreground">{n}</div>
+                      <div className="text-[10px] text-muted-foreground">{l}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ── PRICING ── */}
+          {current === 'pricing' && (
+            <div className="flex-1 flex flex-col pt-4 gap-4">
+              <div className="text-center">
+                <h1 className="text-2xl font-heading font-bold mb-1">Choose Your Plan</h1>
+                <p className="text-sm text-muted-foreground">Start free. Upgrade when you're ready.</p>
+              </div>
+
+              <div className="space-y-3">
+                {PLANS.map(plan => (
                   <button
-                    key={id}
-                    onClick={() => toggleArrayItem('goals', id)}
+                    key={plan.id}
+                    onClick={() => setSelectedPlan(plan.id)}
                     className={cn(
-                      "flex flex-col items-center justify-center gap-2 py-5 px-2 rounded-xl transition-all border text-center",
-                      data.goals.includes(id)
-                        ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                        : "bg-card border-border hover:border-primary/30"
+                      "w-full text-left rounded-2xl border-2 p-4 transition-all",
+                      selectedPlan === plan.id
+                        ? plan.highlight ? "border-primary bg-primary/5" : "border-foreground/20 bg-secondary/40"
+                        : "border-border hover:border-border/80 bg-card"
                     )}
                   >
-                    <span className="text-3xl">{emoji}</span>
-                    <p className="text-xs font-semibold leading-tight">{label}</p>
-                    {data.goals.includes(id) && <Check className="w-3.5 h-3.5" />}
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-heading font-bold text-base">{plan.name}</span>
+                          {plan.badge && (
+                            <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full", plan.badgeColor)}>{plan.badge}</span>
+                          )}
+                        </div>
+                        {plan.trial && <p className="text-xs text-primary font-semibold mt-0.5">{plan.trial}</p>}
+                        <p className="text-xs text-muted-foreground mt-1">{plan.desc}</p>
+                      </div>
+                      <div className="text-right flex-shrink-0 ml-3">
+                        <span className="text-xl font-heading font-bold">{plan.price}</span>
+                        <span className="text-xs text-muted-foreground">{plan.period}</span>
+                      </div>
+                    </div>
+                    <div className="space-y-1 mt-3">
+                      {plan.features.map(f => (
+                        <div key={f} className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <Check className="w-3 h-3 text-primary flex-shrink-0" />
+                          <span>{f}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {selectedPlan === plan.id && (
+                      <div className="mt-3 pt-3 border-t border-border/50">
+                        <p className="text-xs text-primary font-semibold flex items-center gap-1">
+                          <Check className="w-3 h-3" /> Selected — {plan.trial ? 'free trial, then ' + plan.price + plan.period : plan.price + plan.period}
+                        </p>
+                      </div>
+                    )}
                   </button>
                 ))}
               </div>
+
+              <div className="flex items-center gap-2 justify-center text-xs text-muted-foreground">
+                <Lock className="w-3 h-3" />
+                <span>Cancel anytime. You'll be reminded before billing.</span>
+              </div>
             </div>
           )}
 
-          {/* PARTNER */}
-          {currentStep === 'partner' && (
-            <div className="flex-1 flex flex-col">
-              <div className="text-4xl mb-3">🤝</div>
-              <h1 className="text-2xl font-heading font-semibold mb-1">Accountability partner</h1>
-              <p className="text-muted-foreground text-sm mb-6">
-                Optional. People with a trusted partner are 65% more likely to succeed.
-              </p>
+          {/* ── PARTNER ── */}
+          {current === 'partner' && (
+            <div className="flex-1 flex flex-col pt-2 gap-5">
+              <div>
+                <div className="text-4xl mb-2">🤝</div>
+                <h1 className="text-2xl font-heading font-semibold mb-1">Add an accountability partner</h1>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Optional — but people with a trusted partner are <strong>65% more likely</strong> to succeed.
+                </p>
+              </div>
               <div className="space-y-3">
                 <Input
                   placeholder="Their name (e.g. James)"
                   value={data.accountability_partner_name}
-                  onChange={(e) => setData({ ...data, accountability_partner_name: e.target.value })}
+                  onChange={e => set('accountability_partner_name', e.target.value)}
                   className="h-11"
                 />
                 <Input
                   type="email"
                   placeholder="their@email.com"
                   value={data.accountability_partner_email}
-                  onChange={(e) => setData({ ...data, accountability_partner_email: e.target.value })}
+                  onChange={e => set('accountability_partner_email', e.target.value)}
                   className="h-11"
                 />
               </div>
-              <p className="text-xs text-muted-foreground mt-4 leading-relaxed">
-                You control exactly what gets shared. Nothing is sent without your permission.
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                You control exactly what they see. Nothing is shared without your explicit permission.
               </p>
-
-              <div className="mt-6 bg-secondary/50 rounded-xl p-4">
-                <p className="text-sm font-medium mb-1">🎉 You're almost ready!</p>
-                <p className="text-xs text-muted-foreground">Your personalized recovery plan is set up and your streak starts now.</p>
+              <div className="bg-gradient-to-br from-primary/10 to-transparent rounded-xl border border-primary/20 p-4">
+                <p className="text-sm font-semibold mb-0.5">🎉 You're ready to begin</p>
+                <p className="text-xs text-muted-foreground">Your personalized recovery plan is set up. Your streak starts now.</p>
               </div>
             </div>
           )}
@@ -361,25 +683,43 @@ export default function Onboarding() {
       </AnimatePresence>
 
       {/* Navigation */}
-      <div className="flex items-center gap-3 mt-6 pt-4 border-t border-border">
-        {step > 0 && (
-          <Button variant="ghost" onClick={() => setStep(step - 1)} className="gap-2">
+      <div className={cn("flex items-center gap-3 px-5 pb-6 pt-3 border-t border-border bg-background", ['welcome', 'results', 'trial', 'pricing'].includes(current) ? '' : '')}>
+        {step > 0 && !['results', 'trial', 'pricing'].includes(current) && (
+          <Button variant="ghost" onClick={() => setStep(s => s - 1)} className="gap-2">
             <ArrowLeft className="w-4 h-4" /> Back
           </Button>
         )}
+        {['results', 'trial', 'pricing'].includes(current) && (
+          <Button variant="ghost" onClick={() => setStep(s => s - 1)} className="gap-1 text-muted-foreground text-sm">
+            <ArrowLeft className="w-3.5 h-3.5" />
+          </Button>
+        )}
         <div className="flex-1" />
-        {currentStep === 'partner' && (
+        {current === 'partner' && (
           <Button variant="ghost" onClick={handleFinish} disabled={saving} className="text-muted-foreground text-sm">
             Skip
           </Button>
         )}
-        {step < steps.length - 1 ? (
-          <Button onClick={() => setStep(step + 1)} disabled={!canProceed()} className="gap-2">
-            {currentStep === 'welcome' ? "Let's begin" : 'Continue'} <ArrowRight className="w-4 h-4" />
+        {step < STEPS.length - 1 ? (
+          <Button
+            onClick={() => setStep(s => s + 1)}
+            disabled={!canProceed()}
+            className={cn("gap-2", current === 'welcome' ? 'px-8' : '', current === 'trial' || current === 'results' ? 'px-8' : '')}
+            size={current === 'welcome' || current === 'trial' || current === 'results' ? 'lg' : 'default'}
+          >
+            {current === 'welcome' && 'Get Started'}
+            {current === 'motivation' && 'Continue'}
+            {current === 'cost' && 'Continue'}
+            {current === 'triggers' && 'Continue'}
+            {current === 'risk_profile' && 'See My Results'}
+            {current === 'results' && 'View My Recovery Plan'}
+            {current === 'trial' && 'See Pricing'}
+            {current === 'pricing' && <>Start {selectedPlan === 'starter' ? 'Free' : '7-Day Trial'}</>}
+            <ArrowRight className="w-4 h-4" />
           </Button>
         ) : (
           <Button onClick={handleFinish} disabled={saving} className="gap-2">
-            {saving ? 'Setting up...' : 'Start my journey'} <Check className="w-4 h-4" />
+            {saving ? 'Setting up...' : 'Begin My Journey'} <Check className="w-4 h-4" />
           </Button>
         )}
       </div>
