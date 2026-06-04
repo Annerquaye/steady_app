@@ -183,8 +183,8 @@ export default function Onboarding() {
   const [selectedPlan, setSelectedPlan] = useState('pro');
   const [data, setData] = useState({
     motivation: '',
-    what_its_costing: '',
-    what_would_improve: '',
+    what_its_costing: [],
+    what_would_improve: [],
     triggers: [],
     frequency: '',
     vulnerable_times: [],
@@ -211,7 +211,7 @@ export default function Onboarding() {
     switch (current) {
       case 'welcome': return true;
       case 'motivation': return !!data.motivation;
-      case 'cost': return !!data.what_its_costing || !!data.what_would_improve;
+      case 'cost': return data.what_its_costing.length > 0 || data.what_would_improve.length > 0;
       case 'triggers': return data.triggers.length > 0;
       case 'risk_profile': return !!data.frequency && data.vulnerable_times.length > 0 && !!data.tried_before;
       case 'results': return true;
@@ -336,28 +336,39 @@ export default function Onboarding() {
               <div>
                 <div className="text-3xl mb-2">💭</div>
                 <h1 className="text-2xl font-heading font-semibold mb-1">What is this costing you?</h1>
-                <p className="text-sm text-muted-foreground mb-4">Be honest with yourself. This is only for you.</p>
-                {motObj && (
-                  <div className="bg-secondary/50 rounded-xl px-4 py-3 mb-4 text-sm text-muted-foreground italic">
-                    "{motObj.cost}"
-                  </div>
-                )}
-                <textarea
-                  className="w-full bg-card border border-border rounded-xl p-3.5 text-sm resize-none outline-none focus:border-primary/50 transition-colors"
-                  rows={3}
-                  placeholder="e.g. Hours wasted, feel ashamed, avoiding real connection..."
-                  value={data.what_its_costing}
-                  onChange={e => set('what_its_costing', e.target.value)}
+                <p className="text-sm text-muted-foreground mb-4">Select all that apply.</p>
+                <SelectGrid
+                  items={[
+                    { id: 'time', label: 'Hours of lost time', emoji: '⏰' },
+                    { id: 'shame', label: 'Shame & guilt', emoji: '😔' },
+                    { id: 'focus', label: 'Focus & productivity', emoji: '🧠' },
+                    { id: 'relationships', label: 'My relationships', emoji: '💔' },
+                    { id: 'confidence', label: 'Self-confidence', emoji: '😶' },
+                    { id: 'sleep', label: 'Sleep quality', emoji: '😴' },
+                    { id: 'motivation', label: 'Drive & motivation', emoji: '🔋' },
+                    { id: 'intimacy', label: 'Real intimacy', emoji: '🔒' },
+                  ]}
+                  field="what_its_costing"
+                  data={data}
+                  toggle={toggle}
+                  cols={2}
                 />
               </div>
               <div>
-                <p className="text-sm font-semibold mb-2">What would improve if you succeeded?</p>
-                <textarea
-                  className="w-full bg-card border border-border rounded-xl p-3.5 text-sm resize-none outline-none focus:border-primary/50 transition-colors"
-                  rows={3}
-                  placeholder="e.g. More energy, feel proud, better relationships, sharper focus..."
-                  value={data.what_would_improve}
-                  onChange={e => set('what_would_improve', e.target.value)}
+                <p className="text-sm font-semibold mb-2.5">What would improve if you succeeded?</p>
+                <SelectGrid
+                  items={[
+                    { id: 'energy', label: 'More energy', emoji: '⚡' },
+                    { id: 'pride', label: 'Feel proud of myself', emoji: '🏆' },
+                    { id: 'focus2', label: 'Sharper focus', emoji: '🎯' },
+                    { id: 'relationships2', label: 'Better relationships', emoji: '❤️' },
+                    { id: 'confidence2', label: 'Real confidence', emoji: '✨' },
+                    { id: 'peace', label: 'Inner peace', emoji: '🕊️' },
+                  ]}
+                  field="what_would_improve"
+                  data={data}
+                  toggle={toggle}
+                  cols={2}
                 />
               </div>
             </div>
