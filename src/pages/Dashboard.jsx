@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import ProgressCard from '@/components/dashboard/ProgressCard';
-import StatsGrid from '@/components/dashboard/StatsGrid';
+import DailyCheckIn from '@/components/dashboard/DailyCheckIn';
 import DailyMessage from '@/components/dashboard/DailyMessage';
 import TriggerInsights from '@/components/dashboard/TriggerInsights';
 import MoodTrend from '@/components/dashboard/MoodTrend';
@@ -64,6 +64,11 @@ export default function Dashboard() {
       </div>
 
       <ProgressCard profile={profile} urges={urges} />
+      <DailyCheckIn alreadyDoneToday={journals.some(j => {
+        const d = new Date(j.created_date);
+        const now = new Date();
+        return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
+      })} />
       <DailyMessage />
       <MoodTrend journals={journals} />
       <UrgeFrequencyChart urges={urges} />
