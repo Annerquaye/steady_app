@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import ProgressCard from '@/components/dashboard/ProgressCard';
 import DailyCheckIn from '@/components/dashboard/DailyCheckIn';
 import DailyMessage from '@/components/dashboard/DailyMessage';
@@ -10,10 +10,12 @@ import MilestoneTracker from '@/components/dashboard/MilestoneTracker';
 import MoodTrend from '@/components/dashboard/MoodTrend';
 import UrgeFrequencyChart from '@/components/dashboard/UrgeFrequencyChart';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BarChart3, FileText } from 'lucide-react';
+import { BarChart3, FileText, RefreshCw } from 'lucide-react';
+import { usePullToRefresh } from '@/hooks/usePullToRefresh';
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { data: profiles, isLoading: loadingProfile } = useQuery({
     queryKey: ['userProfile'],
@@ -41,6 +43,13 @@ export default function Dashboard() {
     }
   }, [loadingProfile, profile, navigate]);
 
+  // Pull-to-refresh: invalidates all dashboard queries
+  const handleRefresh = React.useCallback(() => {
+    return queryClient.invalidateQueries();
+  }, [queryClient]);
+
+  const { pullDistance, refreshing } = usePullToRefresh(handleRefresh);
+
   if (loadingProfile) {
     return (
       <div className="p-6 space-y-4">
@@ -57,19 +66,34 @@ export default function Dashboard() {
 
   if (!profile) return null;
 
+  const alreadyDoneToday = journals.some(j => {
+    const d = new Date(j.created_date);
+    const now = new Date();
+    return d.getFullYear() === now.getFullYear() &&
+      d.getMonth() === now.getMonth() &&
+      d.getDate() === now.getDate();
+  });
+
   return (
     <div className="p-6 space-y-5">
+      {/* Pull-to-refresh indicator */}
+      {(pullDistance > 0 || refreshing) && (
+        <div
+          className="flex items-center justify-center text-muted-foreground text-xs gap-2 transition-all"
+          style={{ height: Math.min(pullDistance, 56), overflow: 'hidden' }}
+        >
+          <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+          <span>{refreshing ? 'Refreshing…' : 'Pull to refresh'}</span>
+        </div>
+      )}
+
       <div>
         <h1 className="text-2xl font-heading font-bold">Your recovery</h1>
         <p className="text-sm text-muted-foreground mt-0.5">One day at a time.</p>
       </div>
 
       <ProgressCard profile={profile} urges={urges} />
-      <DailyCheckIn alreadyDoneToday={journals.some(j => {
-        const d = new Date(j.created_date);
-        const now = new Date();
-        return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
-      })} />
+      <DailyCheckIn alreadyDoneToday={alreadyDoneToday} />
       <DailyMessage />
       <MoodTrend journals={journals} />
       <UrgeFrequencyChart urges={urges} />

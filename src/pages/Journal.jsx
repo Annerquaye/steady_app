@@ -3,8 +3,8 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
+import { MobileSelect } from '@/components/ui/MobileSelect';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Plus, BookHeart, X } from 'lucide-react';
@@ -31,12 +31,24 @@ export default function Journal() {
     initialData: [],
   });
 
+  const EMPTY_ENTRY = { mood: '', trigger: '', context: '', outcome: 'no_urge', notes: '', energy_level: 'medium' };
+
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.JournalEntry.create(data),
+    onMutate: async (newEntry) => {
+      await queryClient.cancelQueries({ queryKey: ['journals'] });
+      const previous = queryClient.getQueryData(['journals']);
+      const optimistic = { ...newEntry, id: `temp-${Date.now()}`, created_date: new Date().toISOString() };
+      queryClient.setQueryData(['journals'], (old = []) => [optimistic, ...old]);
+      return { previous };
+    },
+    onError: (_err, _vars, ctx) => {
+      if (ctx?.previous) queryClient.setQueryData(['journals'], ctx.previous);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['journals'] });
       setShowForm(false);
-      setEntry({ mood: '', trigger: '', context: '', outcome: 'no_urge', notes: '', energy_level: 'medium' });
+      setEntry(EMPTY_ENTRY);
     },
   });
 
@@ -123,16 +135,16 @@ export default function Journal() {
               {/* Outcome */}
               <div>
                 <label className="text-sm font-medium mb-1.5 block">Outcome</label>
-                <Select value={entry.outcome} onValueChange={(v) => setEntry({ ...entry, outcome: v })}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="no_urge">No urge</SelectItem>
-                    <SelectItem value="resisted">Resisted urge</SelectItem>
-                    <SelectItem value="relapsed">Relapsed</SelectItem>
-                  </SelectContent>
-                </Select>
+                <MobileSelect
+                  value={entry.outcome}
+                  onValueChange={(v) => setEntry({ ...entry, outcome: v })}
+                  placeholder="Select outcome"
+                  options={[
+                    { value: 'no_urge', label: 'No urge' },
+                    { value: 'resisted', label: 'Resisted urge' },
+                    { value: 'relapsed', label: 'Relapsed' },
+                  ]}
+                />
               </div>
 
               {/* Notes */}

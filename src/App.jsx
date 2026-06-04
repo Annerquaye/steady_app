@@ -25,7 +25,10 @@ import Checkout from '@/pages/Checkout';
 import PrivacyPolicy from '@/pages/PrivacyPolicy';
 import TermsOfService from '@/pages/TermsOfService';
 
+import { useDarkMode } from '@/hooks/useDarkMode';
+
 const AuthenticatedApp = () => {
+  useDarkMode();
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
   if (isLoadingPublicSettings || isLoadingAuth) {

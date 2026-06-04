@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -21,26 +22,43 @@ const MOOD_OPTIONS = [
 ];
 
 export default function DailyCheckIn({ alreadyDoneToday }) {
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [energy, setEnergy] = useState('medium');
   const [mood, setMood] = useState('neutral');
   const [takeaway, setTakeaway] = useState('');
-  const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(alreadyDoneToday);
 
-  const handleSave = async () => {
-    if (!takeaway.trim()) return;
-    setSaving(true);
-    await base44.entities.JournalEntry.create({
+  const checkInMutation = useMutation({
+    mutationFn: (data) => base44.entities.JournalEntry.create(data),
+    onMutate: async (newEntry) => {
+      await queryClient.cancelQueries({ queryKey: ['journals'] });
+      const previous = queryClient.getQueryData(['journals']);
+      const optimistic = { ...newEntry, id: `temp-${Date.now()}`, created_date: new Date().toISOString() };
+      queryClient.setQueryData(['journals'], (old = []) => [optimistic, ...old]);
+      // Optimistically mark done immediately
+      setDone(true);
+      setOpen(false);
+      setTakeaway('');
+      return { previous };
+    },
+    onError: (_err, _vars, ctx) => {
+      if (ctx?.previous) queryClient.setQueryData(['journals'], ctx.previous);
+      setDone(false);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['journals'] });
+    },
+  });
+
+  const handleSave = () => {
+    if (!takeaway.trim() || checkInMutation.isPending) return;
+    checkInMutation.mutate({
       mood,
       energy_level: energy,
       notes: takeaway.trim(),
       outcome: 'no_urge',
     });
-    setSaving(false);
-    setDone(true);
-    setOpen(false);
-    setTakeaway('');
   };
 
   return (
@@ -137,10 +155,10 @@ export default function DailyCheckIn({ alreadyDoneToday }) {
 
             <Button
               onClick={handleSave}
-              disabled={!takeaway.trim() || saving}
+              disabled={!takeaway.trim() || checkInMutation.isPending}
               className="w-full"
             >
-              {saving ? 'Saving...' : 'Save check-in'}
+              {checkInMutation.isPending ? 'Saving...' : 'Save check-in'}
             </Button>
           </div>
         </DialogContent>
