@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import StreakCard from '@/components/dashboard/StreakCard';
+import ProgressCard from '@/components/dashboard/ProgressCard';
 import StatsGrid from '@/components/dashboard/StatsGrid';
 import DailyMessage from '@/components/dashboard/DailyMessage';
 import TriggerInsights from '@/components/dashboard/TriggerInsights';
@@ -63,8 +63,7 @@ export default function Dashboard() {
         <p className="text-sm text-muted-foreground mt-0.5">One day at a time.</p>
       </div>
 
-      <StreakCard streakStartDate={profile.streak_start_date} />
-      <StatsGrid profile={profile} urges={urges} />
+      <ProgressCard profile={profile} urges={urges} />
       <DailyMessage />
       <MoodTrend journals={journals} />
       <UrgeFrequencyChart urges={urges} />
