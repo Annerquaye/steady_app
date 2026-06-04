@@ -79,9 +79,16 @@ Guidelines:
     const safeHistory = messages.slice(-20).map(m => `${m.role === 'user' ? 'User' : 'Coach'}: ${m.content.substring(0, 1000)}`).join('\n');
     const fullPrompt = `${systemContext}\n\n---\nConversation:\n${safeHistory}\nUser: ${sanitizedMessage}\nCoach:`;
 
-    const response = await base44.integrations.Core.InvokeLLM({
-      prompt: fullPrompt,
-    });
+    let response;
+    try {
+      response = await base44.integrations.Core.InvokeLLM({
+        prompt: fullPrompt,
+      });
+    } catch (err) {
+      setMessages(prev => [...prev, { role: 'assistant', content: "I'm having trouble connecting right now. Please try again in a moment." }]);
+      setIsLoading(false);
+      return;
+    }
 
     setMessages(prev => [...prev, { role: 'assistant', content: response }]);
     setIsLoading(false);

@@ -35,7 +35,7 @@ export default function UrgeEmergency() {
   const [saving, setSaving] = useState(false);
   const timerRef = useRef(null);
 
-  // Timer
+  // Timer — clean up on unmount and step change
   useEffect(() => {
     if (steps[step] === 'timer' && timeLeft > 0) {
       timerRef.current = setInterval(() => {
@@ -47,9 +47,9 @@ export default function UrgeEmergency() {
           return prev - 1;
         });
       }, 1000);
-      return () => clearInterval(timerRef.current);
     }
-  }, [step, timeLeft]);
+    return () => clearInterval(timerRef.current);
+  }, [step]); // only restart when step changes, not on every tick
 
   const formatTime = (s) => {
     const m = Math.floor(s / 60);

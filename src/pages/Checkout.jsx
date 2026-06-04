@@ -37,8 +37,12 @@ const PLAN_META = {
 export default function Checkout() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const plan = searchParams.get('plan') || 'recovery_pro';
-  const billing = searchParams.get('billing') || 'month';
+  const VALID_PLANS = ['starter', 'recovery_pro', 'elite'];
+  const VALID_BILLING = ['month', 'year'];
+  const rawPlan = searchParams.get('plan') || 'recovery_pro';
+  const rawBilling = searchParams.get('billing') || 'month';
+  const plan = VALID_PLANS.includes(rawPlan) ? rawPlan : 'recovery_pro';
+  const billing = VALID_BILLING.includes(rawBilling) ? rawBilling : 'month';
 
   const meta = PLAN_META[plan] || PLAN_META.recovery_pro;
   const price = billing === 'year' ? meta.annualPrice : meta.monthlyPrice;

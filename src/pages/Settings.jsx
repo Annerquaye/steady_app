@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +19,9 @@ export default function Settings() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [portalLoading, setPortalLoading] = useState(false);
+  const debounceRef = useRef(null);
 
   const { data: subscriptions } = useQuery({
     queryKey: ['subscriptions'],
@@ -48,17 +50,31 @@ export default function Settings() {
 
   const profile = profiles[0];
 
-  const updateProfile = async (updates) => {
+  const updateProfile = useCallback((updates) => {
     if (!profile) return;
-    setSaving(true);
-    await base44.entities.UserProfile.update(profile.id, updates);
-    queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-    setSaving(false);
-  };
+    // Debounce text input saves by 600ms; toggle/select changes save immediately
+    const isTextInput = typeof Object.values(updates)[0] === 'string' &&
+      ('accountability_partner_name' in updates || 'accountability_partner_email' in updates);
+    if (isTextInput) {
+      clearTimeout(debounceRef.current);
+      debounceRef.current = setTimeout(async () => {
+        setSaving(true);
+        await base44.entities.UserProfile.update(profile.id, updates);
+        queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+        setSaving(false);
+      }, 600);
+    } else {
+      setSaving(true);
+      base44.entities.UserProfile.update(profile.id, updates).then(() => {
+        queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+        setSaving(false);
+      });
+    }
+  }, [profile, queryClient]);
 
   const handleDeleteData = async () => {
-    if (!profile) return;
-    // Delete all user data
+    if (!profile || deleting) return;
+    setDeleting(true);
     const [urges, journals, relapses, chats, subs] = await Promise.all([
       base44.entities.UrgeLog.list(),
       base44.entities.JournalEntry.list(),
@@ -66,7 +82,6 @@ export default function Settings() {
       base44.entities.ChatMessage.list(),
       base44.entities.Subscription.list(),
     ]);
-
     await Promise.all([
       ...urges.map(u => base44.entities.UrgeLog.delete(u.id)),
       ...journals.map(j => base44.entities.JournalEntry.delete(j.id)),
@@ -75,7 +90,6 @@ export default function Settings() {
       ...subs.map(s => base44.entities.Subscription.delete(s.id)),
     ]);
     await base44.entities.UserProfile.delete(profile.id);
-
     base44.auth.logout();
   };
 
@@ -259,8 +273,8 @@ export default function Settings() {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteData} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                Delete everything
+              <AlertDialogAction onClick={handleDeleteData} disabled={deleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                {deleting ? 'Deleting...' : 'Delete everything'}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

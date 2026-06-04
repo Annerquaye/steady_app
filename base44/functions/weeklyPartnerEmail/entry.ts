@@ -4,6 +4,12 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
 
+    // Admin-only: only admins or scheduled automations may trigger this
+    const user = await base44.auth.me();
+    if (user?.role !== 'admin') {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
     // Fetch all user profiles that have an accountability partner + weekly email enabled
     const profiles = await base44.asServiceRole.entities.UserProfile.filter({
       send_weekly_email: true,
