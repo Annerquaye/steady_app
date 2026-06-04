@@ -6,6 +6,7 @@ import ProgressCard from '@/components/dashboard/ProgressCard';
 import DailyCheckIn from '@/components/dashboard/DailyCheckIn';
 import DailyMessage from '@/components/dashboard/DailyMessage';
 import TriggerInsights from '@/components/dashboard/TriggerInsights';
+import MilestoneTracker from '@/components/dashboard/MilestoneTracker';
 import MoodTrend from '@/components/dashboard/MoodTrend';
 import UrgeFrequencyChart from '@/components/dashboard/UrgeFrequencyChart';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -72,6 +73,7 @@ export default function Dashboard() {
       <DailyMessage />
       <MoodTrend journals={journals} />
       <UrgeFrequencyChart urges={urges} />
+      <MilestoneTracker profile={profile} urges={urges} />
       <TriggerInsights urges={urges} profile={profile} />
 
       <div className="grid grid-cols-2 gap-3">
