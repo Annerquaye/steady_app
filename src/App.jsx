@@ -1,3 +1,4 @@
+import React from 'react';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
@@ -27,6 +28,7 @@ import TermsOfService from '@/pages/TermsOfService';
 
 import { useDarkMode } from '@/hooks/useDarkMode';
 import AnimatedRoutes from '@/components/layout/AnimatedRoutes';
+import SplashScreen from '@/components/SplashScreen';
 
 const AuthenticatedApp = () => {
   useDarkMode();
@@ -86,12 +88,17 @@ const AuthenticatedApp = () => {
 };
 
 function App() {
+  const [splashDone, setSplashDone] = React.useState(false);
+
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
-        <Router>
-          <AuthenticatedApp />
-        </Router>
+        <SplashScreen onDone={() => setSplashDone(true)} />
+        {splashDone && (
+          <Router>
+            <AuthenticatedApp />
+          </Router>
+        )}
         <Toaster />
       </QueryClientProvider>
     </AuthProvider>
