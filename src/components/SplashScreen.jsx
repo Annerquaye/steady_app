@@ -1,13 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+/**
+ * Steady — Premium Splash Screen
+ *
+ * Design rationale:
+ * - Radial gradient backdrop creates depth and warmth without clutter (à la Headspace/Calm)
+ * - Logo animates in with a gentle spring — feels alive, not mechanical
+ * - Wordmark staggers in 120ms after icon, reinforcing brand hierarchy
+ * - Tagline fades last, giving the eye a natural reading path
+ * - Single hairline progress bar replaces noisy dots — minimal & elegant (Notion/Stripe pattern)
+ * - Exit is a pure opacity fade so the first app screen dissolves in seamlessly
+ * - All safe-area insets respected for notch/island/chin devices
+ * - Works equally in light + dark via CSS variables
+ */
+
 export default function SplashScreen({ onDone }) {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setVisible(false);
-    }, 1800);
+    const timer = setTimeout(() => setVisible(false), 2200);
     return () => clearTimeout(timer);
   }, []);
 
@@ -18,82 +30,147 @@ export default function SplashScreen({ onDone }) {
           key="splash"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.4, ease: 'easeInOut' }}
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background"
+          transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden"
           style={{
             paddingTop: 'env(safe-area-inset-top, 0px)',
             paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+            background: 'hsl(var(--background))',
           }}
         >
-          {/* Logo mark */}
-          <motion.div
-            initial={{ scale: 0.7, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
-            className="flex flex-col items-center gap-5"
-          >
-            {/* Icon */}
-            <div className="w-20 h-20 rounded-3xl bg-primary flex items-center justify-center shadow-lg">
-              <svg
-                viewBox="0 0 40 40"
-                fill="none"
-                className="w-10 h-10"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                {/* Upward arrow / growth symbol */}
-                <path
-                  d="M20 32V12M20 12L12 20M20 12L28 20"
-                  stroke="white"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                {/* Bottom bar = foundation / streak */}
-                <path
-                  d="M10 34h20"
-                  stroke="white"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </div>
+          {/* ── Ambient radial glow — adapts to light/dark via primary colour ── */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse 72% 55% at 50% 42%, hsl(var(--primary)/0.13) 0%, transparent 70%)',
+            }}
+          />
 
-            {/* App name */}
+          {/* ── Secondary soft glow — bottom warmth ── */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse 60% 35% at 50% 92%, hsl(var(--accent)/0.08) 0%, transparent 70%)',
+            }}
+          />
+
+          {/* ── Brand stack ── */}
+          <div className="relative flex flex-col items-center">
+
+            {/* Logo icon — spring entrance */}
             <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.25, duration: 0.4 }}
-              className="text-center"
+              initial={{ opacity: 0, scale: 0.72, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{
+                duration: 0.65,
+                ease: [0.22, 1, 0.36, 1],   // custom spring curve
+                opacity: { duration: 0.45 },
+              }}
             >
-              <h1 className="text-2xl font-heading font-bold tracking-tight text-foreground">
-                Recovery
-              </h1>
-              <p className="text-sm text-muted-foreground mt-0.5 font-body">
-                One day at a time.
-              </p>
+              {/* Icon container — frosted-glass ring effect */}
+              <div className="relative">
+                {/* Outer glow ring */}
+                <div
+                  className="absolute inset-0 rounded-[28px]"
+                  style={{
+                    boxShadow: '0 0 0 1px hsl(var(--primary)/0.18), 0 8px 32px hsl(var(--primary)/0.22)',
+                  }}
+                />
+                {/* Icon card */}
+                <div
+                  className="w-[88px] h-[88px] rounded-[28px] flex items-center justify-center relative overflow-hidden"
+                  style={{
+                    background:
+                      'linear-gradient(145deg, hsl(var(--primary)/0.95) 0%, hsl(var(--primary)) 100%)',
+                    boxShadow:
+                      '0 2px 0 hsl(var(--primary-foreground)/0.08) inset, 0 20px 40px hsl(var(--primary)/0.3)',
+                  }}
+                >
+                  {/* Subtle inner highlight */}
+                  <div
+                    className="absolute top-0 left-0 right-0 h-1/2 rounded-t-[28px]"
+                    style={{
+                      background:
+                        'linear-gradient(180deg, hsl(var(--primary-foreground)/0.12) 0%, transparent 100%)',
+                    }}
+                  />
+                  {/* Steady logo mark — upward arrow + base (growth + stability) */}
+                  <svg
+                    viewBox="0 0 44 44"
+                    fill="none"
+                    className="w-11 h-11 relative z-10"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M22 36V16M22 16L14 24M22 16L30 24"
+                      stroke="white"
+                      strokeWidth="2.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M11 37.5h22"
+                      stroke="white"
+                      strokeWidth="2.8"
+                      strokeLinecap="round"
+                      opacity="0.7"
+                    />
+                  </svg>
+                </div>
+              </div>
             </motion.div>
-          </motion.div>
 
-          {/* Loading dot */}
+            {/* Wordmark — staggered 120 ms after icon */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.32, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="mt-6 text-center"
+            >
+              <h1
+                className="font-heading font-bold tracking-[-0.02em] text-foreground"
+                style={{ fontSize: '28px', lineHeight: 1 }}
+              >
+                Steady
+              </h1>
+            </motion.div>
+
+            {/* Tagline — fades in last */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.58, duration: 0.55 }}
+              className="mt-2 text-[13px] font-body font-medium tracking-wide"
+              style={{ color: 'hsl(var(--muted-foreground))' }}
+            >
+              Build the life you deserve.
+            </motion.p>
+          </div>
+
+          {/* ── Progress bar — minimal, single line (Stripe/Notion pattern) ── */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="absolute bottom-16 flex gap-1.5"
+            transition={{ delay: 0.7 }}
+            className="absolute bottom-10"
+            style={{ bottom: 'calc(2.5rem + env(safe-area-inset-bottom, 0px))' }}
           >
-            {[0, 1, 2].map((i) => (
+            <div
+              className="w-16 h-[2px] rounded-full overflow-hidden"
+              style={{ background: 'hsl(var(--border))' }}
+            >
               <motion.div
-                key={i}
-                className="w-1.5 h-1.5 rounded-full bg-primary/40"
-                animate={{ opacity: [0.3, 1, 0.3] }}
-                transition={{
-                  duration: 0.9,
-                  repeat: Infinity,
-                  delay: i * 0.2,
-                  ease: 'easeInOut',
-                }}
+                className="h-full rounded-full"
+                style={{ background: 'hsl(var(--primary))' }}
+                initial={{ scaleX: 0, originX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ delay: 0.75, duration: 1.3, ease: [0.4, 0, 0.2, 1] }}
               />
-            ))}
+            </div>
           </motion.div>
         </motion.div>
       )}
