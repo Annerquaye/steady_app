@@ -2,12 +2,12 @@ import Stripe from 'npm:stripe@14.21.0';
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
 const PRICE_IDS = {
-  starter_month: 'price_1TeP4QDgtIyh08WPKnftI1ZJ',
-  starter_year: 'price_1TeP4QDgtIyh08WPD8Ztcgor',
-  recovery_pro_month: 'price_1TeP4QDgtIyh08WPKqs4VJp0',
-  recovery_pro_year: 'price_1TeP4QDgtIyh08WPssb5mR0N',
-  elite_month: 'price_1TeP4QDgtIyh08WPzFjE3Q92',
-  elite_year: 'price_1TeP4QDgtIyh08WP3bpdqc58',
+  starter_month: 'price_1Tf6VkDu4AfNdbFnVixrrHaA',
+  starter_year: 'price_1Tf6VkDu4AfNdbFnwSzoKzbY',
+  recovery_pro_month: 'price_1Tf6VkDu4AfNdbFnDFsnEkna',
+  recovery_pro_year: 'price_1Tf6VkDu4AfNdbFnfStxemnS',
+  elite_month: 'price_1Tf6VkDu4AfNdbFnsKvnvScB',
+  elite_year: 'price_1Tf6VkDu4AfNdbFnhjWrcZ78',
 };
 
 const VALID_PLANS = ['starter', 'recovery_pro', 'elite'];

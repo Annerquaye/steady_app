@@ -10,8 +10,8 @@ const PLANS = [
   {
     id: 'starter',
     name: 'Starter',
-    monthlyPrice: 4.99,
-    annualPrice: 47.99,
+    monthlyPrice: 3.99,
+    annualPrice: 39.99,
     badge: null,
     desc: 'Build the foundation of your recovery.',
     features: ['Streak tracking', 'Daily check-ins', 'Journal entries', 'Progress dashboard', 'Trigger logging'],
@@ -22,8 +22,8 @@ const PLANS = [
   {
     id: 'recovery_pro',
     name: 'Recovery Pro',
-    monthlyPrice: 14.99,
-    annualPrice: 143.99,
+    monthlyPrice: 9.99,
+    annualPrice: 95.99,
     badge: 'Most Popular',
     badgeColor: 'bg-primary text-primary-foreground',
     desc: 'The complete recovery system for lasting change.',
@@ -35,8 +35,8 @@ const PLANS = [
   {
     id: 'elite',
     name: 'Elite Recovery',
-    monthlyPrice: 29.99,
-    annualPrice: 287.99,
+    monthlyPrice: 19.99,
+    annualPrice: 191.99,
     badge: 'Maximum Support',
     badgeColor: 'bg-accent text-accent-foreground',
     desc: 'The highest level of structure and personalization.',
