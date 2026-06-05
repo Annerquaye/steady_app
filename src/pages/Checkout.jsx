@@ -229,6 +229,16 @@ export default function Checkout() {
               <p className="text-[10px] text-center text-muted-foreground">
                 Secured by Stripe · 256-bit SSL encryption
               </p>
+
+              {meta.trial ? (
+                <p className="text-[10px] text-muted-foreground leading-relaxed text-center">
+                  After your 7-day free trial, you will be charged ${price}/{billing === 'year' ? 'year' : 'month'}. Subscription automatically renews unless cancelled at least 24 hours before the end of the current period. Manage or cancel anytime in Settings.
+                </p>
+              ) : (
+                <p className="text-[10px] text-muted-foreground leading-relaxed text-center">
+                  Subscription automatically renews unless cancelled at least 24 hours before the end of the current period. Manage or cancel anytime in Settings.
+                </p>
+              )}
             </div>
           </div>
         </div>

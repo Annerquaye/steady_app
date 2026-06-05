@@ -10,7 +10,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
-import { Users, Shield, Trash2, LogOut, ChevronRight, Eye, CreditCard, Zap } from 'lucide-react';
+import { Users, Shield, Trash2, LogOut, ChevronRight, Eye, CreditCard, Zap, RefreshCw } from 'lucide-react';
 import { format, differenceInDays } from 'date-fns';
 
 const PLAN_NAMES = { starter: 'Starter', recovery_pro: 'Recovery Pro', elite: 'Elite Recovery' };
@@ -122,6 +122,7 @@ export default function Settings() {
               <span className="text-muted-foreground">Plan</span>
               <span className="font-semibold">{PLAN_NAMES[sub.plan] || sub.plan}</span>
             </div>
+
             <div className="flex justify-between items-center text-sm">
               <span className="text-muted-foreground">Status</span>
               <span className={`font-semibold capitalize ${sub.status === 'trialing' ? 'text-accent' : sub.status === 'active' ? 'text-primary' : 'text-destructive'}`}>
@@ -148,6 +149,9 @@ export default function Settings() {
             <p className="text-sm text-muted-foreground">No active subscription. Upgrade to unlock all features.</p>
             <Button className="w-full gap-2" onClick={() => navigate('/pricing')}>
               <Zap className="w-4 h-4" /> View Plans
+            </Button>
+            <Button variant="ghost" className="w-full gap-2 text-muted-foreground text-xs" onClick={() => navigate('/pricing?restore=1')}>
+              <RefreshCw className="w-3.5 h-3.5" /> Restore Purchases
             </Button>
           </div>
         )}

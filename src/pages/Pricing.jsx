@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Check, Shield, Lock, Star, Zap, Brain, BarChart3, Users, Globe, Bell, ArrowRight, AlertCircle } from 'lucide-react';
+import { Check, Shield, Lock, Star, Zap, Brain, BarChart3, Users, Globe, Bell, ArrowRight, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { base44 } from '@/api/base44Client';
 import { cn } from '@/lib/utils';
 
 const PLANS = [
@@ -49,7 +51,22 @@ export default function Pricing() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const checkoutFailed = searchParams.get('checkout') === 'failed' || searchParams.get('checkout') === 'canceled';
+  const isRestore = searchParams.get('restore') === '1';
   const [billing, setBilling] = useState('month');
+  const [restoreEmail, setRestoreEmail] = useState('');
+  const [restoreLoading, setRestoreLoading] = useState(false);
+  const [restoreMsg, setRestoreMsg] = useState('');
+
+  const handleRestore = async () => {
+    if (!restoreEmail) return;
+    setRestoreLoading(true);
+    setRestoreMsg('');
+    const res = await base44.functions.invoke('verifyCheckoutSession', { email: restoreEmail, restore: true });
+    setRestoreLoading(false);
+    setRestoreMsg(res.data?.success
+      ? '✅ Subscription restored! Please log in again to apply.'
+      : '❌ No active subscription found for that email.');
+  };
 
   const handleSelect = (plan) => {
     navigate(`/checkout?plan=${plan.id}&billing=${billing}`);
@@ -66,6 +83,27 @@ export default function Pricing() {
             <p className="text-sm font-semibold text-destructive">We couldn't process your payment.</p>
             <p className="text-xs text-muted-foreground mt-1">Please try again or choose a different plan below.</p>
           </div>
+        </div>
+      )}
+
+      {isRestore && (
+        <div className="mb-8 bg-card rounded-2xl border border-border p-5 space-y-3">
+          <div className="flex items-center gap-2">
+            <RefreshCw className="w-4 h-4 text-primary" />
+            <h2 className="text-sm font-semibold">Restore Purchases</h2>
+          </div>
+          <p className="text-xs text-muted-foreground">Enter the email address you used to subscribe.</p>
+          <Input
+            type="email"
+            placeholder="you@email.com"
+            value={restoreEmail}
+            onChange={e => setRestoreEmail(e.target.value)}
+            className="h-11"
+          />
+          <Button className="w-full" onClick={handleRestore} disabled={restoreLoading || !restoreEmail}>
+            {restoreLoading ? 'Checking...' : 'Restore Subscription'}
+          </Button>
+          {restoreMsg && <p className="text-sm text-center">{restoreMsg}</p>}
         </div>
       )}
 
