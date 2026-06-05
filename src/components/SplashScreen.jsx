@@ -71,56 +71,18 @@ export default function SplashScreen({ onDone }) {
                 opacity: { duration: 0.45 },
               }}
             >
-              {/* Icon container — frosted-glass ring effect */}
-              <div className="relative">
-                {/* Outer glow ring */}
-                <div
-                  className="absolute inset-0 rounded-[28px]"
-                  style={{
-                    boxShadow: '0 0 0 1px hsl(var(--primary)/0.18), 0 8px 32px hsl(var(--primary)/0.22)',
-                  }}
+              {/* Steady logo image */}
+              <div
+                className="relative"
+                style={{
+                  filter: 'drop-shadow(0 16px 40px rgba(0,0,0,0.22)) drop-shadow(0 4px 12px rgba(0,0,0,0.14))',
+                }}
+              >
+                <img
+                  src="https://media.base44.com/images/public/6a20baed8fdb785fe59d2daa/ddec82ebf_Steady.jpeg"
+                  alt="Steady"
+                  className="w-[100px] h-[100px] rounded-[28px] object-cover"
                 />
-                {/* Icon card */}
-                <div
-                  className="w-[88px] h-[88px] rounded-[28px] flex items-center justify-center relative overflow-hidden"
-                  style={{
-                    background:
-                      'linear-gradient(145deg, hsl(var(--primary)/0.95) 0%, hsl(var(--primary)) 100%)',
-                    boxShadow:
-                      '0 2px 0 hsl(var(--primary-foreground)/0.08) inset, 0 20px 40px hsl(var(--primary)/0.3)',
-                  }}
-                >
-                  {/* Subtle inner highlight */}
-                  <div
-                    className="absolute top-0 left-0 right-0 h-1/2 rounded-t-[28px]"
-                    style={{
-                      background:
-                        'linear-gradient(180deg, hsl(var(--primary-foreground)/0.12) 0%, transparent 100%)',
-                    }}
-                  />
-                  {/* Steady logo mark — upward arrow + base (growth + stability) */}
-                  <svg
-                    viewBox="0 0 44 44"
-                    fill="none"
-                    className="w-11 h-11 relative z-10"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M22 36V16M22 16L14 24M22 16L30 24"
-                      stroke="white"
-                      strokeWidth="2.8"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M11 37.5h22"
-                      stroke="white"
-                      strokeWidth="2.8"
-                      strokeLinecap="round"
-                      opacity="0.7"
-                    />
-                  </svg>
-                </div>
               </div>
             </motion.div>
 
