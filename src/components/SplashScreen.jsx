@@ -35,7 +35,7 @@ export default function SplashScreen({ onDone }) {
           style={{
             paddingTop: 'env(safe-area-inset-top, 0px)',
             paddingBottom: 'env(safe-area-inset-bottom, 0px)',
-            background: 'hsl(var(--background))',
+            background: '#1a4a2e',
           }}
         >
           {/* ── Ambient radial glow — adapts to light/dark via primary colour ── */}
@@ -44,7 +44,7 @@ export default function SplashScreen({ onDone }) {
             className="pointer-events-none absolute inset-0"
             style={{
               background:
-                'radial-gradient(ellipse 72% 55% at 50% 42%, hsl(var(--primary)/0.13) 0%, transparent 70%)',
+                'radial-gradient(ellipse 80% 60% at 50% 42%, #2d6b44 0%, transparent 70%)',
             }}
           />
 
@@ -54,7 +54,7 @@ export default function SplashScreen({ onDone }) {
             className="pointer-events-none absolute inset-0"
             style={{
               background:
-                'radial-gradient(ellipse 60% 35% at 50% 92%, hsl(var(--accent)/0.08) 0%, transparent 70%)',
+                'radial-gradient(ellipse 60% 35% at 50% 92%, #c9a84c22 0%, transparent 70%)',
             }}
           />
 
@@ -94,8 +94,8 @@ export default function SplashScreen({ onDone }) {
               className="mt-6 text-center"
             >
               <h1
-                className="font-heading font-bold tracking-[-0.02em] text-foreground"
-                style={{ fontSize: '28px', lineHeight: 1 }}
+                className="font-heading font-bold tracking-[-0.02em]"
+                style={{ fontSize: '28px', lineHeight: 1, color: '#c9a84c' }}
               >
                 Steady
               </h1>
@@ -107,7 +107,7 @@ export default function SplashScreen({ onDone }) {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.58, duration: 0.55 }}
               className="mt-2 text-[13px] font-body font-medium tracking-wide"
-              style={{ color: 'hsl(var(--muted-foreground))' }}
+              style={{ color: 'rgba(255,255,255,0.75)' }}
             >
               Build the life you deserve.
             </motion.p>
@@ -123,11 +123,11 @@ export default function SplashScreen({ onDone }) {
           >
             <div
               className="w-16 h-[2px] rounded-full overflow-hidden"
-              style={{ background: 'hsl(var(--border))' }}
+              style={{ background: 'rgba(255,255,255,0.15)' }}
             >
               <motion.div
                 className="h-full rounded-full"
-                style={{ background: 'hsl(var(--primary))' }}
+                style={{ background: '#c9a84c' }}
                 initial={{ scaleX: 0, originX: 0 }}
                 animate={{ scaleX: 1 }}
                 transition={{ delay: 0.75, duration: 1.3, ease: [0.4, 0, 0.2, 1] }}
