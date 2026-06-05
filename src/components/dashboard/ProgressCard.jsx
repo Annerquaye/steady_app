@@ -42,10 +42,16 @@ export default function ProgressCard({ profile, urges }) {
           <span className="text-sm font-medium text-muted-foreground">Clean streak</span>
         </div>
         <div className="flex items-baseline gap-2">
-          <span className="text-5xl font-heading font-bold text-foreground">{days}</span>
-          <span className="text-lg text-muted-foreground">days</span>
-          {hours > 0 && (
-            <span className="text-2xl font-heading font-semibold text-foreground/50 ml-1">{hours}h</span>
+          {days === 0 && hours === 0 ? (
+            <span className="text-3xl font-heading font-bold text-foreground">Day 1 begins now</span>
+          ) : (
+            <>
+              <span className="text-5xl font-heading font-bold text-foreground">{days}</span>
+              <span className="text-lg text-muted-foreground">days</span>
+              {hours > 0 && (
+                <span className="text-2xl font-heading font-semibold text-foreground/50 ml-1">{hours}h</span>
+              )}
+            </>
           )}
         </div>
         <p className="text-xs text-muted-foreground mt-1.5">{streakMessage}</p>

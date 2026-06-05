@@ -17,7 +17,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data: profiles, isLoading: loadingProfile } = useQuery({
+  const { data: profiles, isLoading: loadingProfile, isFetched: profileFetched } = useQuery({
     queryKey: ['userProfile'],
     queryFn: () => base44.entities.UserProfile.list(),
     initialData: [],
@@ -38,10 +38,10 @@ export default function Dashboard() {
   });
 
   React.useEffect(() => {
-    if (!loadingProfile && !profile) {
+    if (profileFetched && !profile) {
       navigate('/onboarding');
     }
-  }, [loadingProfile, profile, navigate]);
+  }, [profileFetched, profile, navigate]);
 
   // Pull-to-refresh: invalidates all dashboard queries
   const handleRefresh = React.useCallback(() => {

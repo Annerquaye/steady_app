@@ -13,6 +13,8 @@ export default function SubscriptionBanner() {
   const [dismissed, setDismissed] = useState(false);
   const [activated, setActivated] = useState(false);
   const verifiedRef = useRef(false);
+  // Persist activation across hard-redirects using sessionStorage
+  const storageKey = sessionId ? `verified_${sessionId}` : null;
 
   // Verify subscription on return from Stripe
   const sessionId = searchParams.get('session_id');
@@ -25,21 +27,31 @@ export default function SubscriptionBanner() {
   });
 
   useEffect(() => {
-    // Guard against double-invoke in strict mode / re-renders
-    if (sessionId && subscriptionActive && !verifiedRef.current) {
-      verifiedRef.current = true;
-      base44.functions.invoke('verifyCheckoutSession', { session_id: sessionId }).then(() => {
-        setActivated(true);
-        queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
-        // Clean up URL params
-        const newParams = new URLSearchParams(searchParams);
-        newParams.delete('session_id');
-        newParams.delete('subscription');
-        setSearchParams(newParams, { replace: true });
-      }).catch(err => {
-        console.error('Failed to verify checkout session:', err);
-      });
+    if (!sessionId || !subscriptionActive) return;
+
+    // Already verified this session (survives hard-redirect)
+    if (storageKey && sessionStorage.getItem(storageKey)) {
+      setActivated(true);
+      return;
     }
+
+    // Guard against double-invoke within same mount
+    if (verifiedRef.current) return;
+    verifiedRef.current = true;
+
+    // Clean up URL params immediately so re-mounts won't re-fire
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete('session_id');
+    newParams.delete('subscription');
+    setSearchParams(newParams, { replace: true });
+
+    base44.functions.invoke('verifyCheckoutSession', { session_id: sessionId }).then(() => {
+      if (storageKey) sessionStorage.setItem(storageKey, '1');
+      setActivated(true);
+      queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
+    }).catch(err => {
+      console.error('Failed to verify checkout session:', err);
+    });
   }, [sessionId]);
 
   const sub = subscriptions?.[0];

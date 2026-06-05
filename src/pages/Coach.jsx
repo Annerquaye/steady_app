@@ -75,8 +75,8 @@ Guidelines:
 - Use "you" language, not "we"
 - If they are in crisis, suggest the urge emergency mode or calling someone they trust`;
 
-    // Build conversation history safely, capped to last 20 messages
-    const safeHistory = messages.slice(-20).map(m => `${m.role === 'user' ? 'User' : 'Coach'}: ${m.content.substring(0, 1000)}`).join('\n');
+    // Build conversation history safely, capped to last 10 messages to avoid token bloat
+    const safeHistory = messages.slice(-10).map(m => `${m.role === 'user' ? 'User' : 'Coach'}: ${m.content.substring(0, 1000)}`).join('\n');
     const fullPrompt = `${systemContext}\n\n---\nConversation:\n${safeHistory}\nUser: ${sanitizedMessage}\nCoach:`;
 
     let response;

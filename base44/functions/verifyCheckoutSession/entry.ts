@@ -4,14 +4,34 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+    const body = await req.json();
 
-    // Auth required — only the authenticated user may verify their own session
+    // ── RESTORE BY EMAIL ──────────────────────────────────────────────────────
+    if (body.restore === true) {
+      const { email } = body;
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return Response.json({ error: 'Invalid email' }, { status: 400 });
+      }
+
+      const existing = await base44.asServiceRole.entities.Subscription.filter({ email });
+      const active = existing.find(s => s.status === 'active' || s.status === 'trialing');
+
+      if (!active) {
+        console.log('Restore attempt: no active subscription found for', email);
+        return Response.json({ success: false, error: 'No active subscription found for that email.' });
+      }
+
+      console.log('Subscription restored for email:', email, 'plan:', active.plan);
+      return Response.json({ success: true, plan: active.plan, status: active.status });
+    }
+
+    // ── VERIFY CHECKOUT SESSION ───────────────────────────────────────────────
     const user = await base44.auth.me();
     if (!user) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { session_id } = await req.json();
+    const { session_id } = body;
 
     if (!session_id || typeof session_id !== 'string' || !session_id.startsWith('cs_')) {
       return Response.json({ error: 'Invalid session ID' }, { status: 400 });

@@ -126,7 +126,7 @@ export default function Settings() {
             <div className="flex justify-between items-center text-sm">
               <span className="text-muted-foreground">Status</span>
               <span className={`font-semibold capitalize ${sub.status === 'trialing' ? 'text-accent' : sub.status === 'active' ? 'text-primary' : 'text-destructive'}`}>
-                {sub.status === 'trialing' ? `Trial (${differenceInDays(new Date(sub.trial_end), new Date())} days left)` : sub.status}
+                {sub.status === 'trialing' ? `Trial (${Math.max(0, differenceInDays(new Date(sub.trial_end), new Date()))} days left)` : sub.status}
               </span>
             </div>
             {sub.current_period_end && (

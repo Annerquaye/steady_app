@@ -10,6 +10,7 @@ import PageHeader from '@/components/layout/PageHeader';
 export default function WeeklyReview() {
   const [report, setReport] = useState(null);
   const [generating, setGenerating] = useState(false);
+  const [lastGenerated, setLastGenerated] = useState(null);
 
   const { data: profiles } = useQuery({
     queryKey: ['userProfile'],
@@ -37,7 +38,10 @@ export default function WeeklyReview() {
 
   const profile = profiles[0];
 
+  const canGenerate = !lastGenerated || (Date.now() - lastGenerated > 60_000);
+
   const generateReport = async () => {
+    if (!canGenerate) return;
     setGenerating(true);
     const weekAgo = subDays(new Date(), 7);
     const weekUrges = urges.filter(u => new Date(u.created_date) >= weekAgo);
@@ -73,6 +77,7 @@ Keep it concise but insightful. Reference their specific data.`;
 
     const response = await base44.integrations.Core.InvokeLLM({ prompt });
     setReport(response);
+    setLastGenerated(Date.now());
     setGenerating(false);
   };
 
@@ -97,7 +102,7 @@ Keep it concise but insightful. Reference their specific data.`;
               Your AI coach will analyze your week and give you personalized insights.
             </p>
           </div>
-          <Button onClick={generateReport} disabled={generating} className="gap-2">
+          <Button onClick={generateReport} disabled={generating || !canGenerate} className="gap-2">
             {generating ? (
               <><Loader2 className="w-4 h-4 animate-spin" /> Analyzing your week...</>
             ) : (

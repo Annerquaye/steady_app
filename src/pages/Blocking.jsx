@@ -12,6 +12,7 @@ export default function Blocking() {
   const [newSite, setNewSite] = useState('');
   const [newKeyword, setNewKeyword] = useState('');
   const [newApp, setNewApp] = useState('');
+  const [saving, setSaving] = useState(false);
 
   const { data: profiles } = useQuery({
     queryKey: ['userProfile'],
@@ -22,13 +23,15 @@ export default function Blocking() {
   const profile = profiles[0];
 
   const updateProfile = async (updates) => {
-    if (!profile) return;
+    if (!profile || saving) return;
+    setSaving(true);
     await base44.entities.UserProfile.update(profile.id, updates);
     queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+    setSaving(false);
   };
 
   const addToList = (field, value, setter) => {
-    if (!value.trim() || !profile) return;
+    if (!value.trim() || !profile || saving) return;
     const current = profile[field] || [];
     updateProfile({ [field]: [...current, value.trim()] });
     setter('');
