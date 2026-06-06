@@ -14,10 +14,8 @@ export default function SubscriptionBanner() {
   const [activated, setActivated] = useState(false);
   const verifiedRef = useRef(false);
 
-  // Verify subscription on return from Stripe
   const sessionId = searchParams.get('session_id');
   const subscriptionActive = searchParams.get('subscription') === 'active';
-  // Persist activation across hard-redirects using sessionStorage
   const storageKey = sessionId ? `verified_${sessionId}` : null;
 
   const { data: subscriptions } = useQuery({
@@ -29,17 +27,14 @@ export default function SubscriptionBanner() {
   useEffect(() => {
     if (!sessionId || !subscriptionActive) return;
 
-    // Already verified this session (survives hard-redirect)
     if (storageKey && sessionStorage.getItem(storageKey)) {
       setActivated(true);
       return;
     }
 
-    // Guard against double-invoke within same mount
     if (verifiedRef.current) return;
     verifiedRef.current = true;
 
-    // Clean up URL params immediately so re-mounts won't re-fire
     const newParams = new URLSearchParams(searchParams);
     newParams.delete('session_id');
     newParams.delete('subscription');
