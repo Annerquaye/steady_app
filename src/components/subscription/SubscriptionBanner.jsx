@@ -13,12 +13,12 @@ export default function SubscriptionBanner() {
   const [dismissed, setDismissed] = useState(false);
   const [activated, setActivated] = useState(false);
   const verifiedRef = useRef(false);
-  // Persist activation across hard-redirects using sessionStorage
-  const storageKey = sessionId ? `verified_${sessionId}` : null;
 
   // Verify subscription on return from Stripe
   const sessionId = searchParams.get('session_id');
   const subscriptionActive = searchParams.get('subscription') === 'active';
+  // Persist activation across hard-redirects using sessionStorage
+  const storageKey = sessionId ? `verified_${sessionId}` : null;
 
   const { data: subscriptions } = useQuery({
     queryKey: ['subscriptions'],
