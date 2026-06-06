@@ -10,7 +10,7 @@ import MilestoneTracker from '@/components/dashboard/MilestoneTracker';
 import MoodTrend from '@/components/dashboard/MoodTrend';
 import UrgeFrequencyChart from '@/components/dashboard/UrgeFrequencyChart';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BarChart3, FileText, RefreshCw } from 'lucide-react';
+import { BarChart3, FileText } from 'lucide-react';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -19,25 +19,37 @@ export default function Dashboard() {
   const touchStartX = useRef(null);
   const containerRef = useRef(null);
 
-  const { data: profiles, isLoading: loadingProfile, isFetched: profileFetched } = useQuery({
+  const { data: profiles, isLoading: loadingProfile, isFetched: profileFetched, refetch: refetchProfile } = useQuery({
     queryKey: ['userProfile'],
     queryFn: () => base44.entities.UserProfile.list(),
     initialData: [],
+    staleTime: 0,
   });
 
   const profile = profiles[0];
 
-  const { data: urges } = useQuery({
+  const { data: urges, refetch: refetchUrges } = useQuery({
     queryKey: ['urges'],
     queryFn: () => base44.entities.UrgeLog.list('-created_date', 100),
     initialData: [],
+    staleTime: 0,
   });
 
-  const { data: journals } = useQuery({
+  const { data: journals, refetch: refetchJournals } = useQuery({
     queryKey: ['journals'],
     queryFn: () => base44.entities.JournalEntry.list('-created_date', 100),
     initialData: [],
+    staleTime: 0,
   });
+
+  // Refetch data whenever switching to Trends or Insights tabs
+  React.useEffect(() => {
+    if (page > 0) {
+      refetchUrges();
+      refetchJournals();
+      refetchProfile();
+    }
+  }, [page]);
 
   React.useEffect(() => {
     if (profileFetched && !profile) {
