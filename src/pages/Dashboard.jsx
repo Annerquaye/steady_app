@@ -81,64 +81,57 @@ export default function Dashboard() {
       d.getDate() === now.getDate();
   });
 
-  const pages = [
-    {
-      label: 'Progress',
-      content: (
-        <div className="space-y-5">
-          <div>
-            <h1 className="text-2xl font-heading font-bold">Your recovery</h1>
-            <p className="text-sm text-muted-foreground mt-0.5">One day at a time.</p>
-          </div>
-          <ProgressCard profile={profile} urges={urges} />
-          <DailyCheckIn alreadyDoneToday={alreadyDoneToday} />
-          <DailyMessage />
+  const PAGE_LABELS = ['Progress', 'Trends', 'Insights'];
+
+  const renderPage = (i) => {
+    if (i === 0) return (
+      <div className="space-y-5">
+        <div>
+          <h1 className="text-2xl font-heading font-bold">Your recovery</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">One day at a time.</p>
         </div>
-      ),
-    },
-    {
-      label: 'Trends',
-      content: (
-        <div className="space-y-5">
-          <div>
-            <h1 className="text-2xl font-heading font-bold">Your trends</h1>
-            <p className="text-sm text-muted-foreground mt-0.5">Track patterns over time.</p>
-          </div>
-          <MoodTrend journals={journals} />
-          <UrgeFrequencyChart urges={urges} />
+        <ProgressCard profile={profile} urges={urges} />
+        <DailyCheckIn alreadyDoneToday={alreadyDoneToday} />
+        <DailyMessage />
+      </div>
+    );
+    if (i === 1) return (
+      <div className="space-y-5">
+        <div>
+          <h1 className="text-2xl font-heading font-bold">Your trends</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">Track patterns over time.</p>
         </div>
-      ),
-    },
-    {
-      label: 'Insights',
-      content: (
-        <div className="space-y-5">
-          <div>
-            <h1 className="text-2xl font-heading font-bold">Insights</h1>
-            <p className="text-sm text-muted-foreground mt-0.5">Milestones & triggers.</p>
-          </div>
-          <MilestoneTracker profile={profile} urges={urges} />
-          <TriggerInsights urges={urges} profile={profile} />
-          <div className="grid grid-cols-2 gap-3">
-            <Link to="/review">
-              <div className="bg-card rounded-xl border border-border p-4 hover:border-primary/20 transition-colors">
-                <BarChart3 className="w-5 h-5 text-primary mb-2" />
-                <p className="text-sm font-medium">Weekly Review</p>
-                <p className="text-xs text-muted-foreground">AI-powered insights</p>
-              </div>
-            </Link>
-            <Link to="/relapse">
-              <div className="bg-card rounded-xl border border-border p-4 hover:border-primary/20 transition-colors">
-                <FileText className="w-5 h-5 text-accent mb-2" />
-                <p className="text-sm font-medium">Log Relapse</p>
-                <p className="text-xs text-muted-foreground">Reflect & learn</p>
-              </div>
-            </Link>
-          </div>
+        <MoodTrend journals={journals} />
+        <UrgeFrequencyChart urges={urges} />
+      </div>
+    );
+    if (i === 2) return (
+      <div className="space-y-5">
+        <div>
+          <h1 className="text-2xl font-heading font-bold">Insights</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">Milestones & triggers.</p>
         </div>
-      ),
-    },
-  ];
+        <MilestoneTracker profile={profile} urges={urges} />
+        <TriggerInsights urges={urges} profile={profile} />
+        <div className="grid grid-cols-2 gap-3">
+          <Link to="/review">
+            <div className="bg-card rounded-xl border border-border p-4 hover:border-primary/20 transition-colors">
+              <BarChart3 className="w-5 h-5 text-primary mb-2" />
+              <p className="text-sm font-medium">Weekly Review</p>
+              <p className="text-xs text-muted-foreground">AI-powered insights</p>
+            </div>
+          </Link>
+          <Link to="/relapse">
+            <div className="bg-card rounded-xl border border-border p-4 hover:border-primary/20 transition-colors">
+              <FileText className="w-5 h-5 text-accent mb-2" />
+              <p className="text-sm font-medium">Log Relapse</p>
+              <p className="text-xs text-muted-foreground">Reflect & learn</p>
+            </div>
+          </Link>
+        </div>
+      </div>
+    );
+  };
 
   const handleTouchStart = (e) => {
     touchStartX.current = e.touches[0].clientX;
@@ -148,7 +141,7 @@ export default function Dashboard() {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 50) {
-      if (diff > 0 && page < pages.length - 1) setPage(p => p + 1);
+      if (diff > 0 && page < PAGE_LABELS.length - 1) setPage(p => p + 1);
       if (diff < 0 && page > 0) setPage(p => p - 1);
     }
     touchStartX.current = null;
@@ -163,7 +156,7 @@ export default function Dashboard() {
     >
       {/* Tab navigation bar */}
       <div className="flex items-center border-b border-border bg-background flex-shrink-0 px-4 pt-2">
-        {pages.map((p, i) => (
+        {PAGE_LABELS.map((label, i) => (
           <button
             key={i}
             onClick={() => setPage(i)}
@@ -171,7 +164,7 @@ export default function Dashboard() {
               i === page ? 'text-primary' : 'text-muted-foreground'
             }`}
           >
-            {p.label}
+            {label}
             {i === page && (
               <span className="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-primary rounded-full" />
             )}
@@ -193,15 +186,15 @@ export default function Dashboard() {
       <div className="overflow-hidden flex-1">
         <div
           className="flex h-full transition-transform duration-300 ease-out"
-          style={{ transform: `translateX(-${page * 100}%)`, width: `${pages.length * 100}%` }}
+          style={{ transform: `translateX(-${page * 100}%)`, width: `${PAGE_LABELS.length * 100}%` }}
         >
-          {pages.map((p, i) => (
+          {PAGE_LABELS.map((_, i) => (
             <div
               key={i}
               className="overflow-y-auto px-5 py-4 pb-8"
-              style={{ width: `${100 / pages.length}%` }}
+              style={{ width: `${100 / PAGE_LABELS.length}%` }}
             >
-              {p.content}
+              {renderPage(i)}
             </div>
           ))}
         </div>
