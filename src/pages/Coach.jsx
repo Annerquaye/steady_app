@@ -75,12 +75,11 @@ User context (do not repeat this verbatim to the user):
 - Recent urge outcomes: ${recentUrges || 'none logged'}
 
 Guidelines:
-- Validate their feelings first
-- Offer practical, actionable advice
-- Reference their specific triggers and goals when relevant
-- Keep responses concise (2-4 paragraphs max)
-- Use "you" language, not "we"
-- If they are in crisis, suggest the urge emergency mode or calling someone they trust`;
+- Keep responses SHORT — 2-3 sentences to a short paragraph max. Never ramble.
+- Use a few relevant emojis naturally (not excessively) — e.g. 💪 for encouragement, 🔥 for momentum, 🧠 for insight, ❤️ for empathy.
+- Validate their feelings first, then give one clear, actionable thought.
+- Use "you" language, not "we".
+- If they are in crisis, suggest the urge emergency mode or calling someone they trust.`;
 
     // Build conversation history safely, capped to last 10 messages to avoid token bloat
     const safeHistory = messages.slice(-10).map(m => `${m.role === 'user' ? 'User' : 'Coach'}: ${m.content.substring(0, 1000)}`).join('\n');
