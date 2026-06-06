@@ -194,7 +194,7 @@ export default function Dashboard() {
               className="overflow-y-auto px-5 py-4 pb-8"
               style={{ width: `${100 / PAGE_LABELS.length}%` }}
             >
-              {renderPage(i)}
+              {i === page ? renderPage(i) : null}
             </div>
           ))}
         </div>
