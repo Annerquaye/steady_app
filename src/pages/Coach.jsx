@@ -16,7 +16,10 @@ export default function Coach() {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [streamingText, setStreamingText] = useState('');
+  const [isStreaming, setIsStreaming] = useState(false);
   const scrollRef = useRef(null);
+  const streamIntervalRef = useRef(null);
 
   const { data: profiles } = useQuery({
     queryKey: ['userProfile'],
@@ -34,7 +37,11 @@ export default function Coach() {
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, streamingText]);
+
+  useEffect(() => {
+    return () => { if (streamIntervalRef.current) clearTimeout(streamIntervalRef.current); };
+  }, []);
 
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
@@ -90,8 +97,29 @@ Guidelines:
       return;
     }
 
-    setMessages(prev => [...prev, { role: 'assistant', content: response }]);
+    // Typewriter stream effect
     setIsLoading(false);
+    setIsStreaming(true);
+    setStreamingText('');
+
+    const words = response.split(' ');
+    let i = 0;
+    // Vary speed slightly for a natural feel
+    const tick = () => {
+      if (i >= words.length) {
+        setMessages(prev => [...prev, { role: 'assistant', content: response }]);
+        setStreamingText('');
+        setIsStreaming(false);
+        return;
+      }
+      // Add 1-3 words at a time at varying intervals for natural rhythm
+      const chunk = words.slice(i, i + (i % 5 === 0 ? 1 : 2)).join(' ');
+      i += (i % 5 === 0 ? 1 : 2);
+      setStreamingText(prev => prev ? prev + ' ' + chunk : chunk);
+      const delay = chunk.endsWith('.') || chunk.endsWith('?') || chunk.endsWith('!') ? 280 : 55;
+      streamIntervalRef.current = setTimeout(tick, delay);
+    };
+    tick();
   };
 
   return (
@@ -134,8 +162,20 @@ Guidelines:
         ))}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-card border border-border rounded-2xl rounded-bl-sm px-4 py-3">
-              <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+            <div className="bg-card border border-border rounded-2xl rounded-bl-sm px-4 py-3 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+              <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+              <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+            </div>
+          </div>
+        )}
+        {isStreaming && streamingText && (
+          <div className="flex justify-start">
+            <div className="max-w-[85%] rounded-2xl rounded-bl-sm px-4 py-3 bg-card border border-border">
+              <div className="text-sm leading-relaxed prose prose-sm prose-slate max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+                <ReactMarkdown>{streamingText}</ReactMarkdown>
+              </div>
+              <span className="inline-block w-0.5 h-4 bg-primary ml-0.5 animate-pulse align-middle" />
             </div>
           </div>
         )}
@@ -153,13 +193,13 @@ Guidelines:
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type a message..."
             className="flex-1 rounded-full bg-secondary border-0"
-            disabled={isLoading}
+            disabled={isLoading || isStreaming}
           />
           <Button
             type="submit"
             size="icon"
             className="rounded-full flex-shrink-0"
-            disabled={!input.trim() || isLoading}
+            disabled={!input.trim() || isLoading || isStreaming}
           >
             <Send className="w-4 h-4" />
           </Button>
