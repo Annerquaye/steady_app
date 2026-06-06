@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -11,11 +11,13 @@ import MoodTrend from '@/components/dashboard/MoodTrend';
 import UrgeFrequencyChart from '@/components/dashboard/UrgeFrequencyChart';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BarChart3, FileText, RefreshCw } from 'lucide-react';
-import { usePullToRefresh } from '@/hooks/usePullToRefresh';
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [page, setPage] = useState(0);
+  const touchStartX = useRef(null);
+  const containerRef = useRef(null);
 
   const { data: profiles, isLoading: loadingProfile, isFetched: profileFetched } = useQuery({
     queryKey: ['userProfile'],
@@ -43,13 +45,6 @@ export default function Dashboard() {
     }
   }, [profileFetched, profile, navigate]);
 
-  // Pull-to-refresh: invalidates all dashboard queries
-  const handleRefresh = React.useCallback(() => {
-    return queryClient.invalidateQueries();
-  }, [queryClient]);
-
-  const { pullDistance, refreshing } = usePullToRefresh(handleRefresh);
-
   if (loadingProfile) {
     return (
       <div className="p-6 space-y-4">
@@ -74,47 +69,113 @@ export default function Dashboard() {
       d.getDate() === now.getDate();
   });
 
-  return (
-    <div className="p-6 space-y-5">
-      {/* Pull-to-refresh indicator */}
-      {(pullDistance > 0 || refreshing) && (
-        <div
-          className="flex items-center justify-center text-muted-foreground text-xs gap-2 transition-all"
-          style={{ height: Math.min(pullDistance, 56), overflow: 'hidden' }}
-        >
-          <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-          <span>{refreshing ? 'Refreshing…' : 'Pull to refresh'}</span>
+  const pages = [
+    {
+      label: 'Progress',
+      content: (
+        <div className="space-y-5">
+          <div>
+            <h1 className="text-2xl font-heading font-bold">Your recovery</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">One day at a time.</p>
+          </div>
+          <ProgressCard profile={profile} urges={urges} />
+          <DailyCheckIn alreadyDoneToday={alreadyDoneToday} />
+          <DailyMessage />
         </div>
-      )}
+      ),
+    },
+    {
+      label: 'Trends',
+      content: (
+        <div className="space-y-5">
+          <div>
+            <h1 className="text-2xl font-heading font-bold">Your trends</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">Track patterns over time.</p>
+          </div>
+          <MoodTrend journals={journals} />
+          <UrgeFrequencyChart urges={urges} />
+        </div>
+      ),
+    },
+    {
+      label: 'Insights',
+      content: (
+        <div className="space-y-5">
+          <div>
+            <h1 className="text-2xl font-heading font-bold">Insights</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">Milestones & triggers.</p>
+          </div>
+          <MilestoneTracker profile={profile} urges={urges} />
+          <TriggerInsights urges={urges} profile={profile} />
+          <div className="grid grid-cols-2 gap-3">
+            <Link to="/review">
+              <div className="bg-card rounded-xl border border-border p-4 hover:border-primary/20 transition-colors">
+                <BarChart3 className="w-5 h-5 text-primary mb-2" />
+                <p className="text-sm font-medium">Weekly Review</p>
+                <p className="text-xs text-muted-foreground">AI-powered insights</p>
+              </div>
+            </Link>
+            <Link to="/relapse">
+              <div className="bg-card rounded-xl border border-border p-4 hover:border-primary/20 transition-colors">
+                <FileText className="w-5 h-5 text-accent mb-2" />
+                <p className="text-sm font-medium">Log Relapse</p>
+                <p className="text-xs text-muted-foreground">Reflect & learn</p>
+              </div>
+            </Link>
+          </div>
+        </div>
+      ),
+    },
+  ];
 
-      <div>
-        <h1 className="text-2xl font-heading font-bold">Your recovery</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">One day at a time.</p>
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0 && page < pages.length - 1) setPage(p => p + 1);
+      if (diff < 0 && page > 0) setPage(p => p - 1);
+    }
+    touchStartX.current = null;
+  };
+
+  return (
+    <div
+      ref={containerRef}
+      className="flex flex-col h-full"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
+      {/* Page dots */}
+      <div className="flex items-center justify-center gap-1.5 pt-3 pb-1 flex-shrink-0">
+        {pages.map((p, i) => (
+          <button
+            key={i}
+            onClick={() => setPage(i)}
+            className={`transition-all rounded-full ${i === page ? 'w-5 h-1.5 bg-primary' : 'w-1.5 h-1.5 bg-border'}`}
+          />
+        ))}
       </div>
 
-      <ProgressCard profile={profile} urges={urges} />
-      <DailyCheckIn alreadyDoneToday={alreadyDoneToday} />
-      <DailyMessage />
-      <MoodTrend journals={journals} />
-      <UrgeFrequencyChart urges={urges} />
-      <MilestoneTracker profile={profile} urges={urges} />
-      <TriggerInsights urges={urges} profile={profile} />
-
-      <div className="grid grid-cols-2 gap-3">
-        <Link to="/review">
-          <div className="bg-card rounded-xl border border-border p-4 hover:border-primary/20 transition-colors">
-            <BarChart3 className="w-5 h-5 text-primary mb-2" />
-            <p className="text-sm font-medium">Weekly Review</p>
-            <p className="text-xs text-muted-foreground">AI-powered insights</p>
-          </div>
-        </Link>
-        <Link to="/relapse">
-          <div className="bg-card rounded-xl border border-border p-4 hover:border-primary/20 transition-colors">
-            <FileText className="w-5 h-5 text-accent mb-2" />
-            <p className="text-sm font-medium">Log Relapse</p>
-            <p className="text-xs text-muted-foreground">Reflect & learn</p>
-          </div>
-        </Link>
+      {/* Sliding pages */}
+      <div className="overflow-hidden flex-1">
+        <div
+          className="flex h-full transition-transform duration-300 ease-out"
+          style={{ transform: `translateX(-${page * 100}%)`, width: `${pages.length * 100}%` }}
+        >
+          {pages.map((p, i) => (
+            <div
+              key={i}
+              className="overflow-y-auto px-5 py-4 pb-8"
+              style={{ width: `${100 / pages.length}%` }}
+            >
+              {p.content}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
