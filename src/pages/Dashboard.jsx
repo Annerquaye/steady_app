@@ -149,16 +149,33 @@ export default function Dashboard() {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Page dots */}
-      <div className="flex items-center justify-center gap-1.5 pt-3 pb-1 flex-shrink-0">
+      {/* Tab navigation bar */}
+      <div className="flex items-center border-b border-border bg-background flex-shrink-0 px-4 pt-2">
         {pages.map((p, i) => (
           <button
             key={i}
             onClick={() => setPage(i)}
-            className={`transition-all rounded-full ${i === page ? 'w-5 h-1.5 bg-primary' : 'w-1.5 h-1.5 bg-border'}`}
-          />
+            className={`flex-1 pb-2.5 text-sm font-medium transition-colors relative ${
+              i === page ? 'text-primary' : 'text-muted-foreground'
+            }`}
+          >
+            {p.label}
+            {i === page && (
+              <span className="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-primary rounded-full" />
+            )}
+          </button>
         ))}
       </div>
+
+      {/* Swipe hint on first load */}
+      {page === 0 && (
+        <div className="flex items-center justify-end gap-1 px-5 pt-2 pb-0 flex-shrink-0">
+          <span className="text-[11px] text-muted-foreground">Swipe to explore</span>
+          <svg className="w-3.5 h-3.5 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      )}
 
       {/* Sliding pages */}
       <div className="overflow-hidden flex-1">
