@@ -25,15 +25,18 @@ export default function MoodTrend({ journals }) {
   // Group by day and average mood
   const dayMap = {};
   recent.forEach(j => {
-    const key = format(new Date(j.created_date), 'MMM d');
-    if (!dayMap[key]) dayMap[key] = [];
-    dayMap[key].push(MOOD_SCORE[j.mood] || 3);
+    const date = new Date(j.created_date);
+    const key = format(date, 'MMM d');
+    if (!dayMap[key]) dayMap[key] = { scores: [], ts: date.getTime() };
+    dayMap[key].scores.push(MOOD_SCORE[j.mood] || 3);
   });
 
-  const data = Object.entries(dayMap).map(([day, scores]) => ({
-    day,
-    mood: parseFloat((scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1)),
-  }));
+  const data = Object.entries(dayMap)
+    .sort(([, a], [, b]) => a.ts - b.ts)
+    .map(([day, { scores }]) => ({
+      day,
+      mood: parseFloat((scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1)),
+    }));
 
   const avgMood = data.reduce((s, d) => s + d.mood, 0) / data.length;
   const avgEmoji = MOOD_EMOJI[Math.round(avgMood)];
