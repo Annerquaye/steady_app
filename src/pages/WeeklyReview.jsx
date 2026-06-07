@@ -52,28 +52,19 @@ export default function WeeklyReview() {
       ? differenceInDays(new Date(), new Date(profile.streak_start_date))
       : 0;
 
-    const prompt = `Generate a weekly recovery report for someone quitting porn. Be warm, practical, and encouraging. Never shame.
+    const prompt = `Write a very short weekly recovery summary. Be direct and warm. No fluff. Max 150 words total.
 
-Data for this week:
-- Days clean this week: ${Math.min(7, streakDays)}
-- Total streak: ${streakDays} days
-- Urges this week: ${weekUrges.length} (${weekUrges.filter(u => u.outcome === 'resisted').length} resisted, ${weekUrges.filter(u => u.outcome === 'relapsed').length} led to relapse)
-- Top triggers: ${[...new Set(weekUrges.map(u => u.trigger).filter(Boolean))].join(', ') || 'none logged'}
-- Interventions used: ${[...new Set(weekUrges.map(u => u.intervention_used).filter(Boolean))].join(', ') || 'none'}
-- Relapses logged: ${weekRelapses.length}
-- Journal entries: ${weekJournals.length}
-- Mood trend: ${weekJournals.map(j => j.mood).join(', ') || 'not tracked'}
-- User's vulnerable times: ${profile?.vulnerable_times?.join(', ') || 'not set'}
-- User's goals: ${profile?.goals?.join(', ') || 'not set'}
+Data:
+- Streak: ${streakDays} days
+- Urges: ${weekUrges.length} (${weekUrges.filter(u => u.outcome === 'resisted').length} resisted, ${weekUrges.filter(u => u.outcome === 'relapsed').length} relapsed)
+- Top triggers: ${[...new Set(weekUrges.map(u => u.trigger).filter(Boolean))].join(', ') || 'none'}
+- Relapses: ${weekRelapses.length}
+- Mood: ${weekJournals.map(j => j.mood).join(', ') || 'not tracked'}
 
-Format the report with these sections using markdown:
-## This Week's Summary
-## Wins & Progress
-## Patterns & Insights
-## Risk Windows for Next Week
-## One Practical Recommendation
-
-Keep it concise but insightful. Reference their specific data.`;
+Use 3 short sections (1-2 sentences each):
+## Week at a Glance
+## Watch Out For
+## This Week, Focus On`;
 
     const response = await base44.integrations.Core.InvokeLLM({ prompt });
     setReport(response);
