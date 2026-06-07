@@ -16,8 +16,9 @@ export default function ProgressCard({ profile, urges }) {
   const days = differenceInDays(now, start);
   const hours = differenceInHours(now, start) % 24;
 
-  const totalUrges = urges.length;
-  const resisted = urges.filter(u => u.outcome === 'resisted').length;
+  const currentStreakUrges = urges.filter(u => new Date(u.created_date) >= start);
+  const totalUrges = currentStreakUrges.length;
+  const resisted = currentStreakUrges.filter(u => u.outcome === 'resisted').length;
   const resistRate = totalUrges > 0 ? Math.round((resisted / totalUrges) * 100) : 0;
 
   const { next, prev } = getMilestone(days);
