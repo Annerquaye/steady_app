@@ -31,12 +31,14 @@ export default function Dashboard() {
   const { data: urges, isLoading: loadingUrges } = useQuery({
     queryKey: ['urges'],
     queryFn: () => base44.entities.UrgeLog.list('-created_date', 100),
+    enabled: !!profile,
     staleTime: 0,
   });
 
   const { data: journals, isLoading: loadingJournals } = useQuery({
     queryKey: ['journals'],
     queryFn: () => base44.entities.JournalEntry.list('-created_date', 100),
+    enabled: !!profile,
     staleTime: 0,
   });
 
@@ -74,7 +76,8 @@ export default function Dashboard() {
 
   const safeUrges = urges || [];
   const safeJournals = journals || [];
-  const isLoadingData = loadingUrges || loadingJournals;
+  // True while fetching OR before the fetch has started (data still undefined)
+  const isLoadingData = loadingUrges || loadingJournals || urges === undefined || journals === undefined;
 
   const renderPage = (i) => {
     if (i === 0) return (
