@@ -80,7 +80,7 @@ export default function SplashScreen({ onDone }) {
               >
                 <img
                   src="https://media.base44.com/images/public/6a20baed8fdb785fe59d2daa/ddec82ebf_Steady.jpeg"
-                  alt="Steady"
+                  alt="Recorva"
                   className="w-[100px] h-[100px] rounded-[28px] object-cover"
                 />
               </div>
@@ -97,7 +97,7 @@ export default function SplashScreen({ onDone }) {
                 className="font-heading font-bold tracking-[-0.02em]"
                 style={{ fontSize: '28px', lineHeight: 1, color: '#c9a84c' }}
               >
-                Steady
+                Recorva
               </h1>
             </motion.div>
 
