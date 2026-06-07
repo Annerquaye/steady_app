@@ -1,0 +1,25 @@
+{
+  "name": "ArchivedStreak",
+  "type": "object",
+  "properties": {
+    "start_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the archived streak started"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the streak ended (relapse date)"
+    },
+    "duration_days": {
+      "type": "number",
+      "description": "How many days the streak lasted"
+    },
+    "urges_resisted": {
+      "type": "number",
+      "description": "Total urges resisted during this streak"
+    }
+  },
+  "required": []
+}

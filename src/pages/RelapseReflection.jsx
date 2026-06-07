@@ -41,11 +41,23 @@ export default function RelapseReflection() {
     setSaving(true);
     await base44.entities.RelapseLog.create(data);
 
-    // Reset streak
+    // Archive current streak and reset profile
     if (profile) {
+      const now = new Date();
+      const streakStart = profile.streak_start_date ? new Date(profile.streak_start_date) : now;
+      const durationDays = Math.floor((now - streakStart) / (1000 * 60 * 60 * 24));
+
+      await base44.entities.ArchivedStreak.create({
+        start_date: streakStart.toISOString(),
+        end_date: now.toISOString(),
+        duration_days: durationDays,
+        urges_resisted: profile.total_urges_resisted || 0,
+      });
+
       await base44.entities.UserProfile.update(profile.id, {
-        streak_start_date: new Date().toISOString(),
-        total_relapses: (profile.total_relapses || 0) + 1,
+        streak_start_date: now.toISOString(),
+        total_urges_resisted: 0,
+        total_relapses: 0,
       });
     }
 
