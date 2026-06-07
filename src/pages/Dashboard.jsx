@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
@@ -17,7 +17,6 @@ export default function Dashboard() {
 
   const [page, setPage] = useState(0);
   const touchStartX = useRef(null);
-  const containerRef = useRef(null);
 
   const { data: profiles, isLoading: loadingProfile, isFetched: profileFetched } = useQuery({
     queryKey: ['userProfile'],
@@ -42,7 +41,7 @@ export default function Dashboard() {
     staleTime: 0,
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (profileFetched && !profile) {
       navigate('/onboarding');
     }
@@ -163,7 +162,6 @@ export default function Dashboard() {
 
   return (
     <div
-      ref={containerRef}
       className="flex flex-col h-full"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
@@ -196,22 +194,9 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Sliding pages */}
-      <div className="overflow-hidden flex-1">
-        <div
-          className="flex h-full transition-transform duration-300 ease-out"
-          style={{ transform: `translateX(-${page * 100}%)`, width: `${PAGE_LABELS.length * 100}%` }}
-        >
-          {PAGE_LABELS.map((_, i) => (
-            <div
-              key={i}
-              className="overflow-y-auto px-5 py-4 pb-8"
-              style={{ width: `${100 / PAGE_LABELS.length}%` }}
-            >
-              {i === page ? renderPage(i) : null}
-            </div>
-          ))}
-        </div>
+      {/* Tab content */}
+      <div className="overflow-y-auto flex-1 px-5 py-4 pb-8">
+        {renderPage(page)}
       </div>
     </div>
   );
