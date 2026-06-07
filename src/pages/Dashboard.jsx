@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import ProgressCard from '@/components/dashboard/ProgressCard';
 import DailyCheckIn from '@/components/dashboard/DailyCheckIn';
 import DailyMessage from '@/components/dashboard/DailyMessage';
@@ -14,12 +14,12 @@ import { BarChart3, FileText } from 'lucide-react';
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+
   const [page, setPage] = useState(0);
   const touchStartX = useRef(null);
   const containerRef = useRef(null);
 
-  const { data: profiles, isLoading: loadingProfile, isFetched: profileFetched, refetch: refetchProfile } = useQuery({
+  const { data: profiles, isLoading: loadingProfile, isFetched: profileFetched } = useQuery({
     queryKey: ['userProfile'],
     queryFn: () => base44.entities.UserProfile.list(),
     initialData: [],
@@ -28,28 +28,17 @@ export default function Dashboard() {
 
   const profile = profiles[0];
 
-  const { data: urges, refetch: refetchUrges } = useQuery({
+  const { data: urges, isLoading: loadingUrges } = useQuery({
     queryKey: ['urges'],
     queryFn: () => base44.entities.UrgeLog.list('-created_date', 100),
-    initialData: [],
     staleTime: 0,
   });
 
-  const { data: journals, refetch: refetchJournals } = useQuery({
+  const { data: journals, isLoading: loadingJournals } = useQuery({
     queryKey: ['journals'],
     queryFn: () => base44.entities.JournalEntry.list('-created_date', 100),
-    initialData: [],
     staleTime: 0,
   });
-
-  // Refetch data whenever switching to Trends or Insights tabs
-  React.useEffect(() => {
-    if (page > 0) {
-      refetchUrges();
-      refetchJournals();
-      refetchProfile();
-    }
-  }, [page]);
 
   React.useEffect(() => {
     if (profileFetched && !profile) {
@@ -73,7 +62,7 @@ export default function Dashboard() {
 
   if (!profile) return null;
 
-  const alreadyDoneToday = journals.some(j => {
+  const alreadyDoneToday = (journals || []).some(j => {
     const d = new Date(j.created_date);
     const now = new Date();
     return d.getFullYear() === now.getFullYear() &&
@@ -83,6 +72,10 @@ export default function Dashboard() {
 
   const PAGE_LABELS = ['Progress', 'Trends', 'Insights'];
 
+  const safeUrges = urges || [];
+  const safeJournals = journals || [];
+  const isLoadingData = loadingUrges || loadingJournals;
+
   const renderPage = (i) => {
     if (i === 0) return (
       <div className="space-y-5">
@@ -90,47 +83,65 @@ export default function Dashboard() {
           <h1 className="text-2xl font-heading font-bold">Your recovery</h1>
           <p className="text-sm text-muted-foreground mt-0.5">One day at a time.</p>
         </div>
-        <ProgressCard profile={profile} urges={urges} />
+        <ProgressCard profile={profile} urges={safeUrges} />
         <DailyCheckIn alreadyDoneToday={alreadyDoneToday} />
         <DailyMessage />
       </div>
     );
-    if (i === 1) return (
-      <div className="space-y-5">
-        <div>
-          <h1 className="text-2xl font-heading font-bold">Your trends</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Track patterns over time.</p>
+    if (i === 1) {
+      if (isLoadingData) return (
+        <div className="space-y-4 pt-4">
+          <Skeleton className="h-8 w-40 rounded-xl" />
+          <Skeleton className="h-48 rounded-2xl" />
+          <Skeleton className="h-48 rounded-2xl" />
         </div>
-        <MoodTrend journals={journals} />
-        <UrgeFrequencyChart urges={urges} />
-      </div>
-    );
-    if (i === 2) return (
-      <div className="space-y-5">
-        <div>
-          <h1 className="text-2xl font-heading font-bold">Insights</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Milestones & triggers.</p>
+      );
+      return (
+        <div className="space-y-5">
+          <div>
+            <h1 className="text-2xl font-heading font-bold">Your trends</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">Track patterns over time.</p>
+          </div>
+          <MoodTrend journals={safeJournals} />
+          <UrgeFrequencyChart urges={safeUrges} />
         </div>
-        <MilestoneTracker profile={profile} urges={urges} />
-        <TriggerInsights urges={urges} profile={profile} />
-        <div className="grid grid-cols-2 gap-3">
-          <Link to="/review">
-            <div className="bg-card rounded-xl border border-border p-4 hover:border-primary/20 transition-colors">
-              <BarChart3 className="w-5 h-5 text-primary mb-2" />
-              <p className="text-sm font-medium">Weekly Review</p>
-              <p className="text-xs text-muted-foreground">AI-powered insights</p>
-            </div>
-          </Link>
-          <Link to="/relapse">
-            <div className="bg-card rounded-xl border border-border p-4 hover:border-primary/20 transition-colors">
-              <FileText className="w-5 h-5 text-accent mb-2" />
-              <p className="text-sm font-medium">Log Relapse</p>
-              <p className="text-xs text-muted-foreground">Reflect & learn</p>
-            </div>
-          </Link>
+      );
+    }
+    if (i === 2) {
+      if (isLoadingData) return (
+        <div className="space-y-4 pt-4">
+          <Skeleton className="h-8 w-40 rounded-xl" />
+          <Skeleton className="h-48 rounded-2xl" />
+          <Skeleton className="h-32 rounded-2xl" />
         </div>
-      </div>
-    );
+      );
+      return (
+        <div className="space-y-5">
+          <div>
+            <h1 className="text-2xl font-heading font-bold">Insights</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">Milestones & triggers.</p>
+          </div>
+          <MilestoneTracker profile={profile} urges={safeUrges} />
+          <TriggerInsights urges={safeUrges} profile={profile} />
+          <div className="grid grid-cols-2 gap-3">
+            <Link to="/review">
+              <div className="bg-card rounded-xl border border-border p-4 hover:border-primary/20 transition-colors">
+                <BarChart3 className="w-5 h-5 text-primary mb-2" />
+                <p className="text-sm font-medium">Weekly Review</p>
+                <p className="text-xs text-muted-foreground">AI-powered insights</p>
+              </div>
+            </Link>
+            <Link to="/relapse">
+              <div className="bg-card rounded-xl border border-border p-4 hover:border-primary/20 transition-colors">
+                <FileText className="w-5 h-5 text-accent mb-2" />
+                <p className="text-sm font-medium">Log Relapse</p>
+                <p className="text-xs text-muted-foreground">Reflect & learn</p>
+              </div>
+            </Link>
+          </div>
+        </div>
+      );
+    }
   };
 
   const handleTouchStart = (e) => {
