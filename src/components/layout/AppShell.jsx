@@ -53,9 +53,8 @@ export default function AppShell() {
         className="fixed right-4 z-50 flex flex-col items-center gap-1 select-none group"
         style={{ bottom: 'calc(5rem + env(safe-area-inset-bottom, 0px))' }}
       >
-        <div className="relative w-14 h-14 rounded-full bg-destructive text-destructive-foreground shadow-xl flex items-center justify-center group-hover:scale-105 group-active:scale-95 transition-transform">
-          <span className="absolute inset-0 rounded-full bg-destructive animate-ping opacity-30 pointer-events-none" style={{ transform: 'none' }} />
-          <Flame className="w-6 h-6 relative z-10" />
+        <div className="w-14 h-14 rounded-full bg-destructive text-destructive-foreground shadow-xl flex items-center justify-center group-hover:scale-105 group-active:scale-95 transition-transform">
+          <Flame className="w-6 h-6" />
         </div>
         <span className="text-[10px] font-semibold text-destructive bg-background/80 px-1.5 py-0.5 rounded-full shadow-sm">URGE</span>
       </Link>
