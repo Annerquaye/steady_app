@@ -25,16 +25,16 @@ export default function TriggerInsights({ urges, profile }) {
           </div>
           <div className="space-y-2">
             {topTriggers.map(([trigger, count]) => (
-              <div key={trigger} className="flex items-center justify-between">
-                <span className="text-sm">{trigger}</span>
-                <div className="flex items-center gap-2">
-                  <div className="h-1.5 rounded-full bg-primary/20 w-16">
+              <div key={trigger} className="flex items-center justify-between gap-3">
+                <span className="text-sm truncate">{trigger}</span>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <div className="h-2 rounded-full bg-primary/15 w-20 sm:w-24">
                     <div
                       className="h-full rounded-full bg-primary transition-all"
                       style={{ width: `${(count / Math.max(...Object.values(triggerCounts))) * 100}%` }}
                     />
                   </div>
-                  <span className="text-xs text-muted-foreground">{count}x</span>
+                  <span className="text-xs text-muted-foreground w-6 text-right">{count}x</span>
                 </div>
               </div>
             ))}

@@ -52,15 +52,15 @@ export default function UrgeFrequencyChart({ urges }) {
         <p className="text-xs text-muted-foreground py-4 text-center">No urge data yet. Use Urge Mode to start tracking.</p>
       ) : (
         <ResponsiveContainer width="100%" height={140}>
-          <BarChart data={weeks} barGap={4}>
-            <XAxis dataKey="week" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} />
-            <YAxis hide />
+          <BarChart data={weeks} barGap={4} margin={{ top: 0, right: 5, bottom: 0, left: 0 }}>
+            <XAxis dataKey="week" tick={{ fontSize: 9 }} axisLine={false} tickLine={false} minTickGap={15} />
+            <YAxis hide allowDecimals={false} />
             <Tooltip
               contentStyle={{ fontSize: 12, borderRadius: 8, border: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
               formatter={(val, name) => [val, name === 'resisted' ? '✅ Resisted' : '❌ Relapsed']}
             />
-            <Bar dataKey="resisted" fill="hsl(160 30% 42%)" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="relapsed" fill="hsl(0 55% 55%)" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="resisted" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} maxBarSize={32} />
+            <Bar dataKey="relapsed" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} maxBarSize={32} />
           </BarChart>
         </ResponsiveContainer>
       )}

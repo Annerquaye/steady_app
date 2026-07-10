@@ -50,21 +50,21 @@ export default function MoodTrend({ journals }) {
       <p className="text-xs text-muted-foreground mb-4">
         Average mood: {avgEmoji} {['', 'Terrible', 'Low', 'Neutral', 'Good', 'Great'][Math.round(avgMood)]}
       </p>
-      <ResponsiveContainer width="100%" height={120}>
-        <AreaChart data={data}>
+      <ResponsiveContainer width="100%" height={130}>
+        <AreaChart data={data} margin={{ top: 5, right: 5, bottom: 0, left: 0 }}>
           <defs>
             <linearGradient id="moodGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="hsl(160 30% 42%)" stopOpacity={0.3} />
-              <stop offset="95%" stopColor="hsl(160 30% 42%)" stopOpacity={0} />
+              <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <XAxis dataKey="day" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
-          <YAxis domain={[1, 5]} hide />
+          <XAxis dataKey="day" tick={{ fontSize: 9 }} axisLine={false} tickLine={false} interval="preserveStartEnd" minTickGap={20} />
+          <YAxis domain={[0.5, 5.5]} hide />
           <Tooltip
             contentStyle={{ fontSize: 12, borderRadius: 8, border: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
             formatter={(val) => [MOOD_EMOJI[Math.round(val)] + ' ' + ['', 'Terrible', 'Low', 'Neutral', 'Good', 'Great'][Math.round(val)], 'Mood']}
           />
-          <Area type="monotone" dataKey="mood" stroke="hsl(160 30% 42%)" strokeWidth={2} fill="url(#moodGrad)" dot={{ r: 3, fill: 'hsl(160 30% 42%)' }} />
+          <Area type="monotone" dataKey="mood" stroke="hsl(var(--primary))" strokeWidth={2} fill="url(#moodGrad)" dot={{ r: 3, fill: 'hsl(var(--primary))' }} activeDot={{ r: 5 }} />
         </AreaChart>
       </ResponsiveContainer>
     </div>
