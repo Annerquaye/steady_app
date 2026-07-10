@@ -11,6 +11,12 @@ import MoodTrend from '@/components/dashboard/MoodTrend';
 import UrgeFrequencyChart from '@/components/dashboard/UrgeFrequencyChart';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BarChart3, FileText } from 'lucide-react';
+import { dummyProfile, dummyUrges, dummyJournals } from '@/components/dashboard/screenshotDummyData';
+
+// ╔══════════════════════════════════════════════════════╗
+// ║  SCREENSHOT DUMMY DATA — set to false after capturing ║
+// ╚══════════════════════════════════════════════════════╝
+const USE_DUMMY_DATA = true;
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -21,33 +27,34 @@ export default function Dashboard() {
   const { data: profiles, isLoading: loadingProfile, isFetched: profileFetched } = useQuery({
     queryKey: ['userProfile'],
     queryFn: () => base44.entities.UserProfile.list(),
-    initialData: [],
+    initialData: USE_DUMMY_DATA ? [dummyProfile] : [],
     staleTime: 0,
+    enabled: !USE_DUMMY_DATA,
   });
 
-  const profile = profiles[0];
+  const profile = USE_DUMMY_DATA ? dummyProfile : profiles[0];
 
   const { data: urges, isLoading: loadingUrges } = useQuery({
     queryKey: ['urges'],
     queryFn: () => base44.entities.UrgeLog.list('-created_date', 100),
-    enabled: !!profile,
+    enabled: !!profile && !USE_DUMMY_DATA,
     staleTime: 0,
   });
 
   const { data: journals, isLoading: loadingJournals } = useQuery({
     queryKey: ['journals'],
     queryFn: () => base44.entities.JournalEntry.list('-created_date', 100),
-    enabled: !!profile,
+    enabled: !!profile && !USE_DUMMY_DATA,
     staleTime: 0,
   });
 
   useEffect(() => {
-    if (profileFetched && !profile) {
+    if (!USE_DUMMY_DATA && profileFetched && !profile) {
       navigate('/onboarding');
     }
-  }, [profileFetched, profile, navigate]);
+  }, [profileFetched, profile, navigate, USE_DUMMY_DATA]);
 
-  if (loadingProfile) {
+  if (!USE_DUMMY_DATA && loadingProfile) {
     return (
       <div className="p-6 space-y-4">
         <Skeleton className="h-32 rounded-2xl" />
@@ -63,7 +70,7 @@ export default function Dashboard() {
 
   if (!profile) return null;
 
-  const alreadyDoneToday = (journals || []).some(j => {
+  const alreadyDoneToday = USE_DUMMY_DATA ? true : (journals || []).some(j => {
     const d = new Date(j.created_date);
     const now = new Date();
     return d.getFullYear() === now.getFullYear() &&
@@ -73,10 +80,10 @@ export default function Dashboard() {
 
   const PAGE_LABELS = ['Progress', 'Trends', 'Insights'];
 
-  const safeUrges = urges || [];
-  const safeJournals = journals || [];
+  const safeUrges = USE_DUMMY_DATA ? dummyUrges : (urges || []);
+  const safeJournals = USE_DUMMY_DATA ? dummyJournals : (journals || []);
   // True while fetching OR before the fetch has started (data still undefined)
-  const isLoadingData = loadingUrges || loadingJournals || urges === undefined || journals === undefined;
+  const isLoadingData = USE_DUMMY_DATA ? false : (loadingUrges || loadingJournals || urges === undefined || journals === undefined);
 
   const renderPage = (i) => {
     if (i === 0) return (
