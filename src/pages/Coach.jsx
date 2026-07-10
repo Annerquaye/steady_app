@@ -7,8 +7,42 @@ import { Send, Bot, Loader2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { cn } from '@/lib/utils';
 
+// ╔══════════════════════════════════════════════════════╗
+// ║  SCREENSHOT DUMMY DATA — set to false after capturing ║
+// ╚══════════════════════════════════════════════════════╝
+const USE_DUMMY_DATA = true;
+
 export default function Coach() {
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState(USE_DUMMY_DATA ? [
+    {
+      role: 'assistant',
+      content: "Hey. I'm your recovery coach. I'm here to listen, help you through tough moments, and celebrate your wins. What's on your mind?"
+    },
+    {
+      role: 'user',
+      content: "I'm feeling really stressed today and the urge is strong."
+    },
+    {
+      role: 'assistant',
+      content: "That takes courage to admit, and reaching out instead of acting on it is already a win. 💪\n\nStress is one of the toughest triggers because it doesn't just go away — it lingers. Let's break the cycle right now: take 4 slow breaths, in for 4 seconds and out for 6. I'll wait.\n\nWhen the urge feels overwhelming, it's usually because your nervous system is in fight-or-flight mode. You're not weak — your brain is just asking for relief. The goal isn't to never feel stressed, it's to give yourself better ways to respond to it.\n\nWhat's causing the stress today?"
+    },
+    {
+      role: 'user',
+      content: "Work has been insane and I've been pulling long hours."
+    },
+    {
+      role: 'assistant',
+      content: "That makes so much sense — long hours, exhaustion, and stress are the perfect storm. 🧠\n\nWhen you're drained, willpower drops to near zero. It's not a character flaw, it's biology. So instead of relying on willpower tonight, try this: **change your environment**. Don't go straight home to the couch. Take a walk, hit the gym, or call someone. Break the usual pattern your brain associates with relapse.\n\nYou're 32 days in. That's not luck — that's real work. One rough evening doesn't erase that. ❤️\n\nWhat's one thing you can do tonight that's just for you?"
+    },
+    {
+      role: 'user',
+      content: "Maybe I'll go for a run to clear my head."
+    },
+    {
+      role: 'assistant',
+      content: "That's perfect — a run hits all the right notes: it burns off the stress hormones flooding your system, gives you a dopamine hit that replaces the one your brain is craving, and physically removes you from your usual environment. 🔥\n\nLace up before you talk yourself out of it. Don't worry about pace or distance — just move. Even 10 minutes counts.\n\nYou've already beaten the urge today by reaching out. That's 32 days of choosing yourself, and today you chose yourself again. I'm proud of you. 💪\n\nGo crush that run. I'll be here if you need me after."
+    },
+  ] : [
     {
       role: 'assistant',
       content: "Hey. I'm your recovery coach. I'm here to listen, help you through tough moments, and celebrate your wins. What's on your mind?"
@@ -25,12 +59,14 @@ export default function Coach() {
     queryKey: ['userProfile'],
     queryFn: () => base44.entities.UserProfile.list(),
     initialData: [],
+    enabled: !USE_DUMMY_DATA,
   });
 
   const { data: urges } = useQuery({
     queryKey: ['urges'],
     queryFn: () => base44.entities.UrgeLog.list('-created_date', 20),
     initialData: [],
+    enabled: !USE_DUMMY_DATA,
   });
 
   const profile = profiles[0];
