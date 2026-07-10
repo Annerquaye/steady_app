@@ -22,7 +22,8 @@ export default function ProgressCard({ profile, urges }) {
   const resistRate = totalUrges > 0 ? Math.round((resisted / totalUrges) * 100) : 0;
 
   const { next, prev } = getMilestone(days);
-  const progress = prev && next ? Math.round(((days - prev) / (next - prev)) * 100) : days > 0 ? 100 : 0;
+  const fractionalDays = days + hours / 24;
+  const progress = prev && next ? Math.round(((fractionalDays - prev) / (next - prev)) * 100) : days > 0 ? 100 : 0;
 
   const streakMessage =
     days === 0 ? 'Every journey starts with day one.' :
