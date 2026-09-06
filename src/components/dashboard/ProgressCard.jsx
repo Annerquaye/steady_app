@@ -40,7 +40,7 @@ export default function ProgressCard({ profile, urges }) {
       {/* Streak header */}
       <div>
         <div className="flex items-center gap-2 mb-2">
-          <Flame className="w-5 h-5 text-primary" />
+          <Flame className="w-5 h-5 text-primary animate-sway" />
           <span className="text-sm font-medium text-muted-foreground">Clean streak</span>
         </div>
         <div className="flex items-baseline gap-2">
@@ -48,7 +48,7 @@ export default function ProgressCard({ profile, urges }) {
             <span className="text-3xl font-heading font-bold text-foreground">Day 1 begins now</span>
           ) : (
             <>
-              <span className="text-5xl font-heading font-bold text-foreground">{days}</span>
+              <span className="text-5xl font-heading font-extrabold text-foreground animate-pop-in">{days}</span>
               <span className="text-lg text-muted-foreground">days</span>
               {hours > 0 && (
                 <span className="text-2xl font-heading font-semibold text-foreground/50 ml-1">{hours}h</span>
