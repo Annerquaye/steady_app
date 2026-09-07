@@ -11,7 +11,7 @@ import { usePlan } from '@/lib/planAccess';
 // ╔══════════════════════════════════════════════════════╗
 // ║  SCREENSHOT DUMMY DATA — set to false after capturing ║
 // ╚══════════════════════════════════════════════════════╝
-const USE_DUMMY_DATA = true;
+const USE_DUMMY_DATA = false;
 
 export default function Coach() {
   const [messages, setMessages] = useState(USE_DUMMY_DATA ? [

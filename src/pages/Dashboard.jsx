@@ -19,7 +19,7 @@ import { dummyProfile, dummyUrges, dummyJournals } from '@/components/dashboard/
 // ╔══════════════════════════════════════════════════════╗
 // ║  SCREENSHOT DUMMY DATA — set to false after capturing ║
 // ╚══════════════════════════════════════════════════════╝
-const USE_DUMMY_DATA = true;
+const USE_DUMMY_DATA = false;
 
 export default function Dashboard() {
   const navigate = useNavigate();
