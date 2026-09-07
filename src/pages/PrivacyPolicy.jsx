@@ -16,7 +16,7 @@ export default function PrivacyPolicy() {
           </div>
           <div>
             <h1 className="text-2xl font-heading font-bold">Privacy Policy</h1>
-            <p className="text-xs text-muted-foreground">Last updated: June 2026</p>
+            <p className="text-xs text-muted-foreground">Last updated: September 2026</p>
           </div>
         </div>
 
@@ -103,7 +103,33 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-base font-semibold text-foreground mb-2">9. Contact</h2>
+            <h2 className="text-base font-semibold text-foreground mb-2">9. Third-Party Services</h2>
+            <p>
+              We rely on a small number of trusted providers to operate the service:
+            </p>
+            <ul className="list-disc ml-5 mt-2 space-y-1">
+              <li><strong>Stripe</strong> — processes all payments; see Stripe's privacy policy for how billing data is handled</li>
+              <li><strong>Google</strong> — if you sign up with Google, Google shares your name and email with us solely for authentication</li>
+              <li><strong>AI provider</strong> — processes recovery context to generate AI coach responses (see Section 5)</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-base font-semibold text-foreground mb-2">10. Children & Age Requirement</h2>
+            <p>
+              Recorva is intended for adults aged 18 and over and is not directed at children. We do not knowingly collect data from anyone under 18. If you believe a minor has provided us information, contact us and we will delete it.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-base font-semibold text-foreground mb-2">11. Changes to This Policy</h2>
+            <p>
+              We may update this Privacy Policy from time to time. The "Last updated" date above will always reflect the current version. Material changes will be announced in the app, and continued use after changes constitutes acceptance.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-base font-semibold text-foreground mb-2">12. Contact</h2>
             <p>
               For privacy questions or data requests, please contact us through the app. We aim to respond within 48 hours.
             </p>

@@ -16,7 +16,7 @@ export default function TermsOfService() {
           </div>
           <div>
             <h1 className="text-2xl font-heading font-bold">Terms of Service</h1>
-            <p className="text-xs text-muted-foreground">Last updated: June 2026</p>
+            <p className="text-xs text-muted-foreground">Last updated: September 2026</p>
           </div>
         </div>
 
@@ -25,7 +25,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-base font-semibold text-foreground mb-2">1. Acceptance of Terms</h2>
             <p>
-              By creating an account and using this app, you agree to these Terms of Service. If you do not agree, please do not use the app.
+              By creating an account and using this app, you agree to these Terms of Service. If you do not agree, please do not use the app. You must be at least 18 years old (or the age of majority in your jurisdiction) to use this app.
             </p>
           </section>
 

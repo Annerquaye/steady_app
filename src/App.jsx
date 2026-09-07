@@ -65,6 +65,8 @@ const AuthenticatedApp = () => {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/oauth/consent" element={<OAuthConsent />} />
         <Route path="/support" element={<Support />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
 
         <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
           <Route path="/onboarding" element={<Onboarding />} />
@@ -73,8 +75,6 @@ const AuthenticatedApp = () => {
           <Route path="/review" element={<WeeklyReview />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/terms" element={<TermsOfService />} />
 
           <Route element={<AppShell />}>
             <Route path="/" element={<Dashboard />} />
