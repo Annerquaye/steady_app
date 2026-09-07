@@ -20,6 +20,7 @@ export default function Support() {
         <ContactSection />
         <p className="text-center text-xs text-muted-foreground pt-2">
           Recorva — build the life you deserve.
+          <br />© 2026 Black Inheritance. All rights reserved.
         </p>
       </div>
     </div>

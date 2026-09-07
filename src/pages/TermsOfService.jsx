@@ -94,6 +94,13 @@ export default function TermsOfService() {
             </p>
           </section>
 
+          <section>
+            <h2 className="text-base font-semibold text-foreground mb-2">10. Copyright</h2>
+            <p>
+              The app and its content are owned by Black Inheritance. © 2026 Black Inheritance. All rights reserved.
+            </p>
+          </section>
+
         </div>
       </div>
     </div>
