@@ -144,9 +144,11 @@ export default function Settings() {
                 Your subscription will end on {format(new Date(sub.current_period_end), 'MMM d, yyyy')}.
               </div>
             )}
-            <Button variant="outline" className="w-full" onClick={handleManageBilling} disabled={portalLoading}>
-              <CreditCard className="w-4 h-4" /> {portalLoading ? 'Loading...' : 'Manage Billing & Invoices'}
-            </Button>
+            {sub.stripe_subscription_id && (
+              <Button variant="outline" className="w-full" onClick={handleManageBilling} disabled={portalLoading}>
+                <CreditCard className="w-4 h-4" /> {portalLoading ? 'Loading...' : 'Manage Billing & Invoices'}
+              </Button>
+            )}
           </div>
         ) : (
           <div className="space-y-3">

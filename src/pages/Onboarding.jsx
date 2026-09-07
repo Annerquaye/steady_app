@@ -677,11 +677,16 @@ export default function Onboarding() {
         )}
         {step < STEPS.length - 1 ? (
           current === 'pricing' ? (
-            <Button asChild size="lg" className="gap-2 px-8">
-              <Link to="/pricing">
-                See Plans <ArrowRight className="w-4 h-4" />
-              </Link>
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" onClick={() => setStep(s => s + 1)} className="text-muted-foreground text-sm">
+                Continue without a plan
+              </Button>
+              <Button asChild size="lg" className="gap-2 px-8">
+                <Link to="/pricing">
+                  See Plans <ArrowRight className="w-4 h-4" />
+                </Link>
+              </Button>
+            </div>
           ) : (
             <Button
               onClick={() => setStep(s => s + 1)}
