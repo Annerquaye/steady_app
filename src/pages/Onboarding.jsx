@@ -55,6 +55,15 @@ const TRIED = [
   { id: 'many', label: 'Yes, many times', emoji: '💪' },
 ];
 
+const HABITS = [
+  { id: 'porn', label: 'Porn', emoji: '🚫', frequency: 'watch porn' },
+  { id: 'social_media', label: 'Social media scrolling', emoji: '📱', frequency: 'scroll social media' },
+  { id: 'gambling', label: 'Gambling', emoji: '🎲', frequency: 'gamble' },
+  { id: 'alcohol', label: 'Alcohol', emoji: '🍺', frequency: 'drink' },
+  { id: 'smoking', label: 'Smoking / vaping', emoji: '🚬', frequency: 'smoke or vape' },
+  { id: 'other', label: 'Another habit', emoji: '✨', frequency: 'give in to it' },
+];
+
 const GOALS = [
   { id: 'quit_porn', label: 'Quit porn completely', emoji: '🚫' },
   { id: 'focus', label: 'Improve focus', emoji: '🎯' },
@@ -174,7 +183,7 @@ function SelectGrid({ items, field, data, toggle, cols = 2 }) {
 
 /* ─── MAIN ────────────────────────────────────────────────────────── */
 
-const STEPS = ['welcome', 'motivation', 'cost', 'triggers', 'risk_profile', 'results', 'trial', 'pricing', 'partner'];
+const STEPS = ['welcome', 'habit', 'motivation', 'cost', 'triggers', 'risk_profile', 'results', 'trial', 'pricing', 'partner'];
 
 export default function Onboarding() {
   const navigate = useNavigate();
@@ -182,6 +191,7 @@ export default function Onboarding() {
   const [saving, setSaving] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState('pro');
   const [data, setData] = useState({
+    target_habit: '',
     motivation: [],
     what_its_costing: [],
     what_would_improve: [],
@@ -219,6 +229,7 @@ export default function Onboarding() {
   const canProceed = () => {
     switch (current) {
       case 'welcome': return true;
+      case 'habit': return !!data.target_habit;
       case 'motivation': return data.motivation.length > 0;
       case 'cost': return data.what_its_costing.length > 0 || data.what_would_improve.length > 0;
       case 'triggers': return data.triggers.length > 0;
@@ -235,7 +246,9 @@ export default function Onboarding() {
     setSaving(true);
     const motIds = Array.isArray(data.motivation) ? data.motivation : [data.motivation];
     const motLabel = motIds.map(id => MOTIVATIONS.find(m => m.id === id)?.label || id).join(', ');
+    const habitLabel = HABITS.find(h => h.id === data.target_habit)?.label || data.target_habit;
     await base44.entities.UserProfile.create({
+      target_habit: habitLabel,
       reason_for_quitting: motLabel,
       triggers: data.triggers,
       vulnerable_times: data.vulnerable_times,
@@ -262,7 +275,7 @@ export default function Onboarding() {
   const results = calcResults(data);
 
   const showProgress = !['welcome', 'results', 'trial', 'pricing'].includes(current);
-  const progressSteps = ['motivation', 'cost', 'triggers', 'risk_profile'];
+  const progressSteps = ['habit', 'motivation', 'cost', 'triggers', 'risk_profile'];
   const progressIdx = progressSteps.indexOf(current);
 
   return (
@@ -311,6 +324,32 @@ export default function Onboarding() {
                     <Icon className="w-4 h-4 text-primary flex-shrink-0" />
                     <p className="text-sm text-foreground/80">{text}</p>
                   </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ── HABIT ── */}
+          {current === 'habit' && (
+            <div className="flex-1 flex flex-col pt-2">
+              <h1 className="text-2xl font-heading font-semibold mb-1">What do you want to quit?</h1>
+              <p className="text-sm text-muted-foreground mb-5">We'll personalize your journey around this.</p>
+              <div className="space-y-2">
+                {HABITS.map(({ id, label, emoji }) => (
+                  <button
+                    key={id}
+                    onClick={() => set('target_habit', id)}
+                    className={cn(
+                      "w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-left transition-all border",
+                      data.target_habit === id
+                        ? "bg-primary text-primary-foreground border-primary shadow-md"
+                        : "bg-card border-border hover:border-primary/30"
+                    )}
+                  >
+                    <span className="text-2xl">{emoji}</span>
+                    <p className="text-sm font-semibold flex-1">{label}</p>
+                    {data.target_habit === id && <Check className="w-4 h-4 flex-shrink-0" />}
+                  </button>
                 ))}
               </div>
             </div>
@@ -404,7 +443,9 @@ export default function Onboarding() {
               </div>
 
               <div>
-                <p className="text-sm font-semibold mb-2.5">How often do you consume porn?</p>
+                <p className="text-sm font-semibold mb-2.5">
+                  How often do you {HABITS.find(h => h.id === data.target_habit)?.frequency || 'give in to it'}?
+                </p>
                 <div className="space-y-2">
                   {FREQUENCY.map(f => (
                     <button
@@ -704,6 +745,7 @@ export default function Onboarding() {
               size={current === 'welcome' || current === 'trial' || current === 'results' ? 'lg' : 'default'}
             >
               {current === 'welcome' && 'Get Started'}
+              {current === 'habit' && 'Continue'}
               {current === 'motivation' && 'Continue'}
               {current === 'cost' && 'Continue'}
               {current === 'triggers' && 'Continue'}

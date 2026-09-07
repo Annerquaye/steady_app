@@ -2,6 +2,10 @@
   "name": "UserProfile",
   "type": "object",
   "properties": {
+    "target_habit": {
+      "type": "string",
+      "description": "What the user wants to quit (e.g. Porn, Social media scrolling, Gambling)"
+    },
     "reason_for_quitting": {
       "type": "string",
       "description": "User's personal reason for quitting"
