@@ -26,6 +26,7 @@ import Pricing from '@/pages/Pricing';
 import Checkout from '@/pages/Checkout';
 import PrivacyPolicy from '@/pages/PrivacyPolicy';
 import TermsOfService from '@/pages/TermsOfService';
+import Support from '@/pages/Support';
 
 import { useDarkMode } from '@/hooks/useDarkMode';
 import AnimatedRoutes from '@/components/layout/AnimatedRoutes';
@@ -63,6 +64,7 @@ const AuthenticatedApp = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/oauth/consent" element={<OAuthConsent />} />
+        <Route path="/support" element={<Support />} />
 
         <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
           <Route path="/onboarding" element={<Onboarding />} />
