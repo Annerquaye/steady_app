@@ -182,7 +182,7 @@ export default function Onboarding() {
   const [saving, setSaving] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState('pro');
   const [data, setData] = useState({
-    motivation: '',
+    motivation: [],
     what_its_costing: [],
     what_would_improve: [],
     triggers: [],
@@ -207,10 +207,19 @@ export default function Onboarding() {
     }));
   };
 
+  const toggleMotivation = (id) => {
+    setData(prev => {
+      const arr = Array.isArray(prev.motivation) ? prev.motivation : [];
+      if (arr.includes(id)) return { ...prev, motivation: arr.filter(v => v !== id) };
+      if (arr.length >= 3) return prev;
+      return { ...prev, motivation: [...arr, id] };
+    });
+  };
+
   const canProceed = () => {
     switch (current) {
       case 'welcome': return true;
-      case 'motivation': return !!data.motivation;
+      case 'motivation': return data.motivation.length > 0;
       case 'cost': return data.what_its_costing.length > 0 || data.what_would_improve.length > 0;
       case 'triggers': return data.triggers.length > 0;
       case 'risk_profile': return !!data.frequency && data.vulnerable_times.length > 0 && !!data.tried_before;
@@ -224,7 +233,8 @@ export default function Onboarding() {
 
   const handleFinish = async () => {
     setSaving(true);
-    const motLabel = MOTIVATIONS.find(m => m.id === data.motivation)?.label || data.motivation;
+    const motIds = Array.isArray(data.motivation) ? data.motivation : [data.motivation];
+    const motLabel = motIds.map(id => MOTIVATIONS.find(m => m.id === id)?.label || id).join(', ');
     await base44.entities.UserProfile.create({
       reason_for_quitting: motLabel,
       triggers: data.triggers,
@@ -250,7 +260,6 @@ export default function Onboarding() {
   };
 
   const results = calcResults(data);
-  const motObj = MOTIVATIONS.find(m => m.id === data.motivation);
 
   const showProgress = !['welcome', 'results', 'trial', 'pricing'].includes(current);
   const progressSteps = ['motivation', 'cost', 'triggers', 'risk_profile'];
@@ -311,22 +320,22 @@ export default function Onboarding() {
           {current === 'motivation' && (
             <div className="flex-1 flex flex-col pt-2">
               <h1 className="text-2xl font-heading font-semibold mb-1">Why do you want to quit?</h1>
-              <p className="text-sm text-muted-foreground mb-5">Your reason is your fuel. Choose what resonates most.</p>
+              <p className="text-sm text-muted-foreground mb-5">Your reason is your fuel. Choose up to {3} that resonate most.</p>
               <div className="space-y-2">
                 {MOTIVATIONS.map(({ id, label, emoji }) => (
                   <button
                     key={id}
-                    onClick={() => set('motivation', id)}
+                    onClick={() => toggleMotivation(id)}
                     className={cn(
                       "w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-left transition-all border",
-                      data.motivation === id
+                      data.motivation.includes(id)
                         ? "bg-primary text-primary-foreground border-primary shadow-md"
                         : "bg-card border-border hover:border-primary/30"
                     )}
                   >
                     <span className="text-2xl">{emoji}</span>
                     <p className="text-sm font-semibold flex-1">{label}</p>
-                    {data.motivation === id && <Check className="w-4 h-4 flex-shrink-0" />}
+                    {data.motivation.includes(id) && <Check className="w-4 h-4 flex-shrink-0" />}
                   </button>
                 ))}
               </div>
