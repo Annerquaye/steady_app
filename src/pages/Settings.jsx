@@ -99,8 +99,21 @@ export default function Settings() {
 
   if (!profile) {
     return (
-      <div className="p-6 text-center py-20">
-        <p className="text-sm text-muted-foreground">Complete onboarding first.</p>
+      <div className="p-6 space-y-6">
+        <div>
+          <h1 className="text-2xl font-heading font-bold">Settings</h1>
+          <p className="text-sm text-muted-foreground">Your privacy, your control.</p>
+        </div>
+        <div className="bg-card rounded-2xl border border-border p-5 text-center space-y-4">
+          <p className="text-sm text-muted-foreground">Complete onboarding to set up your recovery profile.</p>
+          <Button className="w-full" onClick={() => navigate('/onboarding')}>Complete Onboarding</Button>
+        </div>
+        <Button variant="outline" className="w-full justify-between" onClick={() => base44.auth.logout()}>
+          <span className="flex items-center gap-2">
+            <LogOut className="w-4 h-4" /> Log out
+          </span>
+          <ChevronRight className="w-4 h-4 text-muted-foreground" />
+        </Button>
       </div>
     );
   }
