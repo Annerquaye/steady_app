@@ -150,6 +150,11 @@
     "hard_mode_enabled": {
       "type": "boolean",
       "default": false
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optional notes about the user's recovery journey"
     }
   },
   "required": [],
