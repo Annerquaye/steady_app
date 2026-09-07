@@ -27,6 +27,8 @@ import Checkout from '@/pages/Checkout';
 import PrivacyPolicy from '@/pages/PrivacyPolicy';
 import TermsOfService from '@/pages/TermsOfService';
 import Support from '@/pages/Support';
+import RecoveryPlan from '@/pages/RecoveryPlan';
+import PlanGate from '@/components/PlanGate';
 
 import { useDarkMode } from '@/hooks/useDarkMode';
 import AnimatedRoutes from '@/components/layout/AnimatedRoutes';
@@ -70,17 +72,18 @@ const AuthenticatedApp = () => {
 
         <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
           <Route path="/onboarding" element={<Onboarding />} />
-          <Route path="/urge" element={<UrgeEmergency />} />
+          <Route path="/urge" element={<PlanGate feature="urge_mode"><UrgeEmergency /></PlanGate>} />
           <Route path="/relapse" element={<RelapseReflection />} />
-          <Route path="/review" element={<WeeklyReview />} />
+          <Route path="/review" element={<PlanGate feature="weekly_review"><WeeklyReview /></PlanGate>} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/checkout" element={<Checkout />} />
 
           <Route element={<AppShell />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/journal" element={<Journal />} />
-            <Route path="/coach" element={<Coach />} />
-            <Route path="/blocking" element={<Blocking />} />
+            <Route path="/coach" element={<PlanGate feature="ai_coach"><Coach /></PlanGate>} />
+            <Route path="/blocking" element={<PlanGate feature="blocking"><Blocking /></PlanGate>} />
+            <Route path="/plan" element={<PlanGate feature="recovery_plan"><RecoveryPlan /></PlanGate>} />
             <Route path="/settings" element={<Settings />} />
           </Route>
         </Route>

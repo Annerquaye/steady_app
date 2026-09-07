@@ -35,6 +35,24 @@
       "type": "string",
       "description": "Name of accountability partner"
     },
+    "partners": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "description": "Elite tier: multiple accountability partners"
+    },
     "privacy_level": {
       "type": "string",
       "enum": [
@@ -73,6 +91,15 @@
     "total_relapses": {
       "type": "number",
       "default": 0
+    },
+    "recovery_plan": {
+      "type": "string",
+      "description": "Elite tier: AI-generated personalized recovery plan (markdown)"
+    },
+    "recovery_plan_updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the recovery plan was last generated"
     },
     "blocked_websites": {
       "type": "array",

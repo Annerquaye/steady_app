@@ -25,7 +25,12 @@ Deno.serve(async (req) => {
     let sent = 0;
 
     for (const profile of profiles) {
-      if (!profile.accountability_partner_email) continue;
+      // Recipients: legacy single partner + Elite multi-partner list, deduped by email
+      const recipients = [
+        ...(profile.accountability_partner_email ? [{ name: profile.accountability_partner_name || 'Accountability Partner', email: profile.accountability_partner_email }] : []),
+        ...((profile.partners || []).filter(p => p?.email)),
+      ].filter((r, i, arr) => arr.findIndex(x => x.email.toLowerCase() === r.email.toLowerCase()) === i);
+      if (recipients.length === 0) continue;
 
       // Fetch this user's urge logs from the last 7 days
       const allUrges = await base44.asServiceRole.entities.UrgeLog.filter(
@@ -52,7 +57,7 @@ Deno.serve(async (req) => {
 
       // Build email based on privacy level
       const privacyLevel = profile.privacy_level || 'minimal';
-      const partnerName = profile.accountability_partner_name || 'Accountability Partner';
+      const buildEmailBody = (partnerName) => {
 
       let summaryLines = [];
 
@@ -87,7 +92,7 @@ Deno.serve(async (req) => {
         ? "They're taking it one day at a time and showing up consistently."
         : "Every journey has tough moments. Your support means a great deal right now.";
 
-      const emailBody = `
+      return `
 <div style="font-family: Georgia, serif; max-width: 560px; margin: 0 auto; color: #2a3a2a;">
   <div style="background: linear-gradient(135deg, #e8f5e9, #f1f8e9); padding: 32px 28px; border-radius: 16px 16px 0 0; text-align: center;">
     <div style="font-size: 40px; margin-bottom: 8px;">🌿</div>
@@ -117,14 +122,17 @@ Deno.serve(async (req) => {
   </div>
 </div>
       `.trim();
+      };
 
-      await base44.asServiceRole.integrations.Core.SendEmail({
-        to: profile.accountability_partner_email,
-        subject: `Weekly Recovery Update — Day ${streakDays} 🌿`,
-        body: emailBody,
-      });
+      for (const r of recipients) {
+        await base44.asServiceRole.integrations.Core.SendEmail({
+          to: r.email,
+          subject: `Weekly Recovery Update — Day ${streakDays} 🌿`,
+          body: buildEmailBody(r.name),
+        });
 
-      sent++;
+        sent++;
+      }
     }
 
     return Response.json({ message: `Sent ${sent} weekly email(s).` });

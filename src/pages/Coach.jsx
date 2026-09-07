@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Send, Bot, Loader2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { cn } from '@/lib/utils';
+import { usePlan } from '@/lib/planAccess';
 
 // ╔══════════════════════════════════════════════════════╗
 // ║  SCREENSHOT DUMMY DATA — set to false after capturing ║
@@ -69,6 +70,15 @@ export default function Coach() {
     enabled: !USE_DUMMY_DATA,
   });
 
+  const { isElite } = usePlan();
+
+  const { data: journals } = useQuery({
+    queryKey: ['journals'],
+    queryFn: () => base44.entities.JournalEntry.list('-created_date', 5),
+    initialData: [],
+    enabled: !USE_DUMMY_DATA && isElite,
+  });
+
   const profile = profiles[0];
 
   useEffect(() => {
@@ -92,6 +102,14 @@ export default function Coach() {
     const goals = profile?.goals?.join(', ') || 'not set';
     const reason = profile?.reason_for_quitting || 'not specified';
 
+    // Elite members get deeper coaching context: recent journal check-ins + their recovery plan
+    const eliteContext = isElite && !USE_DUMMY_DATA ? `
+Elite member context:
+- Recent journal check-ins: ${(journals || []).map(j => `mood: ${j.mood}${j.trigger ? `, trigger: ${j.trigger}` : ''}, outcome: ${j.outcome}`).join(' | ') || 'none yet'}
+- Personal recovery plan (reference it when relevant): ${(profile?.recovery_plan || 'not created yet').substring(0, 900)}
+- For this member you may occasionally give deeper, more structured guidance tied to their plan, while staying concise.
+` : '';
+
     // Sanitize user message to prevent prompt injection
     const sanitizedMessage = userMessage.replace(/```/g, "'''").substring(0, 2000);
 
@@ -109,7 +127,7 @@ User context (do not repeat this verbatim to the user):
 - Key triggers: ${triggers}
 - Goals: ${goals}
 - Recent urge outcomes: ${recentUrges || 'none logged'}
-
+${eliteContext}
 Guidelines:
 - Keep responses SHORT — 2-3 sentences to a short paragraph max. Never ramble.
 - Use a few relevant emojis naturally (not excessively) — e.g. 💪 for encouragement, 🔥 for momentum, 🧠 for insight, ❤️ for empathy.

@@ -10,7 +10,10 @@ import MilestoneTracker from '@/components/dashboard/MilestoneTracker';
 import MoodTrend from '@/components/dashboard/MoodTrend';
 import UrgeFrequencyChart from '@/components/dashboard/UrgeFrequencyChart';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BarChart3, FileText } from 'lucide-react';
+import { BarChart3, FileText, Sparkles } from 'lucide-react';
+import { usePlan } from '@/lib/planAccess';
+import FeatureLock from '@/components/FeatureLock';
+import AdvancedAnalytics from '@/components/dashboard/AdvancedAnalytics';
 import { dummyProfile, dummyUrges, dummyJournals } from '@/components/dashboard/screenshotDummyData';
 
 // ╔══════════════════════════════════════════════════════╗
@@ -23,6 +26,10 @@ export default function Dashboard() {
 
   const [page, setPage] = useState(0);
   const touchStartX = useRef(null);
+
+  const { hasFeature } = usePlan();
+  // USE_DUMMY_DATA (screenshot mode) bypasses tier gates so every tab is capturable
+  const can = (feature) => USE_DUMMY_DATA || hasFeature(feature);
 
   const { data: profiles, isLoading: loadingProfile, isFetched: profileFetched } = useQuery({
     queryKey: ['userProfile'],
@@ -98,6 +105,7 @@ export default function Dashboard() {
       </div>
     );
     if (i === 1) {
+      if (!can('trigger_analytics')) return <FeatureLock feature="trigger_analytics" />;
       if (isLoadingData) return (
         <div className="space-y-4 pt-4">
           <Skeleton className="h-8 w-40 rounded-xl" />
@@ -113,10 +121,12 @@ export default function Dashboard() {
           </div>
           <MoodTrend journals={safeJournals} />
           <UrgeFrequencyChart urges={safeUrges} />
+          {can('advanced_analytics') && <AdvancedAnalytics urges={safeUrges} />}
         </div>
       );
     }
     if (i === 2) {
+      if (!can('trigger_analytics')) return <FeatureLock feature="trigger_analytics" />;
       if (isLoadingData) return (
         <div className="space-y-4 pt-4">
           <Skeleton className="h-8 w-40 rounded-xl" />
@@ -147,6 +157,17 @@ export default function Dashboard() {
                 <p className="text-xs text-muted-foreground">Reflect & learn</p>
               </div>
             </Link>
+            {can('recovery_plan') && (
+              <Link to="/plan" className="col-span-2">
+                <div className="bg-card rounded-xl border border-border p-4 hover:border-primary/20 transition-colors flex items-center gap-3">
+                  <Sparkles className="w-5 h-5 text-primary flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-medium">My Recovery Plan</p>
+                    <p className="text-xs text-muted-foreground">Personalized AI plan, built from your data</p>
+                  </div>
+                </div>
+              </Link>
+            )}
           </div>
         </div>
       );

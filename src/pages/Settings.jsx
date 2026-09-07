@@ -11,6 +11,9 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import { Users, Shield, Trash2, LogOut, ChevronRight, Eye, CreditCard, Zap, RefreshCw } from 'lucide-react';
+import { usePlan } from '@/lib/planAccess';
+import FeatureLock from '@/components/FeatureLock';
+import PartnerList from '@/components/settings/PartnerList';
 import { format, differenceInDays } from 'date-fns';
 
 const PLAN_NAMES = { starter: 'Starter', recovery_pro: 'Recovery Pro', elite: 'Elite Recovery' };
@@ -18,6 +21,7 @@ const PLAN_NAMES = { starter: 'Starter', recovery_pro: 'Recovery Pro', elite: 'E
 export default function Settings() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { hasFeature, isElite } = usePlan();
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [portalLoading, setPortalLoading] = useState(false);
@@ -165,7 +169,14 @@ export default function Settings() {
           </div>
           <h3 className="text-sm font-semibold">Accountability Partner</h3>
         </div>
-        <div className="space-y-3">
+        {!hasFeature('partner_tools') ? (
+          <FeatureLock compact feature="partner_tools" />
+        ) : (
+          <div className="space-y-3">
+          {isElite ? (
+            <PartnerList profile={profile} updateProfile={updateProfile} />
+          ) : (
+            <>
           <div>
             <label className="text-xs font-medium text-muted-foreground mb-1 block">Name</label>
             <Input
@@ -183,6 +194,8 @@ export default function Settings() {
               placeholder="partner@email.com"
             />
           </div>
+            </>
+          )}
           <div className="space-y-3 pt-2">
             <ToggleRow
               label="Weekly progress email"
@@ -204,6 +217,7 @@ export default function Settings() {
             />
           </div>
         </div>
+        )}
       </div>
 
       {/* Privacy Level */}

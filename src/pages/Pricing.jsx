@@ -40,7 +40,7 @@ const PLANS = [
     badge: 'Maximum Support',
     badgeColor: 'bg-accent text-accent-foreground',
     desc: 'The highest level of structure and personalization.',
-    features: ['Everything in Pro', 'Advanced AI Coaching', 'Personalized Recovery Plans', 'Multiple Partners', 'Family Progress Sharing', 'Deep Behavioral Analytics', 'Priority Support', 'Early Access Features'],
+    features: ['Everything in Pro', 'Advanced AI Coaching (deeper, plan-aware context)', 'Personalized AI Recovery Plan', 'Multiple Accountability Partners', 'Deep Behavioral Analytics'],
     cta: 'Start 7-Day Free Trial',
     trial: true,
     highlight: false,
