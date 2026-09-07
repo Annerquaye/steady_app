@@ -1,0 +1,45 @@
+{
+  "name": "Missed Check-in Alert",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 21 * * *",
+      "one_time_date": null,
+      "timezone": "America/New_York",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "missed_checkin_alert",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "check_missed": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "checkMissedCheckins",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Check missed check-ins",
+            "description": "Email partners of users who missed today's check-in"
+          }
+        }
+      }
+    ]
+  },
+  "description": "Notifies accountability partners each evening when a user misses their daily check-in"
+}

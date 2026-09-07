@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -37,6 +37,13 @@ export default function RelapseReflection() {
   });
   const profile = profiles[0];
 
+  // Prefill the notify switch from the standing "Relapse alert" setting
+  useEffect(() => {
+    if (profile?.send_relapse_alert) {
+      setData(prev => prev.notify_partner ? prev : { ...prev, notify_partner: true });
+    }
+  }, [profile?.send_relapse_alert]);
+
   const handleSave = async () => {
     setSaving(true);
     await base44.entities.RelapseLog.create(data);
@@ -59,6 +66,11 @@ export default function RelapseReflection() {
         total_urges_resisted: 0,
         total_relapses: 0,
       });
+    }
+
+    // Relapse alert to accountability partner(s)
+    if (data.notify_partner) {
+      await base44.functions.invoke('sendRelapseAlert', {});
     }
 
     queryClient.invalidateQueries({ queryKey: ['userProfile'] });
@@ -165,7 +177,7 @@ export default function RelapseReflection() {
                     onCheckedChange={(v) => setData({ ...data, tighten_restrictions: v })}
                   />
                 </div>
-                {profile?.accountability_partner_email && (
+                {(profile?.accountability_partner_email || (profile?.partners || []).length > 0) && (
                   <div className="flex items-center justify-between bg-card rounded-xl p-4 border border-border">
                     <div>
                       <p className="text-sm font-medium">Notify your partner?</p>
