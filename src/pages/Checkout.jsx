@@ -11,8 +11,8 @@ import { useQuery } from '@tanstack/react-query';
 const PLAN_META = {
   starter: {
     name: 'Starter',
-    monthlyPrice: 3.99,
-    annualPrice: 39.99,
+    monthlyPrice: 5.99,
+    annualPrice: 57.50,
     trial: false,
     features: ['Streak tracking', 'Daily check-ins', 'Journal entries', 'Progress dashboard'],
   },
@@ -26,8 +26,8 @@ const PLAN_META = {
   },
   elite: {
     name: 'Elite Recovery',
-    monthlyPrice: 19.99,
-    annualPrice: 191.99,
+    monthlyPrice: 13.99,
+    annualPrice: 134.30,
     trial: true,
     badge: 'Maximum Support',
     features: ['Everything in Pro', 'Advanced AI Coaching', 'Personalized Plans', 'Multiple Partners', 'Priority Support', 'Early Access Features'],
@@ -113,7 +113,7 @@ export default function Checkout() {
               )}
               <div className="flex justify-between items-center text-sm">
                 <span className="text-muted-foreground">Then {billing === 'year' ? 'annually' : 'monthly'}</span>
-                <span className="font-semibold">${price}/{billing === 'year' ? 'yr' : 'mo'}</span>
+                <span className="font-semibold">${price.toFixed(2)}/{billing === 'year' ? 'yr' : 'mo'}</span>
               </div>
               {meta.trial && (
                 <div className="flex justify-between items-center text-sm pt-2 border-t border-border">
@@ -223,7 +223,7 @@ export default function Checkout() {
                 className="w-full h-12 text-base gap-2 font-semibold"
               >
                 <Lock className="w-4 h-4" />
-                {loading ? 'Redirecting to Stripe...' : meta.trial ? 'Start 7-Day Free Trial' : `Subscribe — $${price}/${billing === 'year' ? 'yr' : 'mo'}`}
+                {loading ? 'Redirecting to Stripe...' : meta.trial ? 'Start 7-Day Free Trial' : `Subscribe — $${price.toFixed(2)}/${billing === 'year' ? 'yr' : 'mo'}`}
               </Button>
 
               <p className="text-[10px] text-center text-muted-foreground">
@@ -232,7 +232,7 @@ export default function Checkout() {
 
               {meta.trial ? (
                 <p className="text-[10px] text-muted-foreground leading-relaxed text-center">
-                  After your 7-day free trial, you will be charged ${price}/{billing === 'year' ? 'year' : 'month'}. Subscription automatically renews unless cancelled at least 24 hours before the end of the current period. Manage or cancel anytime in Settings.
+                  After your 7-day free trial, you will be charged ${price.toFixed(2)}/{billing === 'year' ? 'year' : 'month'}. Subscription automatically renews unless cancelled at least 24 hours before the end of the current period. Manage or cancel anytime in Settings.
                 </p>
               ) : (
                 <p className="text-[10px] text-muted-foreground leading-relaxed text-center">

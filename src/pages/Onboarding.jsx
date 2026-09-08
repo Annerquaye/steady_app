@@ -93,7 +93,7 @@ const PLANS = [
   {
     id: 'starter',
     name: 'Starter',
-    price: '$3.99',
+    price: '$5.99',
     period: '/month',
     badge: null,
     desc: 'For users beginning their recovery journey.',
@@ -117,7 +117,7 @@ const PLANS = [
   {
     id: 'elite',
     name: 'Elite Recovery',
-    price: '$19.99',
+    price: '$13.99',
     period: '/month',
     trial: '7-day free trial',
     badge: 'Maximum Support',

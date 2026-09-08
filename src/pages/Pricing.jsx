@@ -10,8 +10,8 @@ const PLANS = [
   {
     id: 'starter',
     name: 'Starter',
-    monthlyPrice: 3.99,
-    annualPrice: 39.99,
+    monthlyPrice: 5.99,
+    annualPrice: 57.50,
     badge: null,
     desc: 'Build the foundation of your recovery.',
     features: ['Streak tracking', 'Daily check-ins', 'Journal entries', 'Progress dashboard', 'Trigger logging'],
@@ -35,8 +35,8 @@ const PLANS = [
   {
     id: 'elite',
     name: 'Elite Recovery',
-    monthlyPrice: 19.99,
-    annualPrice: 191.99,
+    monthlyPrice: 13.99,
+    annualPrice: 134.30,
     badge: 'Maximum Support',
     badgeColor: 'bg-accent text-accent-foreground',
     desc: 'The highest level of structure and personalization.',
@@ -153,7 +153,7 @@ export default function Pricing() {
                   <p className="text-xs text-muted-foreground mt-1">{plan.desc}</p>
                 </div>
                 <div className="text-right ml-3 flex-shrink-0">
-                  <div className="text-2xl font-heading font-bold">${price}</div>
+                  <div className="text-2xl font-heading font-bold">${price.toFixed(2)}</div>
                   <div className="text-xs text-muted-foreground">/{billing === 'year' ? 'year' : 'month'}</div>
                   {billing === 'year' && <div className="text-[10px] text-primary font-semibold">Save {savings}%</div>}
                 </div>
