@@ -28,6 +28,7 @@ import PrivacyPolicy from '@/pages/PrivacyPolicy';
 import TermsOfService from '@/pages/TermsOfService';
 import Support from '@/pages/Support';
 import RecoveryPlan from '@/pages/RecoveryPlan';
+import Analytics from '@/pages/Analytics';
 import PlanGate from '@/components/PlanGate';
 
 import { useDarkMode } from '@/hooks/useDarkMode';
@@ -84,6 +85,7 @@ const AuthenticatedApp = () => {
             <Route path="/coach" element={<PlanGate feature="ai_coach"><Coach /></PlanGate>} />
             <Route path="/blocking" element={<PlanGate feature="blocking"><Blocking /></PlanGate>} />
             <Route path="/plan" element={<PlanGate feature="recovery_plan"><RecoveryPlan /></PlanGate>} />
+            <Route path="/analytics" element={<PlanGate feature="advanced_analytics"><Analytics /></PlanGate>} />
             <Route path="/settings" element={<Settings />} />
           </Route>
         </Route>

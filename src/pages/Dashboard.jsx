@@ -10,7 +10,7 @@ import MilestoneTracker from '@/components/dashboard/MilestoneTracker';
 import MoodTrend from '@/components/dashboard/MoodTrend';
 import UrgeFrequencyChart from '@/components/dashboard/UrgeFrequencyChart';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BarChart3, FileText, Sparkles } from 'lucide-react';
+import { BarChart3, FileText, Sparkles, TrendingUp } from 'lucide-react';
 import { usePlan } from '@/lib/planAccess';
 import FeatureLock from '@/components/FeatureLock';
 import AdvancedAnalytics from '@/components/dashboard/AdvancedAnalytics';
@@ -164,6 +164,17 @@ export default function Dashboard() {
                   <div>
                     <p className="text-sm font-medium">My Recovery Plan</p>
                     <p className="text-xs text-muted-foreground">Personalized AI plan, built from your data</p>
+                  </div>
+                </div>
+              </Link>
+            )}
+            {can('advanced_analytics') && (
+              <Link to="/analytics" className="col-span-2">
+                <div className="bg-card rounded-xl border border-border p-4 hover:border-primary/20 transition-colors flex items-center gap-3">
+                  <TrendingUp className="w-5 h-5 text-accent flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-medium">Advanced Analytics</p>
+                    <p className="text-xs text-muted-foreground">Long-term trends, trigger correlations & milestones</p>
                   </div>
                 </div>
               </Link>
