@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Plus, X } from 'lucide-react';
+import { notifyNewPartners } from '@/lib/partnerNotifications';
 
 const MAX_PARTNERS = 5;
 
@@ -13,8 +14,22 @@ export default function PartnerList({ profile, updateProfile }) {
       : [];
   const [partners, setPartners] = useState(initial.map(p => ({ name: p.name || '', email: p.email || '' })));
 
+  const notifiedEmailsRef = useRef(
+    new Set(initial.map(p => (p.email || '').trim().toLowerCase()).filter(Boolean))
+  );
+
   const persist = (list) => {
-    updateProfile({ partners: list.filter(p => (p.email || '').trim() || (p.name || '').trim()) });
+    const cleaned = list.filter(p => (p.email || '').trim() || (p.name || '').trim());
+    updateProfile({ partners: cleaned });
+    // Welcome-email only partners that are newly added
+    const added = cleaned.filter(p => {
+      const email = (p.email || '').trim().toLowerCase();
+      return email && !notifiedEmailsRef.current.has(email);
+    });
+    if (added.length) {
+      added.forEach(p => notifiedEmailsRef.add((p.email || '').trim().toLowerCase()));
+      notifyNewPartners(added);
+    }
   };
 
   const update = (i, field, value) => {

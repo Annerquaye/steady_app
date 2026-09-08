@@ -14,6 +14,7 @@ import { Users, Shield, Trash2, LogOut, ChevronRight, Eye, CreditCard, Zap, Refr
 import { usePlan } from '@/lib/planAccess';
 import FeatureLock from '@/components/FeatureLock';
 import PartnerList from '@/components/settings/PartnerList';
+import { notifyNewPartners } from '@/lib/partnerNotifications';
 import { format, differenceInDays } from 'date-fns';
 
 const PLAN_NAMES = { starter: 'Starter', recovery_pro: 'Recovery Pro', elite: 'Elite Recovery' };
@@ -26,6 +27,7 @@ export default function Settings() {
   const [deleting, setDeleting] = useState(false);
   const [portalLoading, setPortalLoading] = useState(false);
   const debounceRef = useRef(null);
+  const prevPartnerEmailRef = useRef(null);
 
   const { data: subscriptions } = useQuery({
     queryKey: ['subscriptions'],
@@ -66,6 +68,17 @@ export default function Settings() {
         await base44.entities.UserProfile.update(profile.id, updates);
         queryClient.invalidateQueries({ queryKey: ['userProfile'] });
         setSaving(false);
+        // Welcome-email a newly set single partner
+        if ('accountability_partner_email' in updates) {
+          const email = (updates.accountability_partner_email || '').trim();
+          if (prevPartnerEmailRef.current === null) {
+            prevPartnerEmailRef.current = (profile.accountability_partner_email || '').trim();
+          }
+          if (email && email !== prevPartnerEmailRef.current) {
+            prevPartnerEmailRef.current = email;
+            notifyNewPartners([{ name: profile.accountability_partner_name, email }]);
+          }
+        }
       }, 600);
     } else {
       setSaving(true);

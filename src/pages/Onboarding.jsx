@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
+import { notifyNewPartners } from '@/lib/partnerNotifications';
 import { queryClientInstance } from '@/lib/query-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -276,6 +277,13 @@ export default function Onboarding() {
       created,
       ...(Array.isArray(old) ? old.filter(p => p.id !== created.id) : []),
     ]);
+    // Welcome-email the partner if one was provided
+    if (data.accountability_partner_email) {
+      notifyNewPartners([{
+        name: data.accountability_partner_name,
+        email: data.accountability_partner_email,
+      }]);
+    }
     navigate('/');
   };
 
