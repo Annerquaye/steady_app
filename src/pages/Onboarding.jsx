@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
+import { queryClientInstance } from '@/lib/query-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -247,7 +248,7 @@ export default function Onboarding() {
     const motIds = Array.isArray(data.motivation) ? data.motivation : [data.motivation];
     const motLabel = motIds.map(id => MOTIVATIONS.find(m => m.id === id)?.label || id).join(', ');
     const habitLabel = HABITS.find(h => h.id === data.target_habit)?.label || data.target_habit;
-    await base44.entities.UserProfile.create({
+    const created = await base44.entities.UserProfile.create({
       target_habit: habitLabel,
       reason_for_quitting: motLabel,
       triggers: data.triggers,
@@ -269,6 +270,12 @@ export default function Onboarding() {
       send_relapse_alert: false,
       send_missed_checkin_alert: false,
     });
+    // Seed the profile cache so the Dashboard doesn't see a stale empty list
+    // and bounce the user back into onboarding right after finishing it.
+    queryClientInstance.setQueryData(['userProfile'], (old) => [
+      created,
+      ...(Array.isArray(old) ? old.filter(p => p.id !== created.id) : []),
+    ]);
     navigate('/');
   };
 
