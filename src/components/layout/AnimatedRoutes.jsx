@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 
 // Sub-pages slide in from the right; tab pages cross-fade
 const SUB_PAGES = ['/urge', '/relapse', '/review', '/pricing', '/checkout', '/onboarding'];
@@ -24,6 +24,7 @@ const fadeVariants = {
 export default function AnimatedRoutes({ children }) {
   const location = useLocation();
   const sub = isSubPage(location.pathname);
+  const reduceMotion = useReducedMotion();
 
   return (
     <AnimatePresence mode="wait" initial={false}>
@@ -33,7 +34,10 @@ export default function AnimatedRoutes({ children }) {
         initial="initial"
         animate="animate"
         exit="exit"
-        transition={{ duration: sub ? 0.28 : 0.18, ease: [0.32, 0.72, 0, 1] }}
+        transition={{
+          duration: reduceMotion ? 0 : (sub ? 0.28 : 0.18),
+          ease: [0.32, 0.72, 0, 1],
+        }}
         style={{ willChange: 'transform, opacity' }}
       >
         {children}

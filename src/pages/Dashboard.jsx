@@ -11,6 +11,7 @@ import MoodTrend from '@/components/dashboard/MoodTrend';
 import UrgeFrequencyChart from '@/components/dashboard/UrgeFrequencyChart';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BarChart3, FileText, Sparkles, TrendingUp } from 'lucide-react';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { usePlan } from '@/lib/planAccess';
 import FeatureLock from '@/components/FeatureLock';
 import AdvancedAnalytics from '@/components/dashboard/AdvancedAnalytics';
@@ -21,11 +22,31 @@ import { dummyProfile, dummyUrges, dummyJournals } from '@/components/dashboard/
 // ╚══════════════════════════════════════════════════════╝
 const USE_DUMMY_DATA = false;
 
+// Moderate horizontal slide between the dashboard's tabs
+const tabVariants = {
+  enter: (dir) => ({ opacity: 0, x: dir * 40 }),
+  center: { opacity: 1, x: 0 },
+  exit: (dir) => ({ opacity: 0, x: dir * -40 }),
+};
+
 export default function Dashboard() {
   const navigate = useNavigate();
+  const reduceMotion = useReducedMotion();
 
   const [page, setPage] = useState(0);
+  const [tabDir, setTabDir] = useState(1);
   const touchStartX = useRef(null);
+  const scrollRef = useRef(null);
+
+  const goToPage = (i) => {
+    setTabDir(i >= page ? 1 : -1);
+    setPage(i);
+  };
+
+  // Fresh tab starts at the top
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: 0 });
+  }, [page]);
 
   const { hasFeature } = usePlan();
   // USE_DUMMY_DATA (screenshot mode) bypasses tier gates so every tab is capturable
@@ -193,8 +214,8 @@ export default function Dashboard() {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 50) {
-      if (diff > 0 && page < PAGE_LABELS.length - 1) setPage(p => p + 1);
-      if (diff < 0 && page > 0) setPage(p => p - 1);
+      if (diff > 0 && page < PAGE_LABELS.length - 1) { setTabDir(1); setPage(page + 1); }
+      if (diff < 0 && page > 0) { setTabDir(-1); setPage(page - 1); }
     }
     touchStartX.current = null;
   };
@@ -210,7 +231,7 @@ export default function Dashboard() {
         {PAGE_LABELS.map((label, i) => (
           <button
             key={i}
-            onClick={() => setPage(i)}
+            onClick={() => goToPage(i)}
             className={`flex-1 pb-2.5 text-sm font-medium transition-colors relative ${
               i === page ? 'text-primary' : 'text-muted-foreground'
             }`}
@@ -234,8 +255,21 @@ export default function Dashboard() {
       )}
 
       {/* Tab content */}
-      <div className="overflow-y-auto flex-1 px-5 py-4 pb-8">
-        {renderPage(page)}
+      <div ref={scrollRef} className="overflow-y-auto flex-1 px-5 py-4 pb-8">
+        <AnimatePresence mode="wait" initial={false} custom={tabDir}>
+          <motion.div
+            key={page}
+            custom={tabDir}
+            variants={tabVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: reduceMotion ? 0 : 0.22, ease: 'easeOut' }}
+            style={{ willChange: 'transform, opacity' }}
+          >
+            {renderPage(page)}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );
