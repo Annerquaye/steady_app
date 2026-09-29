@@ -10,7 +10,10 @@ const STREAK_BADGES = [
   { id: 'streak_30',  req: 30,  emoji: '🥇', label: '1 Month',  desc: 'New neural pathways formed.' },
   { id: 'streak_60',  req: 60,  emoji: '💎', label: '2 Months', desc: 'Lifestyle change locked in.' },
   { id: 'streak_90',  req: 90,  emoji: '👑', label: '90 Days',  desc: 'Full rewire complete.' },
+  { id: 'streak_180', req: 180, emoji: '🌹', label: '6 Months', desc: 'Half a year strong.' },
   { id: 'streak_365', req: 365, emoji: '🦅', label: '1 Year',   desc: 'Extraordinary. True freedom.' },
+  { id: 'streak_730', req: 730, emoji: '🚀', label: '2 Years',  desc: 'A new way of living.' },
+  { id: 'streak_1825', req: 1825, emoji: '🏔️', label: '5 Years', desc: 'Legendary. Life transformed.' },
 ];
 
 const URGE_BADGES = [
@@ -18,8 +21,10 @@ const URGE_BADGES = [
   { id: 'urge_5',   req: 5,   emoji: '💪', label: '5 Urges',     desc: 'Pattern of strength.' },
   { id: 'urge_10',  req: 10,  emoji: '🎯', label: '10 Urges',    desc: 'Discipline in action.' },
   { id: 'urge_25',  req: 25,  emoji: '🌟', label: '25 Urges',    desc: 'Mastery developing.' },
-  { id: 'urge_50',  req: 50,  emoji: '🏆', label: '50 Urges',    desc: 'Warrior mindset.' },
-  { id: 'urge_100', req: 100, emoji: '🦁', label: '100 Urges',   desc: 'Unstoppable.' },
+  { id: 'urge_50',   req: 50,   emoji: '🏆', label: '50 Urges',    desc: 'Warrior mindset.' },
+  { id: 'urge_100',  req: 100,  emoji: '🦁', label: '100 Urges',   desc: 'Unstoppable.' },
+  { id: 'urge_250',  req: 250,  emoji: '🌟', label: '250 Urges',   desc: 'Elite resistance.' },
+  { id: 'urge_500',  req: 500,  emoji: '⚡', label: '500 Urges',   desc: 'Iron will.' },
 ];
 
 function Badge({ emoji, label, desc, earned, next }) {

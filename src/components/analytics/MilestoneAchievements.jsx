@@ -12,6 +12,8 @@ const DAY_MILESTONES = [
   { days: 90, emoji: '🏅', label: '90 days' },
   { days: 180, emoji: '🏆', label: '6 months' },
   { days: 365, emoji: '👑', label: '1 year' },
+  { days: 730, emoji: '🚀', label: '2 years' },
+  { days: 1825, emoji: '🏔️', label: '5 years' },
 ];
 
 const URGE_MILESTONES = [
@@ -21,6 +23,8 @@ const URGE_MILESTONES = [
   { count: 100, emoji: '🛡️', label: '100 urges' },
   { count: 250, emoji: '💎', label: '250 urges' },
   { count: 500, emoji: '🌟', label: '500 urges' },
+  { count: 1000, emoji: '🔱', label: '1,000 urges' },
+  { count: 2500, emoji: '👑', label: '2,500 urges' },
 ];
 
 // Milestone achievements: earned vs. locked badges + progress to the next streak milestone
