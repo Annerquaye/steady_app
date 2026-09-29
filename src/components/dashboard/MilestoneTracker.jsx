@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { differenceInDays } from 'date-fns';
 import { cn } from '@/lib/utils';
 
@@ -27,14 +27,12 @@ const URGE_BADGES = [
   { id: 'urge_500',  req: 500,  emoji: '⚡', label: '500 Urges',   desc: 'Iron will.' },
 ];
 
-function Badge({ emoji, label, desc, earned, next }) {
-  const [showTip, setShowTip] = useState(false);
-
+function Badge({ emoji, label, desc, earned, next, open, onToggle }) {
   return (
     <button
-      onClick={() => setShowTip(s => !s)}
+      onClick={() => onToggle()}
       className={cn(
-        "relative flex flex-col items-center gap-1 p-2.5 rounded-xl border transition-all text-center",
+        "badge-tip relative flex flex-col items-center gap-1 p-2.5 rounded-xl border transition-all text-center",
         earned
           ? "bg-primary/8 border-primary/25 shadow-sm"
           : next
@@ -54,7 +52,7 @@ function Badge({ emoji, label, desc, earned, next }) {
       {next && !earned && (
         <span className="text-[8px] text-primary font-medium">next</span>
       )}
-      {showTip && (
+      {open && (
         <div className="absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 bg-foreground text-background text-[10px] rounded-lg px-2.5 py-1.5 w-28 text-center z-10 pointer-events-none shadow-lg">
           {earned ? `🎉 ${desc}` : `Locked — ${desc}`}
         </div>
@@ -64,6 +62,19 @@ function Badge({ emoji, label, desc, earned, next }) {
 }
 
 export default function MilestoneTracker({ profile, urges }) {
+  const [openId, setOpenId] = useState(null);
+
+  // Tap anywhere outside the badges to dismiss the tooltip
+  useEffect(() => {
+    if (!openId) return;
+    const closeOnOutside = (e) => {
+      if (e.target.closest?.('.badge-tip')) return;
+      setOpenId(null);
+    };
+    document.addEventListener('pointerdown', closeOnOutside);
+    return () => document.removeEventListener('pointerdown', closeOnOutside);
+  }, [openId]);
+
   const streakDays = profile?.streak_start_date
     ? differenceInDays(new Date(), new Date(profile.streak_start_date))
     : 0;
@@ -97,6 +108,8 @@ export default function MilestoneTracker({ profile, urges }) {
               {...b}
               earned={earnedStreak.includes(b.id)}
               next={i === nextStreakIdx}
+              open={openId === b.id}
+              onToggle={() => setOpenId(openId === b.id ? null : b.id)}
             />
           ))}
         </div>
@@ -112,6 +125,8 @@ export default function MilestoneTracker({ profile, urges }) {
               {...b}
               earned={earnedUrge.includes(b.id)}
               next={i === nextUrgeIdx}
+              open={openId === b.id}
+              onToggle={() => setOpenId(openId === b.id ? null : b.id)}
             />
           ))}
         </div>
