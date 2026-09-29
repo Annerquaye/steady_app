@@ -4,8 +4,9 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
-import { Shield, Plus, X, Globe, Search, Smartphone, Clock, Lock } from 'lucide-react';
+import { Plus, X, Globe, Search, Smartphone, Clock, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import BlocklistExport from '@/components/blocking/BlocklistExport';
 
 export default function Blocking() {
   const queryClient = useQueryClient();
@@ -141,14 +142,12 @@ export default function Blocking() {
         <TagList items={profile.high_risk_apps || []} onRemove={(i) => removeFromList('high_risk_apps', i)} />
       </Section>
 
-      {/* Info */}
-      <div className="bg-secondary/50 rounded-xl p-4">
-        <p className="text-xs text-muted-foreground leading-relaxed">
-          <Shield className="w-3 h-3 inline mr-1" />
-          These lists help you stay aware of your digital environment. For full device-level blocking, 
-          we recommend pairing this app with a DNS-level blocker or browser extension.
-        </p>
-      </div>
+      {/* Export to real blockers */}
+      <BlocklistExport
+        websites={profile.blocked_websites || []}
+        keywords={profile.blocked_keywords || []}
+        apps={profile.high_risk_apps || []}
+      />
     </div>
   );
 }
