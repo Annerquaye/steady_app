@@ -14,6 +14,7 @@ import { Users, Shield, Trash2, LogOut, ChevronRight, Eye, CreditCard, Zap, Refr
 import { usePlan } from '@/lib/planAccess';
 import FeatureLock from '@/components/FeatureLock';
 import PartnerList from '@/components/settings/PartnerList';
+import AppearanceSetting from '@/components/settings/AppearanceSetting';
 import { notifyNewPartners } from '@/lib/partnerNotifications';
 import { format, differenceInDays } from 'date-fns';
 
@@ -271,6 +272,9 @@ export default function Settings() {
         </Select>
         <p className="text-xs text-muted-foreground">Controls what your accountability partner can see.</p>
       </div>
+
+      {/* Appearance */}
+      <AppearanceSetting />
 
       {/* Privacy & Security */}
       <div className="bg-card rounded-2xl border border-border p-5 space-y-4">

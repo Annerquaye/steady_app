@@ -1,26 +1,49 @@
 import { useEffect } from 'react';
 
+const THEME_KEY = 'recorva_theme';
+
+// Current preference: 'light' | 'dark' | 'system' (default 'system')
+export function getStoredTheme() {
+  try {
+    return localStorage.getItem(THEME_KEY) || 'system';
+  } catch {
+    return 'system';
+  }
+}
+
+// Saves the preference and notifies the running hook (and any other tab)
+export function setStoredTheme(theme) {
+  try {
+    localStorage.setItem(THEME_KEY, theme);
+  } catch {
+    // storage unavailable — theme just won't persist
+  }
+  window.dispatchEvent(new CustomEvent('recorva-theme-change', { detail: theme }));
+}
+
 /**
- * Syncs the document root's `.dark` class with the OS color-scheme preference.
- * Works in both browser and WebView (iOS/Android).
+ * Applies the stored theme (or the OS preference when set to 'system') to the
+ * document root's `.dark` class. Works in both browser and WebView (iOS/Android).
  */
 export function useDarkMode() {
   useEffect(() => {
     const root = document.documentElement;
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
 
-    const apply = (dark) => {
-      if (dark) {
-        root.classList.add('dark');
-      } else {
-        root.classList.remove('dark');
-      }
+    const apply = () => {
+      const theme = getStoredTheme();
+      const dark = theme === 'dark' || (theme === 'system' && mq.matches);
+      root.classList.toggle('dark', dark);
     };
 
-    apply(mq.matches);
+    apply();
 
-    const handler = (e) => apply(e.matches);
+    const handler = () => apply();
     mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
+    window.addEventListener('recorva-theme-change', handler);
+    return () => {
+      mq.removeEventListener('change', handler);
+      window.removeEventListener('recorva-theme-change', handler);
+    };
   }, []);
 }
