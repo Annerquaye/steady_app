@@ -73,13 +73,13 @@ const AuthenticatedApp = () => {
         <Route path="/support" element={<Support />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsOfService />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/checkout" element={<Checkout />} />
 
         <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
           <Route path="/urge" element={<PlanGate feature="urge_mode"><UrgeEmergency /></PlanGate>} />
           <Route path="/relapse" element={<RelapseReflection />} />
           <Route path="/review" element={<PlanGate feature="weekly_review"><WeeklyReview /></PlanGate>} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/checkout" element={<Checkout />} />
 
           <Route element={<AppShell />}>
             <Route path="/" element={<Dashboard />} />

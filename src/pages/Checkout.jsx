@@ -60,26 +60,34 @@ export default function Checkout() {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError('Please enter a valid email address.'); return; }
     if (!agreed) { setError('Please accept the terms to continue.'); return; }
 
-    // Check if running in an iframe (preview mode)
-    if (window.self !== window.top) {
-      alert('Checkout is only available from the published app. Please open the app directly.');
-      return;
-    }
-
     setLoading(true);
     setError('');
 
-    const res = await base44.functions.invoke('createCheckoutSession', {
-      plan,
-      billing_interval: billing,
-      email,
-      coupon: coupon || undefined,
-    });
+    // When framed (e.g. builder preview), open checkout in a new tab synchronously
+    // inside this click handler so popup blockers preserve the user activation.
+    const isFramed = window.self !== window.top;
+    const checkoutTab = isFramed ? window.open('', '_blank') : null;
+    if (isFramed && !checkoutTab) {
+      setError('Allow popups to continue to checkout.');
+      setLoading(false);
+      return;
+    }
+    if (checkoutTab) checkoutTab.opener = null;
 
-    if (res.data?.url) {
-      window.location.href = res.data.url;
-    } else {
-      setError(res.data?.error || 'Something went wrong. Please try again.');
+    try {
+      const res = await base44.functions.invoke('createCheckoutSession', {
+        plan,
+        billing_interval: billing,
+        email,
+        coupon: coupon || undefined,
+      });
+      const url = res.data?.url;
+      if (!url) throw new Error(res.data?.error || 'Something went wrong. Please try again.');
+      if (checkoutTab) checkoutTab.location.replace(url);
+      else window.location.assign(url);
+    } catch (err) {
+      checkoutTab?.close();
+      setError(err.message || 'Something went wrong. Please try again.');
       setLoading(false);
     }
   };

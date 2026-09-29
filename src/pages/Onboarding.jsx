@@ -258,7 +258,7 @@ export default function Onboarding() {
     // the profile is created from these answers right after signup.
     if (isGuest) {
       saveGuestOnboarding(data);
-      navigate('/register');
+      navigate('/pricing');
       return;
     }
     const motIds = Array.isArray(data.motivation) ? data.motivation : [data.motivation];
@@ -792,7 +792,7 @@ export default function Onboarding() {
           )
         ) : (
           <Button onClick={handleFinish} disabled={saving} className="gap-2">
-            {saving ? 'Setting up...' : isGuest ? 'Save & Create Account' : 'Begin My Journey'} <Check className="w-4 h-4" />
+            {saving ? 'Saving...' : isGuest ? 'Save & Choose a Plan' : 'Begin My Journey'} <Check className="w-4 h-4" />
           </Button>
         )}
       </div>
