@@ -15,6 +15,7 @@ import OAuthConsent from '@/pages/OAuthConsent';
 import AppShell from '@/components/layout/AppShell';
 import Dashboard from '@/pages/Dashboard';
 import Onboarding from '@/pages/Onboarding';
+import ClaimOnboarding from '@/pages/ClaimOnboarding';
 import UrgeEmergency from '@/pages/UrgeEmergency';
 import Journal from '@/pages/Journal';
 import Coach from '@/pages/Coach';
@@ -67,12 +68,13 @@ const AuthenticatedApp = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/oauth/consent" element={<OAuthConsent />} />
+        <Route path="/onboarding" element={<Onboarding />} />
+        <Route path="/onboarding/claim" element={<ClaimOnboarding />} />
         <Route path="/support" element={<Support />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsOfService />} />
 
         <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
-          <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/urge" element={<PlanGate feature="urge_mode"><UrgeEmergency /></PlanGate>} />
           <Route path="/relapse" element={<RelapseReflection />} />
           <Route path="/review" element={<PlanGate feature="weekly_review"><WeeklyReview /></PlanGate>} />

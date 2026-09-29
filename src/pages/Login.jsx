@@ -8,6 +8,7 @@ import { LogIn, Mail, Lock, Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 import { safeReturnTo } from "@/lib/authReturnTo";
+import { hasGuestOnboarding } from "@/lib/guestOnboarding";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -21,7 +22,7 @@ export default function Login() {
     setLoading(true);
     try {
       await base44.auth.loginViaEmailPassword(email, password);
-      window.location.href = safeReturnTo();
+      window.location.href = hasGuestOnboarding() ? "/onboarding/claim" : safeReturnTo();
     } catch (err) {
       setError(err.message || "Invalid email or password");
     } finally {
@@ -30,7 +31,7 @@ export default function Login() {
   };
 
   const handleGoogle = () => {
-    base44.auth.loginWithProvider("google", safeReturnTo());
+    base44.auth.loginWithProvider("google", hasGuestOnboarding() ? "/onboarding/claim" : safeReturnTo());
   };
 
   return (
@@ -47,6 +48,13 @@ export default function Login() {
         </>
       }
     >
+      <Button asChild className="w-full h-12 font-medium mb-3">
+        <Link to="/onboarding">New here? Start free — no account needed</Link>
+      </Button>
+      <p className="text-center text-xs text-muted-foreground mb-5">
+        Take the first step now — create an account only when you're ready to save.
+      </p>
+
       <Button
         variant="outline"
         className="w-full h-12 text-sm font-medium mb-6"

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { notifyNewPartners } from '@/lib/partnerNotifications';
+import { saveGuestOnboarding } from '@/lib/guestOnboarding';
 import { queryClientInstance } from '@/lib/query-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -191,6 +192,7 @@ export default function Onboarding() {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
+  const [isGuest, setIsGuest] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState('pro');
   const [data, setData] = useState({
     target_habit: '',
@@ -207,6 +209,12 @@ export default function Onboarding() {
   });
 
   const current = STEPS[step];
+
+  useEffect(() => {
+    base44.auth.isAuthenticated()
+      .then(authed => setIsGuest(!authed))
+      .catch(() => setIsGuest(true));
+  }, []);
 
   const set = (field, val) => setData(prev => ({ ...prev, [field]: val }));
 
@@ -246,6 +254,13 @@ export default function Onboarding() {
 
   const handleFinish = async () => {
     setSaving(true);
+    // Guests: keep their answers locally and send them to sign up —
+    // the profile is created from these answers right after signup.
+    if (isGuest) {
+      saveGuestOnboarding(data);
+      navigate('/register');
+      return;
+    }
     const motIds = Array.isArray(data.motivation) ? data.motivation : [data.motivation];
     const motLabel = motIds.map(id => MOTIVATIONS.find(m => m.id === id)?.label || id).join(', ');
     const habitLabel = HABITS.find(h => h.id === data.target_habit)?.label || data.target_habit;
@@ -740,6 +755,11 @@ export default function Onboarding() {
             Skip
           </Button>
         )}
+        {current === 'partner' && isGuest && (
+          <Button asChild variant="ghost" className="text-muted-foreground text-sm">
+            <Link to="/login">Log in</Link>
+          </Button>
+        )}
         {step < STEPS.length - 1 ? (
           current === 'pricing' ? (
             <div className="flex items-center gap-2">
@@ -772,7 +792,7 @@ export default function Onboarding() {
           )
         ) : (
           <Button onClick={handleFinish} disabled={saving} className="gap-2">
-            {saving ? 'Setting up...' : 'Begin My Journey'} <Check className="w-4 h-4" />
+            {saving ? 'Setting up...' : isGuest ? 'Save & Create Account' : 'Begin My Journey'} <Check className="w-4 h-4" />
           </Button>
         )}
       </div>
