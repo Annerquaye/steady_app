@@ -45,8 +45,10 @@ export default function Journal() {
     onError: (_err, _vars, ctx) => {
       if (ctx?.previous) queryClient.setQueryData(['journals'], ctx.previous);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ['journals'] });
+      await base44.functions.invoke('createMilestoneNotifications', {});
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
       setShowForm(false);
       setEntry(EMPTY_ENTRY);
     },

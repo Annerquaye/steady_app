@@ -46,8 +46,10 @@ export default function DailyCheckIn({ alreadyDoneToday }) {
       if (ctx?.previous) queryClient.setQueryData(['journals'], ctx.previous);
       setDone(false);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ['journals'] });
+      await base44.functions.invoke('createMilestoneNotifications', {});
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
     },
   });
 

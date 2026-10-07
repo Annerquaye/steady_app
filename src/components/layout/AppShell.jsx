@@ -3,6 +3,7 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, BookHeart, Shield, MessageCircle, Settings, Flame } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import SubscriptionBanner from '@/components/subscription/SubscriptionBanner';
+import NotificationBell from '@/components/notifications/NotificationBell';
 
 const navItems = [
   { path: '/', icon: LayoutDashboard, label: 'Home' },
@@ -37,6 +38,7 @@ export default function AppShell() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <SubscriptionBanner />
+      <div className="fixed top-2 right-3 z-40" style={{ top: 'calc(0.5rem + env(safe-area-inset-top, 0px))' }}><NotificationBell /></div>
 
       {/* Tab pages get safe-area top padding here; sub-pages handle it via PageHeader */}
       <main

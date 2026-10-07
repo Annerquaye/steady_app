@@ -30,6 +30,7 @@ import TermsOfService from '@/pages/TermsOfService';
 import Support from '@/pages/Support';
 import RecoveryPlan from '@/pages/RecoveryPlan';
 import Analytics from '@/pages/Analytics';
+import Notifications from '@/pages/Notifications';
 import PlanGate from '@/components/PlanGate';
 
 import { useDarkMode } from '@/hooks/useDarkMode';
@@ -89,6 +90,7 @@ const AuthenticatedApp = () => {
             <Route path="/plan" element={<PlanGate feature="recovery_plan"><RecoveryPlan /></PlanGate>} />
             <Route path="/analytics" element={<PlanGate feature="advanced_analytics"><Analytics /></PlanGate>} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/notifications" element={<Notifications />} />
           </Route>
         </Route>
 

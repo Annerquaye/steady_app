@@ -285,6 +285,11 @@ export default function Onboarding() {
       send_weekly_email: false,
       send_relapse_alert: false,
       send_missed_checkin_alert: false,
+      daily_reminder_enabled: true,
+      milestone_notifications_enabled: true,
+      push_notifications_enabled: true,
+      daily_reminder_time: '20:00',
+      notification_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     });
     // Seed the profile cache so the Dashboard doesn't see a stale empty list
     // and bounce the user back into onboarding right after finishing it.

@@ -3,41 +3,34 @@
   "type": "object",
   "properties": {
     "target_habit": {
-      "type": "string",
-      "description": "What the user wants to quit (e.g. Porn, Social media scrolling, Gambling)"
+      "type": "string"
     },
     "reason_for_quitting": {
-      "type": "string",
-      "description": "User's personal reason for quitting"
+      "type": "string"
     },
     "triggers": {
       "type": "array",
       "items": {
         "type": "string"
-      },
-      "description": "Main triggers like boredom, stress, loneliness, etc."
+      }
     },
     "vulnerable_times": {
       "type": "array",
       "items": {
         "type": "string"
-      },
-      "description": "Most vulnerable times of day"
+      }
     },
     "goals": {
       "type": "array",
       "items": {
         "type": "string"
-      },
-      "description": "User goals"
+      }
     },
     "accountability_partner_email": {
-      "type": "string",
-      "description": "Optional accountability partner email"
+      "type": "string"
     },
     "accountability_partner_name": {
-      "type": "string",
-      "description": "Name of accountability partner"
+      "type": "string"
     },
     "partners": {
       "type": "array",
@@ -54,8 +47,7 @@
         "required": [
           "email"
         ]
-      },
-      "description": "Elite tier: multiple accountability partners"
+      }
     },
     "privacy_level": {
       "type": "string",
@@ -64,8 +56,7 @@
         "moderate",
         "full"
       ],
-      "default": "minimal",
-      "description": "What gets shared with accountability partner"
+      "default": "minimal"
     },
     "send_weekly_email": {
       "type": "boolean",
@@ -85,8 +76,7 @@
     },
     "streak_start_date": {
       "type": "string",
-      "format": "date-time",
-      "description": "When current streak started"
+      "format": "date-time"
     },
     "total_urges_resisted": {
       "type": "number",
@@ -97,34 +87,29 @@
       "default": 0
     },
     "recovery_plan": {
-      "type": "string",
-      "description": "Elite tier: AI-generated personalized recovery plan (markdown)"
+      "type": "string"
     },
     "recovery_plan_updated": {
       "type": "string",
-      "format": "date-time",
-      "description": "When the recovery plan was last generated"
+      "format": "date-time"
     },
     "blocked_websites": {
       "type": "array",
       "items": {
         "type": "string"
-      },
-      "description": "List of blocked website domains"
+      }
     },
     "blocked_keywords": {
       "type": "array",
       "items": {
         "type": "string"
-      },
-      "description": "Blocked search keywords"
+      }
     },
     "high_risk_apps": {
       "type": "array",
       "items": {
         "type": "string"
-      },
-      "description": "High-risk app reminders"
+      }
     },
     "lockdown_windows": {
       "type": "array",
@@ -144,8 +129,7 @@
             }
           }
         }
-      },
-      "description": "Scheduled lockdown time windows"
+      }
     },
     "hard_mode_enabled": {
       "type": "boolean",
@@ -153,8 +137,27 @@
     },
     "description": {
       "type": "string",
-      "maxLength": 1000,
-      "description": "Optional notes about the user's recovery journey"
+      "maxLength": 1000
+    },
+    "daily_reminder_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "milestone_notifications_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "push_notifications_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "daily_reminder_time": {
+      "type": "string",
+      "default": "20:00"
+    },
+    "notification_timezone": {
+      "type": "string",
+      "default": "America/New_York"
     }
   },
   "required": [],

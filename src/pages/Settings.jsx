@@ -15,6 +15,7 @@ import { usePlan } from '@/lib/planAccess';
 import FeatureLock from '@/components/FeatureLock';
 import PartnerList from '@/components/settings/PartnerList';
 import AppearanceSetting from '@/components/settings/AppearanceSetting';
+import NotificationPreferences from '@/components/notifications/NotificationPreferences';
 import { notifyNewPartners } from '@/lib/partnerNotifications';
 import { format, differenceInDays } from 'date-fns';
 
@@ -272,6 +273,8 @@ export default function Settings() {
         </Select>
         <p className="text-xs text-muted-foreground">Controls what your accountability partner can see.</p>
       </div>
+
+      <NotificationPreferences profile={profile} updateProfile={updateProfile} />
 
       {/* Appearance */}
       <AppearanceSetting />
