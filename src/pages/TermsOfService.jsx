@@ -83,7 +83,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-base font-semibold text-foreground mb-2">8. Termination</h2>
             <p>
-              We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time via Settings.
+              We reserve the right to suspend or terminate accounts that violate these Terms. You may permanently delete your recovery data at any time via Settings. Cancelling a subscription is handled separately through Manage Billing in Settings.
             </p>
           </section>
 

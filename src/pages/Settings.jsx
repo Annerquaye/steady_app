@@ -94,19 +94,21 @@ export default function Settings() {
   const handleDeleteData = async () => {
     if (!profile || deleting) return;
     setDeleting(true);
-    const [urges, journals, relapses, chats, subs] = await Promise.all([
+    const [urges, journals, relapses, chats, archivedStreaks, notifications] = await Promise.all([
       base44.entities.UrgeLog.list(),
       base44.entities.JournalEntry.list(),
       base44.entities.RelapseLog.list(),
       base44.entities.ChatMessage.list(),
-      base44.entities.Subscription.list(),
+      base44.entities.ArchivedStreak.list(),
+      base44.entities.Notification.list(),
     ]);
     await Promise.all([
       ...urges.map(u => base44.entities.UrgeLog.delete(u.id)),
       ...journals.map(j => base44.entities.JournalEntry.delete(j.id)),
       ...relapses.map(r => base44.entities.RelapseLog.delete(r.id)),
       ...chats.map(c => base44.entities.ChatMessage.delete(c.id)),
-      ...subs.map(s => base44.entities.Subscription.delete(s.id)),
+      ...archivedStreaks.map(streak => base44.entities.ArchivedStreak.delete(streak.id)),
+      ...notifications.map(notification => base44.entities.Notification.delete(notification.id)),
     ]);
     await base44.entities.UserProfile.delete(profile.id);
     base44.auth.logout();
@@ -312,22 +314,22 @@ export default function Settings() {
           <AlertDialogTrigger asChild>
             <Button variant="outline" className="w-full justify-between text-destructive hover:text-destructive">
               <span className="flex items-center gap-2">
-                <Trash2 className="w-4 h-4" /> Delete all my data
+                <Trash2 className="w-4 h-4" /> Delete recovery data
               </span>
               <ChevronRight className="w-4 h-4" />
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete all data?</AlertDialogTitle>
+              <AlertDialogTitle>Delete recovery data?</AlertDialogTitle>
               <AlertDialogDescription>
-                This will permanently delete your profile, journal entries, urge logs, and all other data. This cannot be undone.
+                This permanently deletes your recovery profile, journal entries, urge logs, streak history, notifications, and coach chats. It does not cancel an active subscription. This cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction onClick={handleDeleteData} disabled={deleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                {deleting ? 'Deleting...' : 'Delete everything'}
+                {deleting ? 'Deleting...' : 'Delete recovery data'}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

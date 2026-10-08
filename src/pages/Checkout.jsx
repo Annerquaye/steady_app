@@ -157,7 +157,7 @@ export default function Checkout() {
               {[
                 { icon: Lock, label: 'SSL\nEncrypted' },
                 { icon: Shield, label: 'Cancel\nAnytime' },
-                { icon: Star, label: '4.9★\nRating' },
+                { icon: Shield, label: 'Private by\ndefault' },
               ].map(({ icon: Icon, label }) => (
                 <div key={label} className="bg-card rounded-xl border border-border p-3 flex flex-col items-center gap-1">
                   <Icon className="w-4 h-4 text-primary" />
@@ -167,7 +167,7 @@ export default function Checkout() {
             </div>
 
             <p className="text-[11px] text-muted-foreground leading-relaxed">
-              🔒 Your personal data is never sold or shared. All health information is end-to-end encrypted and only accessible by you.
+              Your recovery entries are private by default. You control any accountability-partner sharing in Settings.
             </p>
           </div>
 

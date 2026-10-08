@@ -351,7 +351,7 @@ export default function Onboarding() {
               </div>
               <div className="w-full space-y-2">
                 {[
-                  { icon: Lock, text: 'Completely private — encrypted, never shared' },
+                  { icon: Lock, text: 'Private by default — you control what you share' },
                   { icon: Brain, text: 'AI-powered coaching when you need it most' },
                   { icon: Shield, text: 'Proven strategies backed by behavioral science' },
                 ].map(({ icon: Icon, text }) => (
@@ -656,9 +656,9 @@ export default function Onboarding() {
               {/* Trust signals */}
               <div className="flex justify-center gap-6 py-2">
                 {[
-                  { icon: Lock, label: 'End-to-end\nencrypted' },
-                  { icon: Shield, label: 'Never\nshared' },
-                  { icon: Star, label: '4.9★\nrating' },
+                  { icon: Lock, label: 'Private by\ndefault' },
+                  { icon: Shield, label: 'You control\nsharing' },
+                  { icon: Star, label: 'Built for\nrecovery' },
                 ].map(({ icon: Icon, label }) => (
                   <div key={label} className="flex flex-col items-center gap-1 text-center">
                     <Icon className="w-5 h-5 text-primary" />

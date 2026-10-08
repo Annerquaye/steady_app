@@ -71,7 +71,7 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-base font-semibold text-foreground mb-2">5. AI Coach Privacy</h2>
             <p>
-              When you use the AI Recovery Coach, your recovery context (triggers, goals, urge history summaries) is sent to our AI provider to generate responses. Raw journal text and relapse notes are not sent. AI conversations are stored locally in your session and are deleted when you delete your account.
+              When you use the AI Recovery Coach, the message you send and limited recovery context, such as triggers, goals, and urge-history summaries, are sent to our AI provider to generate a response. Raw journal text and relapse notes are not sent. Coach conversations are available only during the current app session unless a future version clearly tells you otherwise.
             </p>
           </section>
 
@@ -90,7 +90,7 @@ export default function PrivacyPolicy() {
             <p>You have the right to:</p>
             <ul className="list-disc ml-5 mt-2 space-y-1">
               <li><strong>Access:</strong> View all data through your dashboard</li>
-              <li><strong>Delete:</strong> Permanently delete all your data via Settings → Delete all my data</li>
+              <li><strong>Delete recovery data:</strong> Permanently delete your recovery profile, journals, urge logs, streak history, notifications, and coach chats via Settings → Delete recovery data</li>
               <li><strong>Opt out:</strong> Disable all partner notifications at any time in Settings</li>
             </ul>
           </section>
@@ -98,7 +98,7 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-base font-semibold text-foreground mb-2">8. Data Retention</h2>
             <p>
-              Your data is retained as long as your account is active. When you delete your account, all personal data is immediately and permanently removed from our systems.
+              Recovery data is retained while your account is active. When you use Delete recovery data in Settings, the recovery records listed in Section 7 are permanently removed from the app.
             </p>
           </section>
 

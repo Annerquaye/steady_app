@@ -184,7 +184,7 @@ export default function Pricing() {
         {[
           { icon: Lock, label: 'Encrypted\npayments' },
           { icon: Shield, label: 'Cancel\nanytime' },
-          { icon: Star, label: '4.9★\nrating' },
+          { icon: Shield, label: 'Private by\ndefault' },
         ].map(({ icon: Icon, label }) => (
           <div key={label} className="flex flex-col items-center gap-1.5">
             <Icon className="w-5 h-5 text-primary" />
