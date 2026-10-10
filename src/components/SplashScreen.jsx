@@ -79,7 +79,7 @@ export default function SplashScreen({ onDone }) {
                 }}
               >
                 <img
-                  src="https://media.base44.com/images/public/6a20baed8fdb785fe59d2daa/c2550dae7_generated_image.png"
+                  src="https://media.base44.com/images/public/6a20baed8fdb785fe59d2daa/ddec82ebf_Steady.jpeg"
                   alt="Recorva"
                   className="w-[132px] h-[132px] rounded-[36px] object-cover ring-4 ring-white/20"
                 />
