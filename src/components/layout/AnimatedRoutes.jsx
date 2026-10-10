@@ -38,7 +38,7 @@ export default function AnimatedRoutes({ children }) {
           duration: reduceMotion ? 0 : (sub ? 0.28 : 0.18),
           ease: [0.32, 0.72, 0, 1],
         }}
-        style={{ willChange: 'transform, opacity' }}
+        style={{ willChange: 'opacity' }}
       >
         {children}
       </motion.div>

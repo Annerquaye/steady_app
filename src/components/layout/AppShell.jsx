@@ -36,14 +36,14 @@ export default function AppShell() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-[100dvh] bg-background flex flex-col">
       <SubscriptionBanner />
       <div className="fixed top-2 right-3 z-40" style={{ top: 'calc(0.5rem + env(safe-area-inset-top, 0px))' }}><NotificationBell /></div>
 
       {/* Tab pages get safe-area top padding here; sub-pages handle it via PageHeader */}
       <main
         ref={mainRef}
-        className="flex-1 overflow-y-auto pb-20 max-w-lg mx-auto w-full"
+        className="flex-1 overflow-y-auto pb-24 max-w-lg mx-auto w-full"
         style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
       >
         <Outlet />

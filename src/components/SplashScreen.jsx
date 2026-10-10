@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 /**
- * Steady — Premium Splash Screen
+ * Recorva — Premium Splash Screen
  *
  * Design rationale:
  * - Radial gradient backdrop creates depth and warmth without clutter (à la Headspace/Calm)
@@ -71,7 +71,7 @@ export default function SplashScreen({ onDone }) {
                 opacity: { duration: 0.45 },
               }}
             >
-              {/* Steady logo image */}
+              {/* Recorva logo image */}
               <div
                 className="relative"
                 style={{
@@ -79,9 +79,9 @@ export default function SplashScreen({ onDone }) {
                 }}
               >
                 <img
-                  src="https://media.base44.com/images/public/6a20baed8fdb785fe59d2daa/ddec82ebf_Steady.jpeg"
+                  src="https://media.base44.com/images/public/6a20baed8fdb785fe59d2daa/c2550dae7_generated_image.png"
                   alt="Recorva"
-                  className="w-[100px] h-[100px] rounded-[28px] object-cover"
+                  className="w-[132px] h-[132px] rounded-[36px] object-cover ring-4 ring-white/20"
                 />
               </div>
             </motion.div>
@@ -94,8 +94,8 @@ export default function SplashScreen({ onDone }) {
               className="mt-6 text-center"
             >
               <h1
-                className="font-heading font-bold tracking-[-0.02em]"
-                style={{ fontSize: '28px', lineHeight: 1, color: '#c9a84c' }}
+                className="font-heading font-extrabold tracking-[-0.03em]"
+                style={{ fontSize: '42px', lineHeight: 1, color: '#f4cf69', textShadow: '0 3px 18px rgba(0,0,0,0.28)' }}
               >
                 Recorva
               </h1>
@@ -106,8 +106,8 @@ export default function SplashScreen({ onDone }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.58, duration: 0.55 }}
-              className="mt-2 text-[13px] font-body font-medium tracking-wide"
-              style={{ color: 'rgba(255,255,255,0.75)' }}
+              className="mt-3 text-[15px] font-body font-bold tracking-wide"
+              style={{ color: 'rgba(255,255,255,0.92)', textShadow: '0 2px 12px rgba(0,0,0,0.24)' }}
             >
               Build the life you deserve.
             </motion.p>

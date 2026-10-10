@@ -50,5 +50,5 @@ export const dummyJournals = [
   { id: 'j10', mood: 'great', energy_level: 'high', trigger: '', context: 'Family', outcome: 'no_urge', notes: 'Wonderful weekend with family.', created_date: subDays(now, 19).toISOString() },
   { id: 'j11', mood: 'low', energy_level: 'low', trigger: 'Loneliness', context: 'Home', outcome: 'resisted', notes: 'Felt alone but journaled through it.', created_date: subDays(now, 22).toISOString() },
   { id: 'j12', mood: 'good', energy_level: 'medium', trigger: 'Stress', context: 'Work', outcome: 'resisted', notes: 'Productive day, urges were manageable.', created_date: subDays(now, 25).toISOString() },
-  { id: 'j13', mood: 'neutral', energy_level: 'medium', trigger: '', context: 'Home', outcome: 'no_urge', notes: 'Steady day. Grateful for progress.', created_date: subDays(now, 28).toISOString() },
+  { id: 'j13', mood: 'neutral', energy_level: 'medium', trigger: '', context: 'Home', outcome: 'no_urge', notes: 'A calm day. Grateful for progress.', created_date: subDays(now, 28).toISOString() },
 ];
