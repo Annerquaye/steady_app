@@ -768,7 +768,7 @@ export default function Onboarding() {
         {step < STEPS.length - 1 ? (
           current === 'pricing' ? (
             <div className="flex items-center gap-2">
-              <Button variant="ghost" onClick={() => setStep(s => s + 1)} className="text-muted-foreground text-sm">
+              <Button variant="ghost" onClick={handleFinish} disabled={saving} className="text-muted-foreground text-sm">
                 Continue without a plan
               </Button>
               <Button asChild size="lg" className="gap-2 px-8">
