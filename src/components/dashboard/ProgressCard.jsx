@@ -1,6 +1,7 @@
 import React from 'react';
 import { differenceInDays, differenceInHours } from 'date-fns';
 import { Flame, Shield, TrendingUp, Star } from 'lucide-react';
+import { useStreakTotals } from '@/hooks/useStreakTotals';
 
 const MILESTONES = [1, 3, 7, 14, 30, 60, 90, 180, 365];
 
@@ -11,6 +12,7 @@ function getMilestone(days) {
 }
 
 export default function ProgressCard({ profile, urges }) {
+  const { bestDays, totalCleanDays, resets } = useStreakTotals(profile);
   const now = new Date();
   const start = profile?.streak_start_date ? new Date(profile.streak_start_date) : now;
   const days = differenceInDays(now, start);
@@ -37,7 +39,7 @@ export default function ProgressCard({ profile, urges }) {
 
   const tiles = [
     { icon: Shield, value: resisted, label: 'Urges beaten', tone: 'text-primary bg-primary/10' },
-    { icon: TrendingUp, value: `${resistRate}%`, label: 'Success rate', tone: 'text-accent bg-accent/10' },
+    { icon: TrendingUp, value: totalUrges > 0 ? `${resistRate}%` : '–', label: 'Success rate', tone: 'text-accent bg-accent/10' },
     { icon: Flame, value: totalUrges, label: 'Urges logged', tone: 'text-chart-3 bg-chart-3/10' },
   ];
 
@@ -68,6 +70,12 @@ export default function ProgressCard({ profile, urges }) {
             )}
           </div>
           <p className="text-sm text-white/85 mt-2">{streakMessage}</p>
+          {resets > 0 && (
+            <div className="mt-3 flex flex-wrap gap-2 text-xs font-medium">
+              <span className="px-2.5 py-1 rounded-full bg-white/15 tabular">Best: {bestDays} day{bestDays !== 1 ? 's' : ''}</span>
+              <span className="px-2.5 py-1 rounded-full bg-white/15 tabular">Total clean: {totalCleanDays} day{totalCleanDays !== 1 ? 's' : ''}</span>
+            </div>
+          )}
 
           {next && (
             <div className="mt-5">

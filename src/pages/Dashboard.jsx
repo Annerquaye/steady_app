@@ -4,6 +4,9 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import ProgressCard from '@/components/dashboard/ProgressCard';
 import DailyCheckIn from '@/components/dashboard/DailyCheckIn';
+import FirstDaysChecklist from '@/components/dashboard/FirstDaysChecklist';
+import SavingsCard from '@/components/dashboard/SavingsCard';
+import MilestoneCelebration from '@/components/dashboard/MilestoneCelebration';
 import DailyMessage from '@/components/dashboard/DailyMessage';
 import TriggerInsights from '@/components/dashboard/TriggerInsights';
 import MilestoneTracker from '@/components/dashboard/MilestoneTracker';
@@ -121,7 +124,10 @@ export default function Dashboard() {
           <p className="text-sm text-muted-foreground mt-0.5">One day at a time.</p>
         </div>
         <ProgressCard profile={profile} urges={safeUrges} />
-        <DailyCheckIn alreadyDoneToday={alreadyDoneToday} />
+        {!USE_DUMMY_DATA && <FirstDaysChecklist profile={profile} urges={safeUrges} journals={safeJournals} />}
+        <div id="daily-checkin" className="scroll-mt-20"><DailyCheckIn alreadyDoneToday={alreadyDoneToday} /></div>
+        {!USE_DUMMY_DATA && <SavingsCard profile={profile} />}
+        {!USE_DUMMY_DATA && <MilestoneCelebration profile={profile} />}
         <DailyMessage />
       </div>
     );

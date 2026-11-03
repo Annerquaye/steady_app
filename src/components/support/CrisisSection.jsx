@@ -1,7 +1,7 @@
 import React from 'react';
 import { Phone, MessageSquare, Globe, Siren, HeartHandshake } from 'lucide-react';
 
-const CRISIS_LINES = [
+export const CRISIS_LINES = [
   {
     icon: Phone,
     name: '988 Suicide & Crisis Lifeline',

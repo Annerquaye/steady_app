@@ -8,7 +8,8 @@ import { Switch } from '@/components/ui/switch';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import PageHeader from '@/components/layout/PageHeader';
-import { ArrowRight, ArrowLeft, Heart, Check } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Heart, Check, Sunrise } from 'lucide-react';
+import { useStreakTotals } from '@/hooks/useStreakTotals';
 
 const MOODS = ['great', 'good', 'neutral', 'low', 'terrible'];
 const moodEmojis = { great: '😊', good: '🙂', neutral: '😐', low: '😔', terrible: '😞' };
@@ -36,6 +37,8 @@ export default function RelapseReflection() {
     initialData: [],
   });
   const profile = profiles[0];
+  const totals = useStreakTotals(profile);
+  const [summary, setSummary] = useState(null);
 
   // Prefill the notify switch from the standing "Relapse alert" setting
   useEffect(() => {
@@ -75,8 +78,46 @@ export default function RelapseReflection() {
 
     queryClient.invalidateQueries({ queryKey: ['userProfile'] });
     queryClient.invalidateQueries({ queryKey: ['relapses'] });
-    navigate('/');
+    queryClient.invalidateQueries({ queryKey: ['archivedStreaks'] });
+
+    // Show what they keep before sending them home: a reset never erases earned days
+    setSummary({
+      lastStreak: totals.currentDays,
+      best: Math.max(totals.bestPast, totals.currentDays),
+      totalClean: totals.totalCleanDays,
+    });
+    setSaving(false);
   };
+
+  if (summary) {
+    const days = (n) => `${n} day${n === 1 ? '' : 's'}`;
+    return (
+      <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto px-6" style={{ paddingTop: 'calc(3rem + env(safe-area-inset-top, 0px))', paddingBottom: 'calc(2rem + env(safe-area-inset-bottom, 0px))' }}>
+        <div className="flex-1 flex flex-col items-center justify-center text-center gap-6">
+          <span className="w-16 h-16 rounded-full bg-accent/10 text-accent grid place-items-center">
+            <Sunrise className="w-8 h-8" />
+          </span>
+          <div className="space-y-2">
+            <h1 className="text-3xl font-heading font-extrabold">Day 1 starts now</h1>
+            <p className="text-muted-foreground max-w-xs mx-auto">A slip is part of recovery, not the end of it. Everything you built is still yours.</p>
+          </div>
+          <div className="w-full grid grid-cols-3 gap-3">
+            {[
+              { label: 'Last streak', value: days(summary.lastStreak) },
+              { label: 'Best streak', value: days(summary.best) },
+              { label: 'Total clean', value: days(summary.totalClean) },
+            ].map((t) => (
+              <div key={t.label} className="bg-card rounded-2xl border border-border/60 shadow-soft p-3">
+                <div className="text-lg font-heading font-bold tabular">{t.value}</div>
+                <div className="text-xs text-muted-foreground">{t.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <Button className="w-full h-12" onClick={() => navigate('/')}>Back to Home</Button>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto">
