@@ -35,82 +35,79 @@ export default function ProgressCard({ profile, urges }) {
     days < 90 ? 'Two months strong. This is who you are now.' :
     'Extraordinary. You\'ve built a new identity.';
 
+  const tiles = [
+    { icon: Shield, value: resisted, label: 'Urges beaten', tone: 'text-primary bg-primary/10' },
+    { icon: TrendingUp, value: `${resistRate}%`, label: 'Success rate', tone: 'text-accent bg-accent/10' },
+    { icon: Flame, value: totalUrges, label: 'Urges logged', tone: 'text-chart-3 bg-chart-3/10' },
+  ];
+
   return (
-    <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-transparent rounded-2xl p-5 border border-primary/15 space-y-5">
-      {/* Streak header */}
-      <div>
-        <div className="flex items-center gap-2 mb-2">
-          <Flame className="w-5 h-5 text-primary animate-sway" />
-          <span className="text-sm font-medium text-muted-foreground">Clean streak</span>
-        </div>
-        <div className="flex items-baseline gap-2">
-          {days === 0 && hours === 0 ? (
-            <span className="text-3xl font-heading font-bold text-foreground">Day 1 begins now</span>
-          ) : (
-            <>
-              <span className="text-5xl font-heading font-extrabold text-foreground animate-pop-in">{days}</span>
-              <span className="text-lg text-muted-foreground">days</span>
-              {hours > 0 && (
-                <span className="text-2xl font-heading font-semibold text-foreground/50 ml-1">{hours}h</span>
-              )}
-            </>
+    <div className="space-y-3">
+      {/* Streak hero */}
+      <div className="relative overflow-hidden rounded-3xl p-6 text-primary-foreground shadow-lg bg-gradient-to-br from-primary via-primary to-[hsl(165_35%_20%)]">
+        <div aria-hidden="true" className="absolute -right-10 -top-10 w-44 h-44 rounded-full bg-white/10" />
+        <div aria-hidden="true" className="absolute -right-2 top-16 w-24 h-24 rounded-full bg-white/5" />
+        <div className="relative">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="w-7 h-7 rounded-full bg-white/15 grid place-items-center">
+              <Flame className="w-4 h-4 animate-sway" />
+            </span>
+            <span className="text-sm font-semibold text-white/85">Clean streak</span>
+          </div>
+          <div className="flex items-baseline gap-2">
+            {days === 0 && hours === 0 ? (
+              <span className="text-3xl font-heading font-extrabold">Day 1 begins now</span>
+            ) : (
+              <>
+                <span className="text-6xl font-heading font-extrabold tracking-tight tabular animate-pop-in">{days}</span>
+                <span className="text-xl font-semibold text-white/80">day{days !== 1 ? 's' : ''}</span>
+                {hours > 0 && (
+                  <span className="text-xl font-heading font-semibold text-white/55 ml-1 tabular">{hours}h</span>
+                )}
+              </>
+            )}
+          </div>
+          <p className="text-sm text-white/85 mt-2">{streakMessage}</p>
+
+          {next && (
+            <div className="mt-5">
+              <div className="flex justify-between items-center mb-2 text-xs font-medium">
+                <span className="text-white/75">{prev ? `${prev}-day reached` : 'Start'}</span>
+                <span className="flex items-center gap-1 text-white">
+                  <Star className="w-3.5 h-3.5 fill-[hsl(42_95%_62%)] text-[hsl(42_95%_62%)]" />
+                  {next}-day milestone
+                </span>
+              </div>
+              <div className="h-2.5 bg-white/20 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-white rounded-full transition-all duration-700"
+                  style={{ width: `${Math.min(100, progress)}%` }}
+                />
+              </div>
+              <p className="text-xs text-white/75 mt-2">
+                {next - days} day{next - days !== 1 ? 's' : ''} to go
+              </p>
+            </div>
           )}
         </div>
-        <p className="text-xs text-muted-foreground mt-1.5">{streakMessage}</p>
       </div>
 
-      {/* Milestone progress bar */}
-      {next && (
-        <div>
-          <div className="flex justify-between items-center mb-1.5">
-            <span className="text-xs text-muted-foreground">
-              {prev ? `${prev}-day ✓` : 'Start'}
+      {/* Urge stats */}
+      <div className="grid grid-cols-3 gap-3">
+        {tiles.map(({ icon: Icon, value, label, tone }) => (
+          <div key={label} className="bg-card rounded-2xl border border-border/60 shadow-soft p-3.5 text-center">
+            <span className={`mx-auto mb-2 w-8 h-8 rounded-full grid place-items-center ${tone}`}>
+              <Icon className="w-4 h-4" />
             </span>
-            <div className="flex items-center gap-1">
-              <Star className="w-3 h-3 text-accent" />
-              <span className="text-xs font-medium text-accent">{next}-day milestone</span>
-            </div>
+            <div className="text-2xl font-heading font-bold tabular">{value}</div>
+            <div className="text-xs text-muted-foreground mt-0.5">{label}</div>
           </div>
-          <div className="h-2 bg-border rounded-full overflow-hidden">
-            <div
-              className="h-full bg-primary rounded-full transition-all duration-700"
-              style={{ width: `${Math.min(100, progress)}%` }}
-            />
-          </div>
-          <p className="text-[10px] text-muted-foreground mt-1">
-            {next - days} day{next - days !== 1 ? 's' : ''} until your next milestone
-          </p>
-        </div>
-      )}
-
-      {/* Urge victories */}
-      <div className="border-t border-primary/10 pt-4 grid grid-cols-3 gap-3">
-        <div className="text-center">
-          <div className="flex items-center justify-center mb-1">
-            <Shield className="w-4 h-4 text-primary" />
-          </div>
-          <div className="text-2xl font-heading font-bold">{resisted}</div>
-          <div className="text-[10px] text-muted-foreground leading-tight">Urges<br />conquered</div>
-        </div>
-        <div className="text-center">
-          <div className="flex items-center justify-center mb-1">
-            <TrendingUp className="w-4 h-4 text-accent" />
-          </div>
-          <div className="text-2xl font-heading font-bold">{resistRate}%</div>
-          <div className="text-[10px] text-muted-foreground leading-tight">Success<br />rate</div>
-        </div>
-        <div className="text-center">
-          <div className="flex items-center justify-center mb-1">
-            <Flame className="w-4 h-4 text-chart-3" />
-          </div>
-          <div className="text-2xl font-heading font-bold">{totalUrges}</div>
-          <div className="text-[10px] text-muted-foreground leading-tight">Urges<br />tracked</div>
-        </div>
+        ))}
       </div>
 
       {resisted > 0 && (
-        <p className="text-xs text-center text-primary font-medium -mt-1">
-          🏆 You've beaten {resisted} urge{resisted !== 1 ? 's' : ''}. That's {resisted} times you chose yourself.
+        <p className="text-sm text-center text-muted-foreground px-4">
+          You've beaten <span className="font-semibold text-foreground">{resisted} urge{resisted !== 1 ? 's' : ''}</span>. That's {resisted} time{resisted !== 1 ? 's' : ''} you chose yourself.
         </p>
       )}
     </div>

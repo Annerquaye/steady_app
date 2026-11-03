@@ -7,7 +7,7 @@ import { queryClientInstance } from '@/lib/query-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ArrowLeft, Check, Shield, Lock, Star, Zap, Brain, BarChart3, Users, Bell, Globe, ChevronRight } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Check, Shield, Lock, Star, Zap, Brain, Sprout, BarChart3, Users, Bell, Globe, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 /* ─── DATA ───────────────────────────────────────────────────────── */
@@ -173,7 +173,7 @@ function SelectGrid({ items, field, data, toggle, cols = 2 }) {
             <div className="flex-1 min-w-0">
               <p className="leading-tight truncate">{item.label}</p>
               {item.sublabel && (
-                <p className={cn("text-[10px]", selected ? "text-primary-foreground/70" : "text-muted-foreground")}>{item.sublabel}</p>
+                <p className={cn("text-[11px]", selected ? "text-primary-foreground/70" : "text-muted-foreground")}>{item.sublabel}</p>
               )}
             </div>
             {selected && <Check className="w-3.5 h-3.5 flex-shrink-0" />}
@@ -342,11 +342,18 @@ export default function Onboarding() {
           {/* ── WELCOME ── */}
           {current === 'welcome' && (
             <div className="flex-1 flex flex-col items-center justify-center text-center gap-7 py-10">
-              <div className="text-7xl">🌿</div>
+              <div className="relative grid place-items-center w-36 h-36" aria-hidden="true">
+                <span className="absolute inset-0 rounded-full bg-primary/5" />
+                <span className="absolute inset-4 rounded-full bg-primary/10" />
+                <span className="relative w-20 h-20 rounded-[1.75rem] bg-primary text-primary-foreground grid place-items-center shadow-xl">
+                  <Sprout className="w-10 h-10" />
+                </span>
+              </div>
               <div className="space-y-3">
-                <h1 className="text-3xl font-heading font-bold leading-tight">Take Back Control<br />of Your Attention</h1>
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">Recorva</p>
+                <h1 className="text-[2rem] font-heading font-extrabold leading-[1.1]">Break the habit.<br />Build the life you deserve.</h1>
                 <p className="text-muted-foreground text-base leading-relaxed max-w-xs mx-auto">
-                  A private, science-backed recovery companion that helps you rewire your habits, understand your triggers, and rebuild the life you want.
+                  A private recovery companion that helps you understand your triggers, get through urges and stay on track, one day at a time.
                 </p>
               </div>
               <div className="w-full space-y-2">
@@ -355,8 +362,8 @@ export default function Onboarding() {
                   { icon: Brain, text: 'AI-powered coaching when you need it most' },
                   { icon: Shield, text: 'Proven strategies backed by behavioral science' },
                 ].map(({ icon: Icon, text }) => (
-                  <div key={text} className="flex items-center gap-3 bg-secondary/60 rounded-xl px-4 py-3 text-left">
-                    <Icon className="w-4 h-4 text-primary flex-shrink-0" />
+                  <div key={text} className="flex items-center gap-3 bg-card shadow-soft border border-border/60 rounded-2xl px-4 py-3.5 text-left">
+                    <span className="w-8 h-8 rounded-xl bg-primary/10 grid place-items-center flex-shrink-0"><Icon className="w-4 h-4 text-primary" /></span>
                     <p className="text-sm text-foreground/80">{text}</p>
                   </div>
                 ))}
@@ -516,7 +523,7 @@ export default function Onboarding() {
                         <span>{emoji}</span>
                         <div>
                           <p className="text-xs font-semibold">{label}</p>
-                          <p className={cn("text-[10px]", sel ? "text-primary-foreground/70" : "text-muted-foreground")}>{sublabel}</p>
+                          <p className={cn("text-[11px]", sel ? "text-primary-foreground/70" : "text-muted-foreground")}>{sublabel}</p>
                         </div>
                       </button>
                     );
@@ -583,7 +590,7 @@ export default function Onboarding() {
               </div>
 
               {/* Key findings */}
-              <div className="bg-card rounded-2xl border border-border p-4 space-y-3">
+              <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-4 space-y-3">
                 <p className="text-sm font-semibold">Key findings</p>
                 <div className="space-y-2 text-sm">
                   <div className="flex gap-2">
@@ -662,7 +669,7 @@ export default function Onboarding() {
                 ].map(({ icon: Icon, label }) => (
                   <div key={label} className="flex flex-col items-center gap-1 text-center">
                     <Icon className="w-5 h-5 text-primary" />
-                    <p className="text-[10px] text-muted-foreground whitespace-pre-line leading-tight">{label}</p>
+                    <p className="text-[11px] text-muted-foreground whitespace-pre-line leading-tight">{label}</p>
                   </div>
                 ))}
               </div>
@@ -674,7 +681,7 @@ export default function Onboarding() {
                   {[['12,400+', 'urges resisted'], ['3,200+', '30-day streaks'], ['890+', '90-day streaks']].map(([n, l]) => (
                     <div key={l}>
                       <div className="text-sm font-bold text-foreground">{n}</div>
-                      <div className="text-[10px] text-muted-foreground">{l}</div>
+                      <div className="text-[11px] text-muted-foreground">{l}</div>
                     </div>
                   ))}
                 </div>

@@ -36,10 +36,10 @@ export default function AdvancedAnalytics({ urges }) {
     .map(d => ({ day: d.day.slice(5), intensity: +(d.sum / d.count).toFixed(1) }));
 
   return (
-    <div className="bg-card rounded-2xl border border-border p-4 space-y-6">
+    <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-4 space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold">Deep Analytics</h3>
-        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-accent text-accent-foreground">Elite</span>
+        <span className="shrink-0 whitespace-nowrap text-[11px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full border border-primary/25 bg-primary/10 text-primary">Elite</span>
       </div>
 
       {safeUrges.length === 0 ? (

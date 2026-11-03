@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,34 +6,34 @@
 
 @layer base {
   :root {
-    --background: 92 18% 91%;
+    --background: 90 20% 96%;
     --foreground: 145 15% 15%;
-    --card: 95 25% 96%;
+    --card: 0 0% 100%;
     --card-foreground: 145 15% 15%;
-    --popover: 95 25% 97%;
+    --popover: 0 0% 100%;
     --popover-foreground: 145 15% 15%;
-    --primary: 145 25% 33%;
+    --primary: 150 30% 30%;
     --primary-foreground: 90 30% 97%;
-    --secondary: 95 12% 87%;
+    --secondary: 100 18% 91%;
     --secondary-foreground: 145 12% 20%;
-    --muted: 95 14% 85%;
-    --muted-foreground: 140 8% 40%;
-    --accent: 18 85% 57%;
-    --accent-foreground: 20 60% 12%;
+    --muted: 100 16% 92%;
+    --muted-foreground: 150 7% 34%;
+    --accent: 32 88% 52%;
+    --accent-foreground: 30 60% 10%;
     --destructive: 350 60% 48%;
     --destructive-foreground: 0 0% 100%;
-    --border: 95 14% 81%;
-    --input: 95 14% 81%;
-    --ring: 145 25% 33%;
+    --border: 100 14% 87%;
+    --input: 100 14% 84%;
+    --ring: 150 30% 30%;
     --chart-1: 145 25% 40%;
-    --chart-2: 18 85% 57%;
+    --chart-2: 32 88% 52%;
     --chart-3: 165 30% 42%;
     --chart-4: 290 22% 55%;
     --chart-5: 350 55% 55%;
-    --radius: 1rem;
-    --font-heading: 'Nunito', sans-serif;
-    --font-body: 'Nunito', sans-serif;
-    --font-display: 'Nunito', sans-serif;
+    --radius: 1.25rem;
+    --font-heading: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     --sidebar-background: 92 16% 89%;
     --sidebar-foreground: 145 12% 20%;
@@ -46,9 +46,9 @@
   }
 
   .dark {
-    --background: 150 10% 9%;
+    --background: 150 12% 7%;
     --foreground: 90 15% 90%;
-    --card: 150 9% 13%;
+    --card: 150 9% 11%;
     --card-foreground: 90 15% 90%;
     --popover: 150 9% 13%;
     --popover-foreground: 90 15% 90%;
@@ -57,8 +57,8 @@
     --secondary: 150 8% 17%;
     --secondary-foreground: 90 12% 85%;
     --muted: 150 8% 15%;
-    --muted-foreground: 90 8% 62%;
-    --accent: 20 80% 60%;
+    --muted-foreground: 90 8% 68%;
+    --accent: 34 85% 58%;
     --accent-foreground: 20 60% 95%;
     --destructive: 350 55% 50%;
     --destructive-foreground: 0 0% 100%;
@@ -66,7 +66,7 @@
     --input: 150 8% 19%;
     --ring: 140 22% 58%;
     --chart-1: 140 22% 58%;
-    --chart-2: 20 80% 60%;
+    --chart-2: 34 85% 58%;
     --chart-3: 165 25% 55%;
     --chart-4: 290 20% 60%;
     --chart-5: 350 50% 58%;
@@ -87,7 +87,11 @@
   }
   body {
     @apply bg-background text-foreground font-body;
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
   }
+  h1, h2, h3 { letter-spacing: -0.015em; }
+  .tabular { font-variant-numeric: tabular-nums; }
 }
 
 /* ── iOS / Android WebView safe-area & gesture fixes ── */
@@ -152,3 +156,22 @@ svg {
   background: hsl(var(--border));
   border-radius: 10px;
 }
+/* ── Soft elevation used by cards (calmer than borders alone) ── */
+.shadow-soft { box-shadow: 0 1px 2px hsl(150 20% 20% / 0.04), 0 4px 16px hsl(150 20% 20% / 0.05); }
+.dark .shadow-soft { box-shadow: 0 1px 2px hsl(0 0% 0% / 0.3); }
+
+/* ── Recovery plan markdown ── */
+.plan-md h1, .plan-md h2 { font-family: var(--font-heading); font-weight: 700; font-size: 1.05rem; margin: 1.25rem 0 .5rem; }
+.plan-md h1:first-child, .plan-md h2:first-child { margin-top: 0; }
+.plan-md h3 { font-weight: 700; font-size: .95rem; margin: 1rem 0 .4rem; }
+.plan-md p { margin: .4rem 0; line-height: 1.6; }
+.plan-md ul, .plan-md ol { margin: .4rem 0 .8rem; padding-left: 0; list-style: none; display: grid; gap: .45rem; }
+.plan-md li { position: relative; padding-left: 1.6rem; line-height: 1.5; }
+.plan-md ul > li::before { content: ""; position: absolute; left: .15rem; top: .2rem; width: .95rem; height: .95rem; border-radius: 999px; border: 2px solid hsl(var(--primary) / .55); }
+.plan-md ol { counter-reset: n; }
+.plan-md ol > li::before { counter-increment: n; content: counter(n); position: absolute; left: 0; top: .05rem; width: 1.2rem; height: 1.2rem; border-radius: 999px; background: hsl(var(--primary) / .12); color: hsl(var(--primary)); font-size: .7rem; font-weight: 700; display: grid; place-items: center; }
+.plan-md strong { font-weight: 700; }
+
+/* Coach chat fills the space between the top bar and the bottom navigation */
+.coach-h { height: calc(100dvh - 3.5rem - 4.5rem - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); }
+@media (min-width: 1024px) { .coach-h { height: calc(100dvh - 3.5rem); } }

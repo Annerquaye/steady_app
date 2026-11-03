@@ -15,10 +15,10 @@ export default function StreakHistoryChart({ archived, currentDays }) {
   const best = Math.max(0, ...data.map(d => d.Days || 0));
 
   return (
-    <div className="bg-card rounded-2xl border border-border p-4">
+    <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-4">
       <div className="flex items-baseline justify-between mb-2">
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Streak history</p>
-        <span className="text-[10px] text-muted-foreground">best: {best} days</span>
+        <span className="text-[11px] text-muted-foreground">best: {best} days</span>
       </div>
       <div className="h-44">
         <ResponsiveContainer width="100%" height="100%">

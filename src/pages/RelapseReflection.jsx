@@ -129,7 +129,7 @@ export default function RelapseReflection() {
                       )}
                     >
                       <span className="text-lg">{moodEmojis[m]}</span>
-                      <span className="text-[10px] capitalize">{m}</span>
+                      <span className="text-[11px] capitalize">{m}</span>
                     </button>
                   ))}
                 </div>

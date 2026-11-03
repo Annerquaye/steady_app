@@ -61,18 +61,20 @@ export default function Blocking() {
       </div>
 
       {/* Hard Mode Toggle */}
-      <div className="bg-card rounded-2xl border border-border p-5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-destructive/10 flex items-center justify-center">
+      <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-5">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 shrink-0 rounded-xl bg-destructive/10 flex items-center justify-center">
               <Lock className="w-5 h-5 text-destructive" />
             </div>
-            <div>
+            <div className="min-w-0">
               <h3 className="text-sm font-semibold">Hard Mode</h3>
               <p className="text-xs text-muted-foreground">Maximum protection during vulnerable hours</p>
             </div>
           </div>
           <Switch
+            className="shrink-0"
+            aria-label="Hard Mode"
             checked={profile.hard_mode_enabled || false}
             onCheckedChange={(checked) => updateProfile({ hard_mode_enabled: checked })}
           />
@@ -154,7 +156,7 @@ export default function Blocking() {
 
 function Section({ icon: Icon, title, description, children }) {
   return (
-    <div className="bg-card rounded-2xl border border-border p-5">
+    <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-5">
       <div className="flex items-center gap-3 mb-4">
         <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
           <Icon className="w-4 h-4 text-primary" />

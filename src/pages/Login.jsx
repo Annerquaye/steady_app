@@ -48,13 +48,6 @@ export default function Login() {
         </>
       }
     >
-      <Button asChild className="w-full h-12 font-medium mb-3">
-        <Link to="/onboarding">New here? Start free — no account needed</Link>
-      </Button>
-      <p className="text-center text-xs text-muted-foreground mb-5">
-        Take the first step now — create an account only when you're ready to save.
-      </p>
-
       <Button
         variant="outline"
         className="w-full h-12 text-sm font-medium mb-6"
@@ -129,6 +122,17 @@ export default function Login() {
           )}
         </Button>
       </form>
+
+      <Link
+        to="/onboarding"
+        className="mt-6 flex items-center justify-between gap-3 rounded-2xl border border-dashed border-primary/30 bg-primary/5 px-4 py-3 hover:bg-primary/10 transition-colors"
+      >
+        <span>
+          <span className="block text-sm font-semibold text-foreground">New here? Start free</span>
+          <span className="block text-xs text-muted-foreground">No account needed. Save your progress when you're ready.</span>
+        </span>
+        <span aria-hidden="true" className="text-primary font-semibold">&rarr;</span>
+      </Link>
     </AuthLayout>
   );
 }

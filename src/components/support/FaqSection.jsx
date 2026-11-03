@@ -41,7 +41,7 @@ export default function FaqSection() {
         <HelpCircle className="w-5 h-5 text-primary" />
         <h2 className="text-lg font-heading font-bold text-foreground">Frequently asked questions</h2>
       </div>
-      <Accordion type="single" collapsible className="bg-card border border-border rounded-2xl px-5 divide-y divide-border">
+      <Accordion type="single" collapsible className="bg-card border border-border rounded-2xl/60 shadow-soft px-5 divide-y divide-border">
         {FAQS.map((item, i) => (
           <AccordionItem key={i} value={`faq-${i}`} className="border-0">
             <AccordionTrigger className="text-left text-sm font-semibold hover:no-underline py-4">

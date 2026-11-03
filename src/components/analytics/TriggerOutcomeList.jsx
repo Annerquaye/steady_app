@@ -12,7 +12,7 @@ export default function TriggerOutcomeList({ stats }) {
   const strongest = meaningful.length ? meaningful.reduce((a, b) => (a.resistRate >= b.resistRate ? a : b)) : null;
 
   return (
-    <div className="bg-card rounded-2xl border border-border p-4 space-y-4">
+    <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-4 space-y-4">
       <div className="flex items-center gap-2">
         <AlertTriangle className="w-4 h-4 text-accent" />
         <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Trigger × outcome</span>
@@ -41,7 +41,7 @@ export default function TriggerOutcomeList({ stats }) {
               </div>
             </div>
           ))}
-          <p className="text-[10px] text-muted-foreground text-right">bar = % of urges resisted</p>
+          <p className="text-[11px] text-muted-foreground text-right">bar = % of urges resisted</p>
         </div>
       )}
 

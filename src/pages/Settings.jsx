@@ -121,7 +121,7 @@ export default function Settings() {
           <h1 className="text-2xl font-heading font-bold">Settings</h1>
           <p className="text-sm text-muted-foreground">Your privacy, your control.</p>
         </div>
-        <div className="bg-card rounded-2xl border border-border p-5 text-center space-y-4">
+        <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-5 text-center space-y-4">
           <p className="text-sm text-muted-foreground">Complete onboarding to set up your recovery profile.</p>
           <Button className="w-full" onClick={() => navigate('/onboarding')}>Complete Onboarding</Button>
         </div>
@@ -143,7 +143,7 @@ export default function Settings() {
       </div>
 
       {/* Subscription */}
-      <div className="bg-card rounded-2xl border border-border p-5 space-y-4">
+      <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-5 space-y-4">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
             <CreditCard className="w-4 h-4 text-primary" />
@@ -194,7 +194,7 @@ export default function Settings() {
       </div>
 
       {/* Accountability Partner */}
-      <div className="bg-card rounded-2xl border border-border p-5 space-y-4">
+      <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-5 space-y-4">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
             <Users className="w-4 h-4 text-primary" />
@@ -253,7 +253,7 @@ export default function Settings() {
       </div>
 
       {/* Privacy Level */}
-      <div className="bg-card rounded-2xl border border-border p-5 space-y-4">
+      <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-5 space-y-4">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
             <Eye className="w-4 h-4 text-primary" />
@@ -282,7 +282,7 @@ export default function Settings() {
       <AppearanceSetting />
 
       {/* Privacy & Security */}
-      <div className="bg-card rounded-2xl border border-border p-5 space-y-4">
+      <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-5 space-y-4">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
             <Shield className="w-4 h-4 text-primary" />

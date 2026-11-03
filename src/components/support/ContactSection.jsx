@@ -6,7 +6,7 @@ export default function ContactSection() {
   return (
     <section className="space-y-3">
       <h2 className="text-lg font-heading font-bold text-foreground">Get in touch</h2>
-      <div className="bg-card border border-border rounded-2xl overflow-hidden">
+      <div className="bg-card border border-border rounded-2xl/60 shadow-soft overflow-hidden">
         <a
           href="mailto:support@recorva.app"
           className="flex items-center gap-4 p-5 hover:bg-secondary/50 transition-colors"

@@ -84,7 +84,7 @@ Keep each section short and actionable. No religious language, no moralizing, no
         <div>
           <div className="flex items-center gap-2 mb-0.5">
             <h1 className="text-2xl font-heading font-bold">My Recovery Plan</h1>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-accent text-accent-foreground">Elite</span>
+            <span className="shrink-0 whitespace-nowrap text-[11px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full border border-primary/25 bg-primary/10 text-primary">Elite</span>
           </div>
           <p className="text-sm text-muted-foreground">Personalized to your triggers, goals, and journey.</p>
         </div>
@@ -105,7 +105,7 @@ Keep each section short and actionable. No religious language, no moralizing, no
       )}
 
       {generating && !profile.recovery_plan && (
-        <div className="rounded-2xl border border-border bg-card p-6 space-y-3">
+        <div className="rounded-2xl border border-border bg-card/60 shadow-soft p-6 space-y-3">
           <Skeleton className="h-4 w-2/3" />
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-4 w-5/6" />
@@ -113,8 +113,8 @@ Keep each section short and actionable. No religious language, no moralizing, no
       )}
 
       {profile.recovery_plan ? (
-        <div className="rounded-2xl border border-border bg-card p-5">
-          <div className="prose prose-sm prose-slate max-w-none text-sm leading-relaxed [&>*:first-child]:mt-0">
+        <div className="rounded-2xl border border-border bg-card/60 shadow-soft p-5">
+          <div className="plan-md max-w-none text-sm leading-relaxed [&>*:first-child]:mt-0">
             <ReactMarkdown>{profile.recovery_plan}</ReactMarkdown>
           </div>
         </div>

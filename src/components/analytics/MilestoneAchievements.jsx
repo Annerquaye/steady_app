@@ -35,7 +35,7 @@ export default function MilestoneAchievements({ currentDays, bestArchivedDays, t
   const resisted = totalResisted || 0;
 
   return (
-    <div className="bg-card rounded-2xl border border-border p-4 space-y-5">
+    <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-4 space-y-5">
       <div className="flex items-center gap-2">
         <Trophy className="w-4 h-4 text-accent" />
         <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Milestone achievements</span>
@@ -89,7 +89,7 @@ function Badge({ earned, emoji, label }) {
       )}
     >
       <div className={cn('text-xl', earned ? '' : 'grayscale')}>{emoji}</div>
-      <p className="text-[10px] font-medium mt-0.5 leading-tight">{label}</p>
+      <p className="text-[11px] font-medium mt-0.5 leading-tight">{label}</p>
       {!earned && <Lock className="w-2.5 h-2.5 mx-auto mt-0.5 text-muted-foreground" />}
     </div>
   );
