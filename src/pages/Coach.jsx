@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { detectCrisis, CRISIS_GUIDANCE } from '@/lib/crisisDetection';
+import { CRISIS_LINES } from '@/components/support/CrisisSection';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -60,6 +62,7 @@ export default function Coach() {
   const [isLoading, setIsLoading] = useState(false);
   const [streamingText, setStreamingText] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
+  const [showCrisis, setShowCrisis] = useState(false);
   const scrollRef = useRef(null);
   const streamIntervalRef = useRef(null);
 
@@ -119,6 +122,8 @@ export default function Coach() {
     if (!raw.trim() || isLoading || isStreaming) return;
 
     const userMessage = raw.trim();
+    const inCrisis = detectCrisis(userMessage);
+    if (inCrisis) setShowCrisis(true);
     setInput('');
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     setIsLoading(true);
@@ -161,7 +166,8 @@ Guidelines:
 - Do not use emojis at all — plain text only, in any message.
 - Validate their feelings first, then give one clear, actionable thought.
 - Use "you" language, not "we".
-- If they are in crisis, suggest the urge emergency mode or calling someone they trust.`;
+- If they are struggling with an urge, suggest Urge Mode or calling someone they trust.
+${CRISIS_GUIDANCE}${inCrisis ? '\nTHIS MESSAGE MAY INDICATE A CRISIS. Follow the SAFETY rules above.' : ''}`;
 
     // Build conversation history safely, capped to last 10 messages to avoid token bloat
     const safeHistory = messages.slice(-10).map(m => `${m.role === 'user' ? 'User' : 'Coach'}: ${m.content.substring(0, 1000)}`).join('\n');
@@ -262,6 +268,35 @@ Guidelines:
         )}
         <div ref={scrollRef} />
       </div>
+
+      {showCrisis && (
+        <div role="alert" className="mx-4 mb-2 rounded-2xl border border-destructive/30 bg-destructive/5 p-4">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-sm font-bold text-foreground">You don't have to go through this alone</p>
+              <p className="text-xs text-muted-foreground mt-0.5">If you might hurt yourself or someone else, please reach out to a person now. In an emergency, call your local emergency number.</p>
+            </div>
+            <button type="button" onClick={() => setShowCrisis(false)} className="text-xs font-medium text-muted-foreground hover:text-foreground shrink-0">Hide</button>
+          </div>
+          <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {CRISIS_LINES.map(({ icon: Icon, name, detail, href }) => (
+              <a
+                key={name}
+                href={href}
+                target={href.startsWith('http') ? '_blank' : undefined}
+                rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                className="flex items-center gap-3 rounded-xl bg-card border border-border/60 px-3 py-2.5 hover:border-destructive/40 transition-colors"
+              >
+                <span className="w-8 h-8 rounded-lg bg-destructive/10 text-destructive grid place-items-center shrink-0"><Icon className="w-4 h-4" /></span>
+                <span className="min-w-0">
+                  <span className="block text-[13px] font-semibold leading-tight">{name}</span>
+                  <span className="block text-xs text-muted-foreground">{detail}</span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Input */}
       <div className="px-4 py-3 border-t border-border bg-card/50">

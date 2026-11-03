@@ -93,6 +93,18 @@
       "type": "string",
       "format": "date-time"
     },
+    "cost_minutes_per_day": {
+      "type": "number",
+      "description": "Minutes per day the habit used to take, for the time-saved counter"
+    },
+    "cost_money_per_day": {
+      "type": "number",
+      "description": "Money per day the habit used to cost, for the money-saved counter"
+    },
+    "cost_currency": {
+      "type": "string",
+      "description": "ISO currency code for cost_money_per_day, e.g. USD, GHS"
+    },
     "blocked_websites": {
       "type": "array",
       "items": {
