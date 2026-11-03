@@ -57,17 +57,25 @@ export default function RelapseReflection() {
       const streakStart = profile.streak_start_date ? new Date(profile.streak_start_date) : now;
       const durationDays = Math.floor((now - streakStart) / (1000 * 60 * 60 * 24));
 
+      // Urges resisted during this streak, from the urge log
+      let streakResisted = 0;
+      try {
+        const logs = await base44.entities.UrgeLog.list('-created_date', 500);
+        streakResisted = logs.filter(u => u.outcome === 'resisted' && new Date(u.created_date) >= streakStart).length;
+      } catch { /* keep 0 if the log can't be read */ }
+
       await base44.entities.ArchivedStreak.create({
         start_date: streakStart.toISOString(),
         end_date: now.toISOString(),
         duration_days: durationDays,
-        urges_resisted: profile.total_urges_resisted || 0,
+        urges_resisted: streakResisted,
       });
 
+      // Counters count up by default; resets are made in Settings > Streak & counters
       await base44.entities.UserProfile.update(profile.id, {
         streak_start_date: now.toISOString(),
-        total_urges_resisted: 0,
-        total_relapses: 0,
+        total_relapses: (profile.total_relapses || 0) + 1,
+        ...(profile.reset_urges_on_relapse ? { total_urges_resisted: 0 } : {}),
       });
     }
 
