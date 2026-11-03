@@ -93,6 +93,11 @@
       "type": "string",
       "format": "date-time"
     },
+    "reset_urges_on_relapse": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true, the all-time urges-beaten counter resets when a relapse is logged"
+    },
     "cost_minutes_per_day": {
       "type": "number",
       "description": "Minutes per day the habit used to take, for the time-saved counter"

@@ -69,6 +69,17 @@ export default function UrgeEmergency() {
       time_of_day: new Date().toLocaleTimeString(),
       intensity: 7,
     });
+    if (outcome === 'resisted') {
+      try {
+        const [profile] = await base44.entities.UserProfile.list();
+        if (profile) {
+          await base44.entities.UserProfile.update(profile.id, {
+            total_urges_resisted: (profile.total_urges_resisted || 0) + 1,
+          });
+          queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+        }
+      } catch { /* the urge is already logged; the counter can catch up later */ }
+    }
     queryClient.invalidateQueries({ queryKey: ['urges'] });
     setSaving(false);
     navigate('/');
