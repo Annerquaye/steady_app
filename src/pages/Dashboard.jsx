@@ -246,7 +246,7 @@ export default function Dashboard() {
 
       {/* Swipe hint on first load */}
       {page === 0 && (
-        <div className="flex items-center justify-end gap-1 px-5 pt-2 pb-0 flex-shrink-0">
+        <div className="lg:hidden flex items-center justify-end gap-1 px-5 pt-2 pb-0 flex-shrink-0">
           <span className="text-[11px] text-muted-foreground">Swipe to explore</span>
           <svg className="w-3.5 h-3.5 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />

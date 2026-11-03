@@ -11,10 +11,10 @@ export default function WeeklyVolumeChart({ urges, weeks = 12 }) {
   }));
 
   return (
-    <div className="bg-card rounded-2xl border border-border p-4">
+    <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-4">
       <div className="flex items-baseline justify-between mb-2">
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Urge volume vs. resisted</p>
-        <span className="text-[10px] text-muted-foreground">last {weeks} weeks</span>
+        <span className="text-[11px] text-muted-foreground">last {weeks} weeks</span>
       </div>
       <div className="h-48">
         <ResponsiveContainer width="100%" height="100%">

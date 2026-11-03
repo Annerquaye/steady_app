@@ -14,10 +14,10 @@ export default function TriggerTimeMatrix({ stats }) {
   });
 
   return (
-    <div className="bg-card rounded-2xl border border-border p-4">
+    <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-4">
       <div className="flex items-baseline justify-between mb-2">
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Triggers × time of day</p>
-        {top.length > 0 && <span className="text-[10px] text-muted-foreground">top {top.length}</span>}
+        {top.length > 0 && <span className="text-[11px] text-muted-foreground">top {top.length}</span>}
       </div>
       {top.length === 0 ? (
         <p className="text-xs text-muted-foreground">Log urges with triggers to see when they strike.</p>

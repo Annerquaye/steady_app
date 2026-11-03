@@ -21,7 +21,7 @@ export default function StatsGrid({ profile, urges }) {
         <div key={label} className="bg-card rounded-xl p-3 border border-border text-center">
           <Icon className={`w-5 h-5 mx-auto mb-1.5 ${color}`} />
           <div className="text-xl font-bold font-heading">{value}</div>
-          <div className="text-[10px] text-muted-foreground leading-tight mt-0.5">{label}</div>
+          <div className="text-[11px] text-muted-foreground leading-tight mt-0.5">{label}</div>
         </div>
       ))}
     </div>

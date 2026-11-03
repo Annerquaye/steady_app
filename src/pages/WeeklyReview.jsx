@@ -103,8 +103,8 @@ Use 3 short sections (1-2 sentences each):
         </div>
       ) : (
         <div className="space-y-4">
-          <div className="bg-card rounded-2xl border border-border p-5">
-            <div className="prose prose-sm prose-slate max-w-none text-sm leading-relaxed [&>h2]:text-base [&>h2]:font-heading [&>h2]:font-semibold [&>h2]:mt-6 [&>h2]:mb-2 [&>h2:first-child]:mt-0">
+          <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-5">
+            <div className="plan-md max-w-none text-sm leading-relaxed [&>h2]:text-base [&>h2]:font-heading [&>h2]:font-semibold [&>h2]:mt-6 [&>h2]:mb-2 [&>h2:first-child]:mt-0">
               <ReactMarkdown>{report}</ReactMarkdown>
             </div>
           </div>

@@ -80,7 +80,7 @@ export default function Journal() {
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden"
           >
-            <div className="bg-card rounded-2xl border border-border p-5 space-y-4">
+            <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-5 space-y-4">
               {/* Mood */}
               <div>
                 <label className="text-sm font-medium mb-2 block">How are you feeling?</label>
@@ -97,7 +97,7 @@ export default function Journal() {
                       )}
                     >
                       <span className="text-xl">{emoji}</span>
-                      <span className="text-[10px] font-medium">{moodLabels[key]}</span>
+                      <span className="text-[11px] font-medium">{moodLabels[key]}</span>
                     </button>
                   ))}
                 </div>
@@ -207,7 +207,7 @@ export default function Journal() {
                 </span>
               )}
               {e.notes && <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{e.notes}</p>}
-              {e.context && <p className="text-[10px] text-muted-foreground/60 mt-1">📍 {e.context}</p>}
+              {e.context && <p className="text-[11px] text-muted-foreground/60 mt-1">📍 {e.context}</p>}
             </div>
           ))
         )}

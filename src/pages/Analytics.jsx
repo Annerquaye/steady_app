@@ -42,7 +42,7 @@ export default function Analytics() {
       <div>
         <h1 className="text-2xl font-heading font-bold flex items-center gap-2">
           Advanced Analytics
-          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-accent text-accent-foreground">Elite</span>
+          <span className="shrink-0 whitespace-nowrap text-[11px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full border border-primary/25 bg-primary/10 text-primary">Elite</span>
         </h1>
         <p className="text-sm text-muted-foreground mt-0.5">Long-term trends, correlations & milestones.</p>
       </div>
@@ -76,7 +76,7 @@ export default function Analytics() {
     return (
       <div className="p-5 space-y-5">
         {header}
-        <div className="bg-card rounded-2xl border border-border p-8 text-center space-y-3">
+        <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-8 text-center space-y-3">
           <Sparkles className="w-6 h-6 text-primary mx-auto" />
           <p className="text-sm font-medium">Your analytics will appear here</p>
           <p className="text-xs text-muted-foreground leading-relaxed max-w-xs mx-auto">

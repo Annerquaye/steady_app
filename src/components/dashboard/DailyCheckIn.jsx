@@ -137,7 +137,7 @@ export default function DailyCheckIn({ alreadyDoneToday }) {
                   >
                     <span className="text-xl">{emoji}</span>
                     <span className="text-xs font-medium">{label}</span>
-                    <span className="text-[10px] text-muted-foreground">{desc}</span>
+                    <span className="text-[11px] text-muted-foreground">{desc}</span>
                   </button>
                 ))}
               </div>

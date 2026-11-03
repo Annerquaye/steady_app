@@ -20,7 +20,7 @@ export default function TermsOfService() {
           </div>
         </div>
 
-        <div className="prose prose-sm prose-slate max-w-none space-y-6 text-sm text-foreground/80 leading-relaxed">
+        <div className="plan-md max-w-none space-y-6 text-sm text-foreground/80 leading-relaxed">
 
           <section>
             <h2 className="text-base font-semibold text-foreground mb-2">1. Acceptance of Terms</h2>

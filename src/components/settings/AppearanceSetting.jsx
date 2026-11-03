@@ -22,7 +22,7 @@ export default function AppearanceSetting() {
   };
 
   return (
-    <div className="bg-card rounded-2xl border border-border p-5 space-y-4">
+    <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-5 space-y-4">
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
           <Sun className="w-4 h-4 text-primary" />

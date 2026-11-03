@@ -107,12 +107,12 @@ export default function Checkout() {
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Your plan</p>
               <h1 className="text-2xl font-heading font-bold">{meta.name}</h1>
               {meta.badge && (
-                <span className="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary text-primary-foreground">{meta.badge}</span>
+                <span className="inline-block mt-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-primary text-primary-foreground">{meta.badge}</span>
               )}
             </div>
 
             {/* Pricing summary */}
-            <div className="bg-card rounded-2xl border border-border p-4 space-y-3">
+            <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-4 space-y-3">
               {meta.trial && (
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-muted-foreground">7-day free trial</span>
@@ -140,7 +140,7 @@ export default function Checkout() {
             </div>
 
             {/* Features */}
-            <div className="bg-card rounded-2xl border border-border p-4">
+            <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3">What's included</p>
               <div className="space-y-2">
                 {meta.features.map(f => (
@@ -161,7 +161,7 @@ export default function Checkout() {
               ].map(({ icon: Icon, label }) => (
                 <div key={label} className="bg-card rounded-xl border border-border p-3 flex flex-col items-center gap-1">
                   <Icon className="w-4 h-4 text-primary" />
-                  <p className="text-[10px] text-muted-foreground whitespace-pre-line leading-tight">{label}</p>
+                  <p className="text-[11px] text-muted-foreground whitespace-pre-line leading-tight">{label}</p>
                 </div>
               ))}
             </div>
@@ -178,7 +178,7 @@ export default function Checkout() {
               <p className="text-sm text-muted-foreground">Your personalized recovery plan is ready.</p>
             </div>
 
-            <div className="bg-card rounded-2xl border border-border p-5 space-y-4">
+            <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-5 space-y-4">
               <div>
                 <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground block mb-1.5">Email address</label>
                 <Input
@@ -234,16 +234,16 @@ export default function Checkout() {
                 {loading ? 'Redirecting to Stripe...' : meta.trial ? 'Start 7-Day Free Trial' : `Subscribe — $${price.toFixed(2)}/${billing === 'year' ? 'yr' : 'mo'}`}
               </Button>
 
-              <p className="text-[10px] text-center text-muted-foreground">
+              <p className="text-[11px] text-center text-muted-foreground">
                 Secured by Stripe · 256-bit SSL encryption
               </p>
 
               {meta.trial ? (
-                <p className="text-[10px] text-muted-foreground leading-relaxed text-center">
+                <p className="text-[11px] text-muted-foreground leading-relaxed text-center">
                   After your 7-day free trial, you will be charged ${price.toFixed(2)}/{billing === 'year' ? 'year' : 'month'}. Subscription automatically renews unless cancelled at least 24 hours before the end of the current period. Manage or cancel anytime in Settings.
                 </p>
               ) : (
-                <p className="text-[10px] text-muted-foreground leading-relaxed text-center">
+                <p className="text-[11px] text-muted-foreground leading-relaxed text-center">
                   Subscription automatically renews unless cancelled at least 24 hours before the end of the current period. Manage or cancel anytime in Settings.
                 </p>
               )}

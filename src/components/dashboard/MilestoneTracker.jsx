@@ -41,7 +41,7 @@ function Badge({ emoji, label, desc, earned, next, open, onToggle }) {
       )}
     >
       <span className={cn("text-2xl leading-none", !earned && !next && "grayscale")}>{emoji}</span>
-      <span className={cn("text-[10px] font-semibold leading-tight", earned ? "text-foreground" : "text-muted-foreground")}>
+      <span className={cn("text-[11px] font-semibold leading-tight", earned ? "text-foreground" : "text-muted-foreground")}>
         {label}
       </span>
       {earned && (
@@ -53,7 +53,7 @@ function Badge({ emoji, label, desc, earned, next, open, onToggle }) {
         <span className="text-[8px] text-primary font-medium">next</span>
       )}
       {open && (
-        <div className="absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 bg-foreground text-background text-[10px] rounded-lg px-2.5 py-1.5 w-28 text-center z-10 pointer-events-none shadow-lg">
+        <div className="absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 bg-foreground text-background text-[11px] rounded-lg px-2.5 py-1.5 w-28 text-center z-10 pointer-events-none shadow-lg">
           {earned ? `🎉 ${desc}` : `Locked — ${desc}`}
         </div>
       )}
@@ -89,7 +89,7 @@ export default function MilestoneTracker({ profile, urges }) {
   const totalEarned = earnedStreak.length + earnedUrge.length;
 
   return (
-    <div className="bg-card rounded-2xl border border-border p-4 space-y-4">
+    <div className="bg-card rounded-2xl border border-border/60 shadow-soft p-4 space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-sm font-semibold">Achievements</h3>
@@ -100,7 +100,7 @@ export default function MilestoneTracker({ profile, urges }) {
 
       {/* Streak badges */}
       <div>
-        <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground mb-2">Streak milestones</p>
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground mb-2">Streak milestones</p>
         <div className="grid grid-cols-4 gap-2">
           {STREAK_BADGES.map((b, i) => (
             <Badge
@@ -117,7 +117,7 @@ export default function MilestoneTracker({ profile, urges }) {
 
       {/* Urge resistance badges */}
       <div>
-        <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground mb-2">Urges conquered</p>
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground mb-2">Urges conquered</p>
         <div className="grid grid-cols-4 gap-2">
           {URGE_BADGES.map((b, i) => (
             <Badge
@@ -132,7 +132,7 @@ export default function MilestoneTracker({ profile, urges }) {
         </div>
       </div>
 
-      <p className="text-[10px] text-muted-foreground text-center">Tap any badge to learn more</p>
+      <p className="text-[11px] text-muted-foreground text-center">Tap any badge to learn more</p>
     </div>
   );
 }

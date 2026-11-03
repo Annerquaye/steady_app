@@ -13,6 +13,13 @@ import { usePlan } from '@/lib/planAccess';
 // ╚══════════════════════════════════════════════════════╝
 const USE_DUMMY_DATA = false;
 
+const QUICK_PROMPTS = [
+  "I'm having an urge right now",
+  'Help me plan for tonight',
+  'Why do I keep slipping?',
+  'I relapsed. What now?',
+];
+
 export default function Coach() {
   const [messages, setMessages] = useState(USE_DUMMY_DATA ? [
     {
@@ -107,10 +114,11 @@ export default function Coach() {
     return () => { if (streamIntervalRef.current) clearTimeout(streamIntervalRef.current); };
   }, []);
 
-  const sendMessage = async () => {
-    if (!input.trim() || isLoading) return;
+  const sendMessage = async (preset) => {
+    const raw = typeof preset === 'string' ? preset : input;
+    if (!raw.trim() || isLoading || isStreaming) return;
 
-    const userMessage = input.trim();
+    const userMessage = raw.trim();
     setInput('');
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     setIsLoading(true);
@@ -196,7 +204,7 @@ Guidelines:
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-80px)]">
+    <div className="flex flex-col coach-h">
       {/* Header */}
       <div className="px-6 py-4 border-b border-border bg-card/50">
         <div className="flex items-center gap-3">
@@ -226,7 +234,7 @@ Guidelines:
               {msg.role === 'user' ? (
                 <p className="text-sm leading-relaxed">{msg.content}</p>
               ) : (
-                <div className="text-sm leading-relaxed prose prose-sm prose-slate max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+                <div className="text-sm leading-relaxed plan-md max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
                   <ReactMarkdown>{msg.content}</ReactMarkdown>
                 </div>
               )}
@@ -235,7 +243,7 @@ Guidelines:
         ))}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-card border border-border rounded-2xl rounded-bl-sm px-4 py-3 flex items-center gap-1.5">
+            <div className="bg-card border border-border rounded-2xl/60 shadow-soft rounded-bl-sm px-4 py-3 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
               <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
               <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -245,7 +253,7 @@ Guidelines:
         {isStreaming && streamingText && (
           <div className="flex justify-start">
             <div className="max-w-[85%] rounded-2xl rounded-bl-sm px-4 py-3 bg-card border border-border">
-              <div className="text-sm leading-relaxed prose prose-sm prose-slate max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+              <div className="text-sm leading-relaxed plan-md max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
                 <ReactMarkdown>{streamingText}</ReactMarkdown>
               </div>
               <span className="inline-block w-0.5 h-4 bg-primary ml-0.5 animate-pulse align-middle" />
@@ -257,6 +265,20 @@ Guidelines:
 
       {/* Input */}
       <div className="px-4 py-3 border-t border-border bg-card/50">
+        {messages.length <= 1 && !isLoading && !isStreaming && (
+          <div className="flex gap-2 overflow-x-auto pb-3 -mx-1 px-1" aria-label="Suggested messages">
+            {QUICK_PROMPTS.map((q) => (
+              <button
+                key={q}
+                type="button"
+                onClick={() => sendMessage(q)}
+                className="shrink-0 text-[13px] font-medium px-3.5 py-2 rounded-full border border-border bg-card hover:border-primary/40 hover:bg-primary/5 transition-colors"
+              >
+                {q}
+              </button>
+            ))}
+          </div>
+        )}
         <form
           onSubmit={(e) => { e.preventDefault(); sendMessage(); }}
           className="flex items-center gap-2"
@@ -264,7 +286,7 @@ Guidelines:
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type a message..."
+            placeholder="Tell your coach what's going on..."
             className="flex-1 rounded-full bg-secondary border-0"
             disabled={isLoading || isStreaming}
           />

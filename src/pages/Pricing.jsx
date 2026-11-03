@@ -87,7 +87,7 @@ export default function Pricing() {
       )}
 
       {isRestore && (
-        <div className="mb-8 bg-card rounded-2xl border border-border p-5 space-y-3">
+        <div className="mb-8 bg-card rounded-2xl border border-border/60 shadow-soft p-5 space-y-3">
           <div className="flex items-center gap-2">
             <RefreshCw className="w-4 h-4 text-primary" />
             <h2 className="text-sm font-semibold">Restore Purchases</h2>
@@ -124,7 +124,7 @@ export default function Pricing() {
           onClick={() => setBilling('year')}
           className={cn("text-sm font-medium px-4 py-1.5 rounded-full transition-all flex items-center gap-2", billing === 'year' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground')}
         >
-          Annual <span className={cn("text-[10px] font-bold px-1.5 py-0.5 rounded-full", billing === 'year' ? 'bg-white/20' : 'bg-primary/10 text-primary')}>Save up to 20%</span>
+          Annual <span className={cn("text-[11px] font-bold px-1.5 py-0.5 rounded-full", billing === 'year' ? 'bg-white/20' : 'bg-primary/10 text-primary')}>Save up to 20%</span>
         </button>
       </div>
 
@@ -146,7 +146,7 @@ export default function Pricing() {
                   <div className="flex items-center gap-2 flex-wrap mb-1">
                     <h2 className="font-heading font-bold text-lg">{plan.name}</h2>
                     {plan.badge && (
-                      <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full", plan.badgeColor)}>{plan.badge}</span>
+                      <span className={cn("text-[11px] font-bold px-2 py-0.5 rounded-full", plan.badgeColor)}>{plan.badge}</span>
                     )}
                   </div>
                   {plan.trial && <p className="text-xs text-primary font-semibold">7-day free trial included</p>}
@@ -155,7 +155,7 @@ export default function Pricing() {
                 <div className="text-right ml-3 flex-shrink-0">
                   <div className="text-2xl font-heading font-bold">${price.toFixed(2)}</div>
                   <div className="text-xs text-muted-foreground">/{billing === 'year' ? 'year' : 'month'}</div>
-                  {billing === 'year' && <div className="text-[10px] text-primary font-semibold">Save {savings}%</div>}
+                  {billing === 'year' && <div className="text-[11px] text-primary font-semibold">Save {savings}%</div>}
                 </div>
               </div>
 
@@ -188,7 +188,7 @@ export default function Pricing() {
         ].map(({ icon: Icon, label }) => (
           <div key={label} className="flex flex-col items-center gap-1.5">
             <Icon className="w-5 h-5 text-primary" />
-            <p className="text-[10px] text-muted-foreground whitespace-pre-line leading-tight">{label}</p>
+            <p className="text-[11px] text-muted-foreground whitespace-pre-line leading-tight">{label}</p>
           </div>
         ))}
       </div>
